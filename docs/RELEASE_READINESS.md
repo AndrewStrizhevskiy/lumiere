@@ -1,39 +1,41 @@
 # Release readiness — 0.3.0 (pre-1.0)
 
 Assessment of whether a stranger can install, test, understand and contribute. Claims are limited to what was run; see the three lists.
+All results below were measured on this exact source tree (the sanitized public history), on one machine: Ubuntu 24.04, GNOME/Wayland, ext4, Python 3.12.
 
-## Checks that passed
-* **Full test discovery** (`python3 -m unittest discover -s tests -t .`, offscreen Qt, ~12 min): 162 tests, 154 passed, 7 skipped (the OpenGL player tests, by design in that
-  mode), **1 failed**: the intermittent `test_stalls` black-hole test (see KNOWN_ISSUES; passes alone).
-* **Real OpenGL player tests** (`python3 -m unittest tests.test_ui_player`, Wayland, real libmpv, local swarm): 9 tests, OK (50 s) — torrent file and magnet link, both also through the
-  launcher path (`handle_external`), seek/pause/volume/tracks, error reporting, status wording.
-* **GUI/launch/packaging subset** after the last edits: 41 tests OK (`test_ui`, `test_launch`, `test_tour`, `test_packaging`).
-* **Install/uninstall in a throw-away HOME** (`tests/test_packaging.py`, 8 tests): creates only the documented files; other apps' files (mimeapps.list) byte-identical;
-  idempotent re-install; refuses to overwrite/remove a foreign launcher; uninstall leaves nothing but user data; `--purge-data` never removes a custom cache folder; clear message for a missing dependency;
-  `desktop-file-validate` clean; installed copy runs `--version`, `--help`, `--smoke`.
-* **Desktop launch** (manual): `gio launch` of the installed `.desktop` file (throw-away profile, real Wayland session) started the app; a second launch with a magnet link returned in 0.65 s and handed it to the running window.
-* **Window sizes**: Home, Settings, error dialogs, tutorial and player at 720×480 / ~1100×700 / 1600×900 with layout assertions and screenshots (`docs/gui/p5_*`); two layout problems found and fixed (player controls squeezed at minimum
-  width with the panel open; clipped legend in the panel).
-* **Logs/messages review**: code logs no magnet links, peer addresses or file contents; diagnostics and technical error details now hide the home folder and tracker URLs (tested).
-* **Post-commit security review (2 findings, both fixed and tested):** (1) diagnostics redaction missed magnet links with `dn=` before `xt=`, other URL schemes, other users' home paths and IP addresses — now hides every magnet except its info-hash, every URL, IPs and `/home/<user>`; (2) the single-instance socket was in world-writable `/tmp`, so another local user could have squatted it and received forwarded magnet links — it now lives in `$XDG_RUNTIME_DIR` (fallback: the 0700 state directory), is owner-only, a socket or file not owned by you is refused (never replaced or trusted), and requests are size-capped.
-* **Security review items** from earlier stages (cache deletion confinement, plain-text rendering of untrusted names) are covered by tests.
+## Passed
+* **Full test discovery** (`python3 -m unittest discover -s tests -t .`, offscreen Qt): **171 tests in 755 s — OK, 164 ran, 7 skipped** (the OpenGL player tests, which need a real display and run separately).
+* **Real-display OpenGL player tests** (`python3 -m unittest tests.test_ui_player`, Wayland, real libmpv, local swarm): **9 tests in 57 s — OK.** Torrent file and magnet link, each also through the launcher path; seek, pause, volume, tracks; player-error reporting; status wording.
+* **Install / uninstall in disposable profiles** (`tests/test_packaging.py`, 8 tests, plus a manual run): install is repeatable (a second install leaves the profile byte-identical); only the documented files are created;
+  other applications' files and `mimeapps.list` are untouched; the uninstaller removes only what the installer made and refuses to touch a foreign launcher; user data and a custom cache folder are kept unless `--purge-data`
+  is given, and a custom cache folder is never deleted even then; a missing dependency is explained with the exact `apt` command; `desktop-file-validate` is clean.
+* **Desktop launch** (manual, disposable profile, real Wayland session): `gio launch` on the installed `.desktop` file started the app; a second launch (`-- magnet:?…`) handed the link to the running window and exited 0.
+* **Security-sensitive code**: magnet/`.torrent` hand-over (parsing, ownership-checked owner-only socket in `$XDG_RUNTIME_DIR`, size cap, `--` before `%U`), cache-deletion confinement, plain-text rendering of untrusted names, diagnostics redaction — all covered by tests.
+* **Publish gate**: `tools/release_config.py check` fails while any `@@PLACEHOLDER@@` remains or `LICENSE` is missing; `.githooks/pre-push` runs it (3 tests).
+* **Documented commands match the implementation**: `install.sh --check/--no-desktop-db`, `uninstall.sh --dry-run/--purge-data/--no-desktop-db`, `kino-stream --version`, `kino-stream-gui --version`, `doctor --network`, `play` options were each run or checked against `--help`.
+* **Privacy audit** of every revision and every git object of the public repository: see the release report; no personal address, name, network, VPN or credential data found.
 
 ## Skipped
-* The 7 OpenGL player tests in the discovery run (they run separately, above).
-* Real-internet tests (`tests/realswarm.py`, 25 GB `tests/large_scenarios.py`) — opt-in, not run in P5. Earlier real-swarm results are in `docs/real_swarm_report.json` (5 runs) and are not a guarantee.
+* The 7 player tests inside the discovery run (run separately, above).
+* Real-internet tests (`tests/realswarm.py`, 25 GB `tests/large_scenarios.py`): opt-in, not run. Earlier real-swarm results (5 runs) are in `docs/real_swarm_report.json` and are not a guarantee.
 
 ## Unverified
-* Anything other than Ubuntu 24.04 / GNOME / Wayland / ext4 / Intel graphics (X11, NVIDIA/AMD, other distros, btrfs/xfs/tmpfs, other Qt/mpv versions).
+* Anything other than Ubuntu 24.04 / GNOME / Wayland / ext4 / Intel graphics (X11, NVIDIA/AMD, other distributions, btrfs/xfs/tmpfs, other Qt/mpv versions).
 * Playback of a real internet torrent **through the GUI** (engine-level real-swarm runs exist; GUI runs used local swarms).
-* Clicking the launcher in the GNOME application menu and `xdg-mime` default-handler flow (the `.desktop` file is valid and launches via `gio`; defaults were deliberately not changed).
-* Screen-reader behaviour; multi-monitor fullscreen; many-track audio/subtitle menus.
-* The root cause of two intermittent test failures (magnet GUI test, `test_stalls` black-hole): **unknown**.
+* Clicking the launcher in the GNOME application menu; the `xdg-mime` default-handler flow (defaults are deliberately never changed by the installer).
+* Screen-reader behaviour, multi-monitor fullscreen, audio/subtitle menus with many tracks.
+* The root cause of two intermittent test failures — **unknown, not fixed**:
+  * `tests/test_ui_player.py::test_magnet_link_plays_end_to_end` failed 2 of ~14 early runs; not reproduced in 40+ later runs and in the final run above.
+  * `tests/test_stalls.py::LostRequests::test_black_holed_seeder…` failed in 2 of 6 earlier module/discovery runs; **8 of 8 repeat runs with extra diagnostics passed and the final discovery run passed**. No change was made that
+    could be credited with fixing it; a failure now prints server/store state to help the next investigation.
+  See `docs/KNOWN_ISSUES.md`.
 
-## Blockers and decisions before publishing
-1. **License** — not chosen on purpose. Recommendation (GPL-3.0-or-later) and trade-offs: `docs/LICENSE_DECISION.md`. No `LICENSE` file exists yet.
-2. **Personal data in the repository history.** Working-tree copies of IP addresses in `diag/*.json`, `docs/NETWORK_FINDINGS.md` and `docs/*.json` were replaced by documentation-range addresses (203.0.113.x), but
-   (a) the **git history still contains the real addresses**, and (b) `docs/NETWORK_FINDINGS.md` and several file names name your networks, university, VPN software/provider and host details. Recommended: publish from a fresh
-   history (or a filtered one) and decide whether `diag/*.json` / `docs/NETWORK_FINDINGS.md` belong in the public repo at all. Nothing was deleted or rewritten without your say-so.
-3. **Contact addresses**: `SECURITY.md` and `CODE_OF_CONDUCT.md` contain placeholders for a security/conduct email; `.github/ISSUE_TEMPLATE/config.yml` has `OWNER/REPO` placeholders.
-4. **Real installation**: the installer was only run in throw-away profiles. Run `./packaging/install.sh` yourself when you want it in your real profile (user-level, no root; uninstall documented).
-5. Screenshots show a synthetic test video (colour bars), not a real movie.
+## Licensing compatibility
+GPL-3.0-or-later (see `docs/LICENSING.md`, `THIRD_PARTY_NOTICES.md`). No concerns for source distribution. If binary packages are ever built, bundling PyQt6 (GPL-3 only) and libmpv/python-mpv brings GPL redistribution
+duties (offer source, keep notices). The bundled-icon provenance is covered by precautionary Feather/Lucide notices; the "drawn in the style of" statement could not be verified beyond the author's own account.
+
+## Remaining blockers before publishing (need the maintainer)
+1. Fill the release placeholders: GitHub `owner/name`, security contact email, conduct contact email — `python3 tools/release_config.py apply --repo … --security-email … --conduct-email …`; then `python3 tools/release_config.py check`.
+2. Decide the commit author identity for the public history (currently the neutral `Kino Stream contributors <noreply@invalid>`).
+3. Approve publication (creating the repository, pushing, tagging `v0.3.0`) — nothing has been pushed or published.
+4. Real installation into a user profile has not been performed (only disposable profiles).

@@ -2,7 +2,7 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are pre-1.0: anything may change.
 
-## [0.3.0] — first public version (unreleased until published)
+## [0.3.0] — first public version (not yet published)
 
 ### Added
 - Desktop app (PyQt6 + libmpv): Home with drop zone / magnet field / "Continue watching", Settings, first-run tutorial, error dialogs and a
