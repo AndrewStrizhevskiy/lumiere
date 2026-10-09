@@ -15,6 +15,7 @@ Assessment of whether a stranger can install, test, understand and contribute. C
 * **Window sizes**: Home, Settings, error dialogs, tutorial and player at 720×480 / ~1100×700 / 1600×900 with layout assertions and screenshots (`docs/gui/p5_*`); two layout problems found and fixed (player controls squeezed at minimum
   width with the panel open; clipped legend in the panel).
 * **Logs/messages review**: code logs no magnet links, peer addresses or file contents; diagnostics and technical error details now hide the home folder and tracker URLs (tested).
+* **Post-commit security review (2 findings, both fixed and tested):** (1) diagnostics redaction missed magnet links with `dn=` before `xt=`, other URL schemes, other users' home paths and IP addresses — now hides every magnet except its info-hash, every URL, IPs and `/home/<user>`; (2) the single-instance socket was in world-writable `/tmp`, so another local user could have squatted it and received forwarded magnet links — it now lives in `$XDG_RUNTIME_DIR` (fallback: the 0700 state directory), is owner-only, a socket or file not owned by you is refused (never replaced or trusted), and requests are size-capped.
 * **Security review items** from earlier stages (cache deletion confinement, plain-text rendering of untrusted names) are covered by tests.
 
 ## Skipped

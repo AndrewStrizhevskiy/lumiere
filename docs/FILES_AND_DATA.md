@@ -10,7 +10,7 @@ Paths follow the XDG variables; defaults shown.
 | `~/.local/state/kino-stream/gui.log`, `crash.log` | warnings/errors and native crash stacks (rotating, ≤1 MB). Magnet links and peer addresses are not logged. | app | yes |
 | `~/.cache/kino-stream/<infohash>/` | the streamed data (sparse file) plus the marker `.kino-stream-managed`; at most the cache limit | engine | yes, via Settings → "Saved data" (preferred) or by deleting the folder **and** its `<infohash>.*` files above |
 | a folder you chose in Settings | same layout as above | engine | same; Kino Stream never deletes it by itself except the per-video folders it created, on your request |
-| `/tmp/kino-stream-<uid>` | socket that hands a second launch to the running window | app | removed on exit; a stale one is replaced at the next start |
+| `$XDG_RUNTIME_DIR/kino-stream-gui.sock` (fallback: `~/.local/state/kino-stream/gui.sock`) | owner-only socket that hands a second launch to the running window; never in `/tmp`; a socket not owned by you is refused | app | removed on exit; a stale one is replaced at the next start |
 | `$XDG_RUNTIME_DIR/kino-stream-<pid>.sock` | mpv control socket of the **command line tool** | CLI | removed on exit; leftovers after a crash/kill are harmless |
 | install files | see [INSTALL.md](INSTALL.md) | `packaging/install.sh` | `packaging/uninstall.sh` |
 

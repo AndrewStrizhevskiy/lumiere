@@ -136,15 +136,26 @@ class NetworkResultDialog(QDialog):
         lay.addWidget(close, 0, Qt.AlignmentFlag.AlignRight)
 
 
+def _magnet(m) -> str:
+    import re
+    h = re.search(r"xt(?:\.\d+)?=urn:btih:([0-9A-Za-z]+)", m.group(0))
+    return f"magnet:?xt=urn:btih:{h.group(1)}&…" if h else "magnet:?…"
+
+
 def redact(text: str) -> str:
-    """Diagnostics are meant to be pasted into bug reports: hide the home directory and tracker URLs (they can carry private keys)."""
+    """Diagnostics are meant to be pasted into bug reports. Hides: the home folder (and any /home/<user>), every magnet link except its
+    info-hash (whatever the parameter order), every URL (tracker keys live there), and IP addresses. Video titles are NOT hidden."""
+    import os
     import re
     from pathlib import Path
-    home = str(Path.home())
-    if home and home != "/":
-        text = text.replace(home, "~")
-    text = re.sub(r"(magnet:\?xt=urn:btih:[0-9A-Za-z]+)[^\"\s]*", r"\1&…", text)
-    text = re.sub(r"(https?|udp)://[^\s\"',]+", r"\1://<tracker>", text)
+    for home in {str(Path.home()), os.path.realpath(Path.home())}:
+        if home and home != "/":
+            text = text.replace(home, "~")
+    text = re.sub(r"magnet:\?[^\s\"'<>]*", _magnet, text, flags=re.I)
+    text = re.sub(r"\b[a-z][a-z0-9+.\-]{1,15}://[^\s\"'<>,]+", lambda m: m.group(0).split("://")[0] + "://<redacted>", text, flags=re.I)
+    text = re.sub(r"/home/[^/\s\"']+", "/home/<user>", text)
+    text = re.sub(r"\b(?:\d{1,3}\.){3}\d{1,3}\b", "<ip>", text)
+    text = re.sub(r"\b(?:[0-9A-Fa-f]{1,4}:){3,7}[0-9A-Fa-f]{1,4}\b", "<ip>", text)
     return text
 
 

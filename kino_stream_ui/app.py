@@ -1,6 +1,7 @@
 """Application start-up: platform quirks, theme, translations, window."""
 from __future__ import annotations
 
+import logging
 import os
 import sys
 from pathlib import Path
@@ -42,15 +43,48 @@ def parse_target(arg: str) -> str:
     return arg if arg.lower().endswith(".torrent") else ""
 
 
-def instance_name() -> str:
-    return f"kino-stream-{os.getuid()}"
+def instance_socket_path() -> str:
+    """Per-user, private location for the hand-over socket. NOT /tmp: it is world-writable, so another local user could pre-create the
+    socket and receive the magnet links we forward. $XDG_RUNTIME_DIR (0700, ours) is preferred, the state directory (made 0700) is the fallback."""
+    rt = os.environ.get("XDG_RUNTIME_DIR")
+    if rt and _private_dir_ok(Path(rt)):
+        return str(Path(rt) / "kino-stream-gui.sock")
+    from kino_stream.settings import state_dir
+    d = state_dir()
+    d.mkdir(parents=True, exist_ok=True)
+    try:
+        os.chmod(d, 0o700)
+    except OSError:
+        pass
+    return str(d / "gui.sock")
+
+
+def _private_dir_ok(d: Path) -> bool:
+    try:
+        st = d.stat()
+        return d.is_dir() and st.st_uid == os.getuid() and (st.st_mode & 0o077) == 0
+    except OSError:
+        return False
+
+
+def socket_is_ours(path: str) -> bool:
+    """Only talk to a socket that we own: a squatter's socket is refused rather than handed a magnet link."""
+    import stat
+    try:
+        st = os.stat(path)
+    except OSError:
+        return False
+    return stat.S_ISSOCK(st.st_mode) and st.st_uid == os.getuid()
 
 
 def forward_to_running_instance(target: str, timeout_ms: int = 800) -> bool:
     """Two instances must never share a cache: if one is already running, hand it the request and let this one exit."""
     from PyQt6.QtNetwork import QLocalSocket
+    path = instance_socket_path()
+    if not socket_is_ours(path):
+        return False
     sock = QLocalSocket()
-    sock.connectToServer(instance_name())
+    sock.connectToServer(path)
     if not sock.waitForConnected(timeout_ms):
         return False
     sock.write((target or "\x00show").encode("utf-8", "replace"))
@@ -60,22 +94,31 @@ def forward_to_running_instance(target: str, timeout_ms: int = 800) -> bool:
 
 
 class InstanceServer:
-    """Listens for requests from later launches (e.g. clicking a magnet link while the app is open)."""
+    """Listens for requests from later launches (e.g. clicking a magnet link while the app is open). Owner-only socket; input is size-capped
+    and reduced to a .torrent path or magnet link by parse_target()."""
+    MAX_REQUEST = 16 * 1024
 
     def __init__(self, on_request):
         from PyQt6.QtNetwork import QLocalServer
         self.on_request = on_request
-        QLocalServer.removeServer(instance_name())          # stale socket of a crashed run
+        self.path = instance_socket_path()
+        if os.path.lexists(self.path) and not socket_is_ours(self.path):
+            self.server, self.ok = QLocalServer(), False          # something foreign sits there: never replace or trust it
+            logging.getLogger("kino.ui").warning("single-instance socket path is not ours; running without hand-over")
+            return
+        QLocalServer.removeServer(self.path)                       # stale socket of a crashed run
         self.server = QLocalServer()
         self.server.setSocketOptions(QLocalServer.SocketOption.UserAccessOption)
-        self.ok = self.server.listen(instance_name())
+        self.ok = self.server.listen(self.path)
+        if not self.ok:
+            logging.getLogger("kino.ui").warning("single-instance socket unavailable: %s", self.server.errorString())
         self.server.newConnection.connect(self._new)
 
     def _new(self):
         while self.server.hasPendingConnections():
             c = self.server.nextPendingConnection()
             c.waitForReadyRead(500)
-            data = bytes(c.readAll()).decode("utf-8", "replace")
+            data = bytes(c.read(self.MAX_REQUEST)).decode("utf-8", "replace")
             c.disconnectFromServer()
             self.on_request("" if data == "\x00show" else parse_target(data))
 

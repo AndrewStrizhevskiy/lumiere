@@ -80,7 +80,7 @@ class EngineBridge(QObject):
 
     def request_availability(self, bins: int = 240) -> None:
         f = self.service.availability_async(bins)
-        f.add_done_callback(lambda fu: self.availability.emit(fu.result() if not fu.exception() else []))
+        f.add_done_callback(lambda fu: None if fu.cancelled() else self.availability.emit(fu.result() if not fu.exception() else []))
 
     def save_position(self, infohash: str, pos: float, dur: float) -> None:
         self.recent.update_position(infohash, pos, dur)
@@ -91,11 +91,11 @@ class EngineBridge(QObject):
 
     def check_ready(self) -> None:
         f = self.service.check_ready()
-        f.add_done_callback(lambda fu: self.ready.emit(fu.result() if not fu.exception() else {"ok": False, "problems": ["CACHE_DIR_UNUSABLE"], "free_bytes": 0}))
+        f.add_done_callback(lambda fu: None if fu.cancelled() else self.ready.emit(fu.result() if not fu.exception() else {"ok": False, "problems": ["CACHE_DIR_UNUSABLE"], "free_bytes": 0}))
 
     def network_check(self) -> None:
         f = self.service.network_check()
-        f.add_done_callback(lambda fu: self.networkChecked.emit(fu.result() if not fu.exception() else {"error": str(fu.exception())}))
+        f.add_done_callback(lambda fu: None if fu.cancelled() else self.networkChecked.emit(fu.result() if not fu.exception() else {"error": str(fu.exception())}))
 
     def delete_cache(self, infohash: str) -> int:
         """Explicitly requested deletion of one managed cache. Refuses the video that is open. Returns bytes freed (0 if refused)."""

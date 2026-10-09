@@ -10,7 +10,7 @@ You will get an acknowledgement; this is a volunteer project, so no response-tim
 
 **Areas of particular interest:** path handling in cache deletion (`kino_stream/caches.py`), parsing of untrusted `.torrent`/magnet input and file
 names (rendered as plain text in the UI), the local HTTP server (binds to `127.0.0.1` only, random port), the single-instance socket
-(`/tmp/kino-stream-<uid>`, user-only permissions), and the installer scripts.
+(`$XDG_RUNTIME_DIR/kino-stream-gui.sock`, owner-only, ownership checked before use), and the installer scripts.
 
 **Out of scope:** the behaviour of BitTorrent peers or content you choose to stream; vulnerabilities in libtorrent, mpv or Qt (report those upstream).
 
