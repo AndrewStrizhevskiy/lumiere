@@ -177,6 +177,7 @@ class PlayerScreen(QWidget):
         self.play_btn = icon_button("pause", tr("Play / Pause (Space)", "Player"), T.TEXT, 22)
         self.play_btn.clicked.connect(self.toggle_pause)
         self.time_lbl = label("0:00 / 0:00", "secondary")
+        self.time_lbl.setMinimumWidth(self.time_lbl.fontMetrics().horizontalAdvance("0:00:00 / 0:00:00") + 4)
         self.mute_btn = icon_button("volume", tr("Mute (M)", "Player"), T.TEXT, 20)
         self.mute_btn.clicked.connect(self.toggle_mute)
         self.vol = QSlider(Qt.Orientation.Horizontal)
@@ -257,7 +258,8 @@ class PlayerScreen(QWidget):
             if key == "cache":
                 self.cache_bar = AnimatedBar(T.ACCENT, T.TRACK, 6)
                 pl.addWidget(self.cache_bar)
-        pl.addWidget(label(tr("On the seek bar, grey parts are already on disk and dark parts still have to be fetched.", "Player"), "caption", wrap=True))
+        self.panel_note = label(tr("On the seek bar, grey parts are already on disk and dark parts still have to be fetched.", "Player"), "caption", wrap=True)
+        pl.addWidget(self.panel_note)
         pl.addStretch(1)
         d = button(tr("Diagnostics", "Player"), "", "info", name=tr("Open diagnostics", "Player"))
         d.clicked.connect(self.diagnosticsRequested)
@@ -594,10 +596,14 @@ class PlayerScreen(QWidget):
         self.video.setGeometry(0, 0, w, h)
         th = self.top.sizeHint().height()
         bh = self.bottom.sizeHint().height()
-        pw = self.panel.width() if self.panel.isVisible() else 0
+        panel_w = 260 if w < 900 else 320
+        pw = panel_w if self.panel.isVisible() else 0
         self.top.setGeometry(0, 0, w - pw, th)                 # the side panel never hides a control
         self.bottom.setGeometry(0, h - bh, w - pw, bh)
-        self.panel.setGeometry(w - 320, 0, 320, h)
+        self.vol.setVisible(w - pw >= 560)                     # narrow window: the mute button and keys ↑/↓ remain
+        self.panel.setFixedWidth(panel_w)
+        self.panel_note.setVisible(h >= 560)                  # short window: the numbers matter more than the legend (also in the seek bar tooltip)
+        self.panel.setGeometry(w - panel_w, 0, panel_w, h)
         self.wait.move((w - pw - self.wait.width()) // 2, (h - self.wait.height()) // 2)
 
     def resizeEvent(self, e):

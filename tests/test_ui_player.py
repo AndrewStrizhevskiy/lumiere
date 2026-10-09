@@ -174,6 +174,27 @@ class PlayerEndToEnd(unittest.TestCase):
         it = next(i for i in self.recent.items if i["infohash"] == self.infohash)
         self.assertGreater(it["position_s"], 1)
 
+    def _via_launcher(self, source):
+        real = self.__dict__.setdefault("_real_open", self.bridge.open_source)     # inject the local swarm only; everything else is the real launcher path
+        self.bridge.open_source = lambda src, **kw: real(src, overrides=self.overrides(), peers=[("127.0.0.1", self.sd.port)], **kw)
+        self.win.handle_external(source)
+        until(lambda: self.opened or self.failed, 60, "open never finished")
+        self.assertFalse(self.failed, self.failed)
+
+    def test_launcher_path_opens_torrent_file_then_magnet(self):
+        self._via_launcher(str(self.torrent))
+        self.playing(1.0)
+        self.win.stop_and_home()
+        until(lambda: self.win.stack.currentIndex() == self.win.HOME)
+        n = len(self.opened)
+        self.bridge.service.close_media().result(20)
+        QApplication.processEvents()
+        time.sleep(1.0)
+        self.opened.clear()
+        self._via_launcher(f"magnet:?xt=urn:btih:{self.infohash}")
+        self.playing(1.0)
+        self.assertEqual(self.win.player.media.infohash, self.infohash)
+
     def test_audio_and_subtitle_selection(self):
         self.open(str(self.torrent))
         self.playing(1.0)

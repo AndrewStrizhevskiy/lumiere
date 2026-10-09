@@ -99,6 +99,8 @@ async def amain(a) -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser(prog="kino-stream", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    from . import __version__
+    ap.add_argument("--version", action="version", version=f"kino-stream {__version__}")
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("play", help="stream a torrent into mpv")
     p.add_argument("source", help=".torrent file (recommended) or magnet link")

@@ -2,4 +2,10 @@ import sys
 
 from .app import run
 
-sys.exit(run())
+
+def main() -> None:
+    sys.exit(run())
+
+
+if __name__ == "__main__":
+    main()

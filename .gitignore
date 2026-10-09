@@ -5,3 +5,14 @@ tests/.cache/
 .venv/
 build/
 *.egg-info/
+*.log
+*.bad
+dist/
+.pytest_cache/
+.mypy_cache/
+.idea/
+.vscode/
+# local scratch / downloaded media used by manual runs
+*.part
+*.torrent
+!tests/**/*.torrent

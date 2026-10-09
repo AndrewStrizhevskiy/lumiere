@@ -1,5 +1,19 @@
 # Known issues and open risks (read this before relying on kino-stream)
 
+## 0. Desktop app (0.3.0) — scope of what was verified
+* Verified on one machine: Ubuntu 24.04, GNOME/Wayland, ext4, Intel graphics, Python 3.12, PyQt6 6.6.1, libmpv 0.37. X11, NVIDIA/AMD, other
+  distributions and filesystems are unverified.
+* The player was exercised end to end against **local** swarms (torrent file and magnet link, seeks, pause, volume, track selection). Real-internet
+  playback through the GUI was not part of the automated tests; engine-level real-swarm runs are described in section 5.
+* Screenshots in `docs/gui/` are Qt widget grabs (offscreen or from the live window); they were not taken by an external screen recorder.
+* Audio/subtitle selection was exercised on files with one audio track and no subtitles; menu construction for many tracks is unit-level only.
+* Fullscreen was verified in code and offscreen, not on a real multi-monitor setup.
+* The tutorial and error dialogs were checked at window sizes from 720×480 to 1920×1080 (layout assertions plus screenshots); screen-reader behaviour was not tested
+  (this PyQt6 build exposes no `QAccessible`, so only accessible names/descriptions are set).
+* GNOME's "reduce animations" setting is read once at startup.
+* Stale `kino-stream-<pid>.sock` files can remain in `$XDG_RUNTIME_DIR` after killed command-line runs (harmless).
+* Launching from the GNOME application menu was not clicked through. The installed `.desktop` file was launched with `gio launch` from a throw-away profile (manual check), plus a second launch to confirm hand-over to the running window.
+
 ## 1. libtorrent crashes (SIGSEGV / SIGABRT): root cause found, fixed, verified by a controlled experiment
 **Root cause.** `session.wait_for_alert()` in the Python binding returns a raw pointer to an alert inside the *live* alert
 queue. libtorrent's other threads keep posting alerts (and the queue reallocates / is swapped) while Python converts and
@@ -69,3 +83,10 @@ stack in `crash.log`.
 
 Seen twice (2 of ~14 runs, both right after a long full-suite run); the failing runs took ~100 s because the test waited its full 60 s for playback after the open had succeeded. In the failing runs mpv never reached 2 s of playback within 60 s; the engine snapshot was not captured then (the failure message now includes the snapshot, mpv log lines and engine event codes).
 Not reproduced since: 1 + 12 solo runs, 12 runs with three in parallel, 6 module runs under full-CPU load, all passing. Root cause is **inconclusive**. Candidates, none confirmed: the magnet path's metadata→re-add step (the engine already waits 0.4 s there after a known peer-teardown race), or a local-port reuse race (`free_port()` hands out a port that is bound a moment later). If it recurs, read the snapshot in the assertion message first: `peers == 0` with `phase == opening/starting` points at the magnet re-add; `peers > 0` with no `pieces_have` growth points at the store.
+
+## Intermittent: `tests.test_stalls.LostRequests.test_black_holed_seeder_requests_are_cancelled_and_reissued` (engine test)
+
+Fails with "stall must be noticed" (the HTTP server did not count a stall within 15 s after the seeder was throttled to 1 B/s). Seen in 1 of 3 discovery
+runs and 1 of 3 module runs during P5 (it passed in the earlier full runs and alone 4/4). No engine code involved in this path (`httpd.py`, `lt_store.py`) changed in P5.
+Not investigated further; likely timing (the range requested may already be partly delivered by in-flight requests when the throttle starts). Treat a failure here as "unknown" rather than
+proof of a regression, and rerun it alone. Root cause: **unknown**.

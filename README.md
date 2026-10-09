@@ -1,72 +1,112 @@
-# kino-stream
+# Kino Stream
 
-Watch a torrent **while it downloads**, with an optional **hard-bounded disk cache** (Prizma-style): old pieces are evicted,
-upcoming pieces are fetched ahead of the playback position, and a backward seek simply downloads what was evicted again.
+Watch a video from a torrent **while it is still downloading**, with a **hard upper limit on the disk space it uses**.
+Kino Stream has a desktop app (PyQt6 + libmpv) and a command line tool that share one streaming engine.
 
-    mpv  <-HTTP Range->  scheduler  ->  PieceStore (BoundedSparseStore)  ->  libtorrent  ->  sparse file on disk
+![Home screen](docs/gui/p2_home.png)
 
-Standalone: it does not touch other applications (media servers, torrent clients), and it never asks your router to open ports (no UPnP).
+> **Status: pre-1.0 (0.3.0), tested on Ubuntu 24.04 / GNOME / Wayland only.** The engine and cache have an extensive automated
+> test suite and a few real-swarm runs, but this is young software. Read [Known limitations](#known-limitations) before relying on it.
+> Kino Stream does not host or provide any content. You are responsible for only streaming material you have the right to use.
 
-## Install
-    sudo apt install python3-libtorrent mpv ffmpeg          # ffmpeg only for the tests
-    git clone / copy this directory, then use it in place:
-    ./bin/kino-stream --help                                # or: python3 -m kino_stream --help
-    # optional: pip install --user -e .   (gives a `kino-stream` command; python-libtorrent still comes from apt)
-
-Requirements: Python >= 3.12, python3-libtorrent 2.0.x, mpv, Linux. For the bounded cache: a filesystem that frees blocks on
-`fallocate(PUNCH_HOLE)` (tested: ext4; the program probes it and refuses to start otherwise - it never falls back to anything unsafe).
-
-## Use
-Bounded cache, 3 GB hard limit, 150 MB kept behind the playhead for backward seeks (recommended):
-
-    ./bin/kino-stream play "Movie.torrent" --save-path ~/.cache/kino-stream/movie --cache-limit-gb 3 --cache-back-mb 150
-
-Unbounded (everything downloaded stays): drop `--cache-limit-gb`. Stop with `q` in mpv or Ctrl-C; a summary line is printed.
-Resume later with the same command and the same `--save-path`: retained pieces are reused, an interrupted session is recovered.
-
-| option | meaning |
+| Playing, with the connection panel | Seek bar: grey = already on disk |
 |---|---|
-| `--cache-limit-gb N` / `--cache-limit-mb N` | hard limit on *allocated* disk blocks of `--save-path` (0 = unbounded) |
-| `--cache-back-mb N` | keep this much behind the playhead (default 5% of the limit) |
-| `--save-path DIR` | cache directory. With a limit it must be dedicated to this torrent (data without an index is refused) |
-| `--peer host:port` | peer hint, repeatable; helps when DHT/trackers are blocked |
-| `--encryption forced` | BitTorrent protocol encryption; some networks treat plain BitTorrent differently |
-| `--no-mpv` | only serve the HTTP URL (open it in any player that supports Range) |
-| `--headless`, `--quit-after S`, `--ipc-socket P` | automation: no video output, stop after S seconds, mpv JSON IPC path |
-| `--status-interval S` | log peers / pieces / disk usage every S seconds (default 10; 0 = off) |
+| ![Player with connection panel](docs/gui/p3_player_panel.png) | ![Fetching a part that is not downloaded yet](docs/gui/p3_player_fetching.png) |
 
-Use a `.torrent` file when you can. Magnet links need DHT, which is blocked or flaky on several networks (see `docs/NETWORK_FINDINGS.md`).
+## What it does
 
-### What the bounded cache guarantees
-* `allocated blocks <= limit` at all times (requests are admitted only while there is room; stale data is evicted first - playback may briefly wait, the limit does not give).
-* Evicted pieces are never served, uploaded or advertised: eviction removes the torrent from the session, punches the holes, and re-adds it with an exact `have_pieces` taken from a durable index (never from libtorrent resume data). Every HTTP byte is checked in tests against the original file.
-* Crash-safe: journal + startup recovery before any peer connection (verified with simulated crashes at every step and with real `SIGKILL` of the process group while evicting).
-* Details, crash table, policy: `docs/STAGE2_DESIGN.md`.
+Pick a `.torrent` file or paste a magnet link and press Play. Kino Stream fetches the part of the video you are about to watch
+first, plays it through mpv, and removes old parts so the cache never grows past the limit you set (4 GB by default).
+How well that works depends on the people sharing the video and on your network — see [How it works](docs/HOW_IT_WORKS.md).
 
-## Troubleshooting
-    ./bin/kino-stream doctor --save-path ~/.cache/kino-stream/movie             # local checks (libtorrent, mpv, hole punching, free space, VPN hint)
-    ./bin/kino-stream doctor --network                                          # + DHT / UDP trackers / DNS-over-UDP / exit IP probes, with CONFIRMED vs HYPOTHESIS verdicts
-    ./bin/kino-stream play X.torrent --status-interval 3 ...                    # watch peers, pieces, disk, evictions
-    tail -n 40 ~/.local/state/kino-stream/crash.log                             # native crash stacks (should stay empty)
+## Features
 
-| symptom | what to do |
-|---|---|
-| `peers=0 (waiting for peers ...)` | run `doctor --network`; if DHT/UDP trackers do not answer use a `.torrent` with HTTP/TCP trackers and `--peer`; try `--encryption forced` |
-| `error: bounded cache is not possible here` | the directory's filesystem does not release blocks on hole punching; use another directory (ext4/xfs/btrfs/tmpfs) or no limit |
-| `error: ... not managed by a bounded cache` | the directory contains data without an index; use an empty `--save-path` (or delete the old directory) |
-| `error: cache limit ... is too small` | raise `--cache-limit-gb` or lower `--cache-back-mb` / `--mpv-cache-mb` |
-| playback pauses at seeks | expected until the first pieces arrive: seconds on a healthy swarm; slower when peers are few |
-| reset a cache completely | delete the `--save-path` directory **and** `~/.local/state/kino-stream/<infohash>.cache.json` |
+**Implemented and covered by automated tests**
 
-Known limitations and open risks: `docs/KNOWN_ISSUES.md`. Network findings: `docs/NETWORK_FINDINGS.md`. Stage 1 numbers: `docs/STAGE1_VALIDATION.md`.
+* Desktop app: drop a `.torrent` onto the window, choose a file, or paste a magnet link; "Continue watching" list with resume.
+* Embedded player (libmpv): play/pause, seek bar that shows which parts are already on disk, volume, fullscreen, audio-track and
+  subtitle-track menus (tracks inside the file), keyboard shortcuts, auto-hiding controls.
+* Honest status: sources, speed, how much is ready ahead, disk used, and plain-language messages for "looking for sources",
+  "waiting for sources", "fetching this part", cache pressure and unsupported files.
+* Hard-bounded disk cache: allocated blocks stay under the limit; evicted data is never served; crash-safe journal with recovery
+  (tested with simulated crashes at every step and with real `SIGKILL`).
+* Fails with a clear explanation when the filesystem cannot guarantee the limit; an explicit, warned **temporary mode** (no limit,
+  deleted on close) is offered instead of silently ignoring the limit.
+* Settings (cache size, how much watched video to keep, patience with poor connections, protocol encryption, on-close behaviour,
+  cache folder), saved-data list with delete-on-request, first-run tutorial (reopen from Help).
+* "Check my connection" and `kino-stream doctor --network`: read-only probes whose results are labelled *confirmed*, *observed*
+  or *hypothesis*; it never claims a cause it has not measured.
+* Desktop launcher with `.torrent` / `magnet:` handling (it does not change your default applications), single running instance.
+* Command line tool: `kino-stream play ...`, `kino-stream doctor ...` (mpv in its own window).
+
+**Not implemented / planned** (no promises)
+
+* Translations (the code is structured for it; only English exists).
+* Loading external subtitle files, choosing a file inside a multi-file torrent in the app (it plays the largest video file; the CLI has `--file`), playlists.
+* Remembering the volume between sessions.
+* Other operating systems, `.deb`/Flatpak packaging.
+* Filesystems other than ext4 for the bounded cache (the program probes and refuses when unsafe; others are untested).
+* X11 sessions (expected to work, untested).
+
+## Install (Ubuntu 24.04)
+
+```bash
+sudo apt install python3-libtorrent python3-pyqt6 python3-pyqt6.qtsvg python3-mpv libmpv2 mpv
+git clone <this repository> kino-stream && cd kino-stream
+./packaging/install.sh          # user-level: no root, no network; --check shows what it would do
+```
+
+Start **Kino Stream** from the application menu, or run `kino-stream-gui`. Details, other options and the clean uninstall:
+[docs/INSTALL.md](docs/INSTALL.md). Uninstall: `./packaging/uninstall.sh` (keeps your data) or `--purge-data`.
+
+## Quick start
+
+1. Start Kino Stream. The short tutorial appears on first launch.
+2. Drop a `.torrent` file on the window, or paste a magnet link and press **Play**. Prefer `.torrent` files: magnet links depend on DHT,
+   which some networks block.
+3. Space pauses, ←/→ skip 5 s (Shift: 30 s), ↑/↓ volume, **F** fullscreen, **C** connection panel, **Esc** back.
+4. **Settings** (top right) changes the cache size and other options.
+
+Command line:
+
+```bash
+kino-stream play "Movie.torrent" --save-path ~/.cache/kino-stream/movie --cache-limit-gb 3
+kino-stream doctor --network
+```
+
+## Documentation
+
+* [How streaming works, and what the cache does and does not guarantee](docs/HOW_IT_WORKS.md)
+* [Troubleshooting connection problems](docs/TROUBLESHOOTING.md)
+* [Files and settings created, and how to remove them](docs/FILES_AND_DATA.md)
+* [Install / uninstall](docs/INSTALL.md) · [CLI reference](docs/CLI.md)
+* [Known limitations](docs/KNOWN_ISSUES.md) · [Changelog](CHANGELOG.md) · [Release readiness](docs/RELEASE_READINESS.md)
+* Design and validation notes: [bounded cache design](docs/STAGE2_DESIGN.md), [engine validation](docs/STAGE1_VALIDATION.md), [GUI stage reports](docs/gui/)
+* [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md) · [Code of conduct](CODE_OF_CONDUCT.md)
+
+## Known limitations
+
+* Smooth playback is **never guaranteed**: it depends on how many people share the video, their upload speed and your network.
+  Seeking into a part that is not downloaded yet waits for it (seconds on a healthy swarm, longer on a poor one).
+* The disk limit is hard for *allocated blocks of the cache folder*; it is not a promise about playback during pressure
+  (playback can pause while room is made) — see [How it works](docs/HOW_IT_WORKS.md#what-the-cache-limit-guarantees).
+* Tested on ext4 only, on one Ubuntu 24.04 machine, Wayland. Real-swarm validation consists of a handful of runs.
+* One intermittent failure of an automated magnet-link test (2 of ~14 early runs, not reproduced in 40+ later runs) has an
+  **unknown root cause**; details in [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md).
+* Every eviction re-adds the torrent in libtorrent, which drops peer connections briefly; the effect on slow real swarms is not
+  fully measured.
 
 ## Tests
-    python3 -m unittest tests.test_cache tests.test_cli tests.test_alert_safety       # Stage 2, ~7 min
-    python3 -m unittest discover -s tests -t .                                         # everything, ~30 min (needs ffmpeg + mpv)
 
-Opt-in heavy/diagnostic tools: `tests/large_scenarios.py` (25 GB files), `tests/realswarm.py` (internet), `diag/` (network diagnostics,
-`alert_stress.py`, `kill_storm.py`).
+```bash
+python3 -m unittest discover -s tests -t .      # everything except the OpenGL player tests (~12 min, needs mpv + ffmpeg)
+python3 -m unittest tests.test_ui_player        # real libmpv/OpenGL player on a graphical session (~45 s; a window appears)
+```
 
-## Layout
-`kino_stream/`: `piecemap.py` (offsets/pieces/files) - `store.py` (interface) - `lt_store.py` (Stage 1 store, alert pump, restarts) -
-`bounded_store.py` + `cacheindex.py` + `punch.py` (bounded cache) - `scheduler.py` - `httpd.py` - `mpvctl.py` - `session.py` - `doctor.py`/`netprobe.py`.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the test layout. Opt-in heavy tools: `tests/large_scenarios.py` (25 GB files),
+`tests/realswarm.py` (uses the internet), `diag/` (network diagnostics, stress tools).
+
+## License
+
+Not yet chosen — see [docs/LICENSE_DECISION.md](docs/LICENSE_DECISION.md). Until a `LICENSE` file is added, no one but the author has
+permission to copy or modify this code.

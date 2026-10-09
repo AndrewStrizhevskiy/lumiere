@@ -12,7 +12,7 @@ from kino_stream.settings import Settings
 
 from . import theme as T
 from .bridge import EngineBridge
-from .dialogs import DiagnosticsDialog, MessageDialog, NetworkResultDialog, OpeningOverlay
+from .dialogs import DiagnosticsDialog, MessageDialog, NetworkResultDialog, OpeningOverlay, redact
 from .home import HomeScreen, StatusStrip, looks_like_magnet
 from .messages import for_code, tr
 from .player import PlayerScreen
@@ -158,7 +158,7 @@ class MainWindow(QMainWindow):
     def on_open_failed(self, code: str, detail: str) -> None:
         self.overlay.hide()
         msg = for_code(code) or for_code(ev.OPEN_FAILED)
-        dlg = MessageDialog(msg, self, technical=detail if code in (ev.STORE_FAILED, ev.OPEN_FAILED) else "")
+        dlg = MessageDialog(msg, self, technical=redact(detail) if code in (ev.STORE_FAILED, ev.OPEN_FAILED) else "")
         dlg.exec()
         self._handle_action(dlg.choice)
 
@@ -264,8 +264,27 @@ class MainWindow(QMainWindow):
         if not self.bridge.settings.tour_done:
             QTimer.singleShot(250, self.show_tour)
 
+    def handle_external(self, source: str) -> None:
+        """A file or magnet handed over by the desktop (or by a second launch). Never interrupts the tutorial or hides an error."""
+        self.showNormal() if self.isMinimized() else None
+        self.raise_()
+        self.activateWindow()
+        if not source:
+            return
+        if self.tour.isVisible():
+            self._after_tour = source
+            return
+        if self.overlay.isVisible():
+            self.toast.say(tr("Already opening a video. Cancel it first to open another.", "Home"))
+            return
+        if self.stack.currentIndex() == self.PLAYER:
+            self.stop_and_home()
+        self.start_open(source)
+
     def show_tour(self) -> None:
         self.tour.open(self.bridge.settings.cache_gb)
+
+    _after_tour = ""
 
     def _tour_finished(self, completed: bool) -> None:
         """Finish and Skip both count as done, so the tutorial never nags; Help reopens it. Only the flag changes."""
@@ -273,6 +292,9 @@ class MainWindow(QMainWindow):
             from dataclasses import replace
             self.bridge.apply_settings(replace(self.bridge.settings, tour_done=True))
             self.settings_screen.load(self.bridge.settings)
+        if self._after_tour:
+            src, self._after_tour = self._after_tour, ""
+            QTimer.singleShot(0, lambda: self.start_open(src))
 
     def resizeEvent(self, e):
         super().resizeEvent(e)

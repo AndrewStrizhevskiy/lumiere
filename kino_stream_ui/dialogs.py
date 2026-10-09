@@ -136,6 +136,18 @@ class NetworkResultDialog(QDialog):
         lay.addWidget(close, 0, Qt.AlignmentFlag.AlignRight)
 
 
+def redact(text: str) -> str:
+    """Diagnostics are meant to be pasted into bug reports: hide the home directory and tracker URLs (they can carry private keys)."""
+    import re
+    from pathlib import Path
+    home = str(Path.home())
+    if home and home != "/":
+        text = text.replace(home, "~")
+    text = re.sub(r"(magnet:\?xt=urn:btih:[0-9A-Za-z]+)[^\"\s]*", r"\1&…", text)
+    text = re.sub(r"(https?|udp)://[^\s\"',]+", r"\1://<tracker>", text)
+    return text
+
+
 class DiagnosticsDialog(QDialog):
     runCheck = pyqtSignal()
 
@@ -147,11 +159,11 @@ class DiagnosticsDialog(QDialog):
         lay.setContentsMargins(T.S6, T.S6, T.S6, T.S4)
         lay.setSpacing(T.S3)
         lay.addWidget(label(tr("Diagnostics", "Diagnostics"), "title"))
-        lay.addWidget(label(tr("Technical details for troubleshooting. You can copy them when asking for help.", "Diagnostics"), "secondary", wrap=True))
+        lay.addWidget(label(tr("Technical details for troubleshooting. Your home folder and tracker addresses are hidden; video titles and file names are not, so look before you share.", "Diagnostics"), "secondary", wrap=True))
         self.text = QPlainTextEdit()
         self.text.setReadOnly(True)
         self.text.setStyleSheet(f"background:{T.SURFACE}; border:1px solid {T.HAIRLINE}; border-radius:{T.R_CTRL}px; padding:8px; font-family:monospace; font-size:12px;")
-        self.text.setPlainText(json.dumps({"engine": snapshot, "readiness": ready}, indent=2, default=str))
+        self.text.setPlainText(redact(json.dumps({"engine": snapshot, "readiness": ready}, indent=2, default=str)))
         lay.addWidget(self.text, 1)
         row = QHBoxLayout()
         chk = button(tr("Check my connection", "Diagnostics"), "", "activity", name=tr("Check my connection", "Diagnostics"))

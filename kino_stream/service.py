@@ -199,7 +199,19 @@ class EngineService:
             self._submit(self._close_media(None)).result(timeout)
         except Exception:
             log.exception("closing media at shutdown failed")
-        self.loop.call_soon_threadsafe(self.loop.stop)
+        loop = self.loop
+
+        async def _drain():                                  # let helper tasks (readiness checks...) end instead of being destroyed
+            me = asyncio.current_task()
+            rest = [t for t in asyncio.all_tasks() if t is not me and t is not getattr(self, "_status_task", None)]
+            for t in rest:
+                t.cancel()
+            await asyncio.gather(*rest, return_exceptions=True)
+        try:
+            asyncio.run_coroutine_threadsafe(_drain(), loop).result(5)
+        except Exception:
+            pass
+        loop.call_soon_threadsafe(loop.stop)
         if self.thread:
             self.thread.join(timeout)
         self.loop = None
