@@ -31,6 +31,18 @@ class StoreError(Exception):
     """Unrecoverable storage / torrent error."""
 
 
+class CacheUnsupportedError(StoreError):
+    """The filesystem cannot release disk blocks (no PUNCH_HOLE): a bounded cache is not possible there."""
+
+
+class CacheDirNotManagedError(StoreError):
+    """The cache directory holds data that no cache index describes: refused, never adopted or touched."""
+
+
+class CacheTooSmallError(ValueError):
+    """The configured limit cannot hold the retention window, pinned container data and a minimal read-ahead."""
+
+
 @dataclass
 class Demand:
     """What the scheduler wants right now. Applied wholesale: anything not listed is no longer wanted."""

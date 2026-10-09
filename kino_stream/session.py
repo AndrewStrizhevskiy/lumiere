@@ -38,8 +38,12 @@ class StreamSession:
             cls_ = BoundedSparseStore if cfg.cache_limit_bytes else PersistentFileStore
             store = await cls_.open(cfg, source, save_path, select=pick_video_file if file_index is None else file_index)
         fi = pick_video_file(store.piece_map) if file_index is None else file_index
-        self = cls(cfg, store, fi)
-        await self.server.start()
+        try:
+            self = cls(cfg, store, fi)                    # may raise (e.g. cache limit too small for the window)
+            await self.server.start()
+        except BaseException:
+            await asyncio.shield(store.close())           # never leak an open torrent session when construction fails
+            raise
         self._sched_task = asyncio.create_task(self.sched.run())
         return self
 

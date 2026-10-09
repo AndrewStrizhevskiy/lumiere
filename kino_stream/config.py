@@ -34,6 +34,7 @@ class Config:
     # --- bounded cache (Stage 2); cache_limit_bytes = 0 keeps Stage 1 behaviour (nothing is ever evicted) ---------
     cache_limit_bytes: int = 0                        # HARD limit on allocated disk blocks (st_blocks) of the cache directory
     cache_back_bytes: int = 0                         # retained behind the playback head for backward seeks (0 = 5% of limit)
+    cache_back_seconds: float = 0.0                   # same, in seconds of video (converted with the measured bitrate; wins over 5%)
     cache_high: float = 0.90                          # start evicting above this fraction of the limit
     cache_low: float = 0.70                           # ... down to this fraction
     cache_emergency: float = 0.97                     # above this: no new read-ahead is requested, eviction ignores the interval
@@ -72,8 +73,12 @@ class Config:
     mpv_network_timeout: int = 150                    # must exceed hard_timeout, else mpv gives up while we wait
     poll_interval: float = 0.25
 
-    def back_bytes(self) -> int:
-        return self.cache_back_bytes or int(self.cache_limit_bytes * 0.05)
+    def back_bytes(self, bytes_per_s: float = 0.0) -> int:
+        if self.cache_back_bytes:
+            return self.cache_back_bytes
+        if self.cache_back_seconds and bytes_per_s:
+            return int(min(self.cache_back_seconds * bytes_per_s, self.cache_limit_bytes * 0.40))   # never more than 40% of the cache
+        return int(self.cache_limit_bytes * 0.05)
 
     def cache_reserve(self, block: int = 4096, piece_len: int = 0) -> int:
         """Slack for block rounding, extents, part-files and pieces that are partly downloaded when their priority drops

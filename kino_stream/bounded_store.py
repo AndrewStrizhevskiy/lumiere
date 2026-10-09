@@ -33,7 +33,7 @@ from .cacheindex import CacheIndex
 from .lt_store import PRIO_OFF, PersistentFileStore
 from .piecemap import PieceMap
 from .punch import allocated_bytes, block_size, punch_inward, supports_punch
-from .store import Demand, PieceUnavailable, RetentionHint, StoreError
+from .store import CacheDirNotManagedError, CacheUnsupportedError, Demand, PieceUnavailable, RetentionHint, StoreError
 
 log = logging.getLogger("kino_stream.cache")
 
@@ -78,7 +78,7 @@ class BoundedSparseStore(PersistentFileStore):
             raise ValueError("BoundedSparseStore needs cache_limit_bytes > 0")
         ok, why = supports_punch(Path(save_path))
         if not ok:
-            raise StoreError(f"bounded cache is not possible here: {why}. Existing data in {save_path} was not touched. "
+            raise CacheUnsupportedError(f"bounded cache is not possible here: {why}. Existing data in {save_path} was not touched. "
                              f"Use a filesystem with hole punching (ext4, xfs, btrfs, tmpfs) or run without --cache-limit.")
         store = await super().open(cfg, source, save_path, select)
         store._cache_task = asyncio.create_task(store._cache_loop())
@@ -100,7 +100,7 @@ class BoundedSparseStore(PersistentFileStore):
         idx = CacheIndex.load(path, ih, pm.num_pieces, pm.piece_length)
         if not idx.loaded_from_disk and not idx.corrupt:
             if data.exists() and data.stat().st_blocks > 0:
-                raise StoreError(f"{data} contains data but there is no cache index for it: this directory is not managed by a "
+                raise CacheDirNotManagedError(f"{data} contains data but there is no cache index for it: this directory is not managed by a "
                                  f"bounded cache (or its index was deleted). Refusing to touch it; use an empty --save-path.")
             idx.save()                                  # from now on 'data without index' means 'foreign data'
         self.index = idx

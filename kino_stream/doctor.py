@@ -86,3 +86,35 @@ def run_doctor(save_path: Path, network: bool) -> int:
         print("CONFIRMED: no port-based TCP blocking for the ports tried.")
     print("NOT MEASURED: bandwidth throttling by the ISP; whether peers can connect to you (no inbound test is performed).")
     return 1 if bad else 0
+
+
+def network_report(include_speed: bool = False) -> dict:
+    """Structured network probes. Every verdict is tagged: confirmed (measured now on this path), observed (partial/ambiguous),
+    hypothesis (cannot be proven from here), not_measured. Never claims throttling by an ISP."""
+    info = netprobe.exit_info()
+    dns = netprobe.dns_udp()
+    dht, dht_n = netprobe.dht_replies()
+    trk, trk_n = netprobe.udp_tracker_replies()
+    tcp = netprobe.tcp_http_ports()
+    speed = netprobe.https_speed_mbps() if include_speed else None
+    iface = netprobe.default_route_iface()
+    verdicts: list[tuple[str, str]] = []
+    if not dns:
+        verdicts.append(("confirmed", "udp_dropped"))
+    elif dht == 0 and trk == 0:
+        verdicts.append(("confirmed", "udp_bittorrent_no_answer"))
+        verdicts.append(("hypothesis", "protocol_filtering_possible"))
+    elif dht == 0 or trk == 0:
+        verdicts.append(("observed", "udp_partial"))
+    else:
+        verdicts.append(("observed", "udp_ok"))
+    if not all(tcp.values()):
+        verdicts.append(("observed", "tcp_ports_unreachable"))
+    else:
+        verdicts.append(("confirmed", "no_tcp_port_blocking"))
+    if iface and iface.startswith(("tun", "wg", "vpn", "tap", "ppp", "utun")):
+        verdicts.append(("observed", "vpn_in_path"))
+    verdicts.append(("not_measured", "isp_throttling"))
+    verdicts.append(("not_measured", "inbound_reachability"))
+    return {"exit": info, "dns_udp": dns, "dht": [dht, dht_n], "udp_trackers": [trk, trk_n], "tcp_ports": tcp,
+            "https_MBps": speed, "default_iface": iface, "verdicts": verdicts}

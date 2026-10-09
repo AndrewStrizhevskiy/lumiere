@@ -142,6 +142,9 @@ class PersistentFileStore(PieceStore):
         except asyncio.TimeoutError:
             await self.close()
             raise StoreError("no torrent metadata (no peers/trackers?)")
+        except BaseException:                            # cancelled (user pressed Cancel) or anything else: never leak a session
+            await asyncio.shield(self.close())
+            raise
         return self
 
     def _params(self, source, use_resume: bool = True) -> lt.add_torrent_params:

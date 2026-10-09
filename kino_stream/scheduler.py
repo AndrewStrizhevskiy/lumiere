@@ -24,7 +24,7 @@ from typing import Callable
 
 from .config import Config
 from .piecemap import PieceMap
-from .store import Demand, PieceStore, RetentionHint
+from .store import CacheTooSmallError, Demand, PieceStore, RetentionHint
 
 
 @dataclass
@@ -78,17 +78,14 @@ class Scheduler:
         self._last_head_piece_abs = -1
         self.events: collections.deque = collections.deque(maxlen=2000)   # (t, name, detail)
         self.counters = collections.Counter()
-        self.max_window = None
+        self._pinned_bytes_cache = None
         if cfg.cache_limit_bytes:
-            pm = self.pm
-            pinned_bytes = sum(len(pm.range_pieces(file_index, lo, hi)) for lo, hi in self.pinned) * pm.piece_length
-            self.max_window = (cfg.cache_limit_bytes - cfg.cache_reserve(piece_len=pm.piece_length) - cfg.back_bytes() - pinned_bytes
-                               - 3 * pm.piece_length)
-            if self.max_window < 4 * pm.piece_length:
-                raise ValueError(
-                    f"cache limit {cfg.cache_limit_bytes} B is too small: after the reserve ({cfg.cache_reserve(piece_len=pm.piece_length)} B), the "
-                    f"backward-seek window ({cfg.back_bytes()} B) and pinned container data ({pinned_bytes} B) only "
-                    f"{max(self.max_window, 0)} B are left for read-ahead (piece size {pm.piece_length} B)")
+            mw = self.max_window
+            if mw < 4 * self.pm.piece_length:
+                raise CacheTooSmallError(
+                    f"cache limit {cfg.cache_limit_bytes} B is too small: after the reserve ({cfg.cache_reserve(piece_len=self.pm.piece_length)} B), the "
+                    f"backward-seek window ({self.back_bytes()} B) and pinned container data ({self._pinned_bytes()} B) only "
+                    f"{max(mw, 0)} B are left for read-ahead (piece size {self.pm.piece_length} B)")
         store.add_listener(self._on_store_event)
         self.recompute()
 
@@ -110,6 +107,22 @@ class Scheduler:
         if ps and ps.duration and ps.duration > 1:
             return max(self.size / ps.duration, 1.0)
         return float(self.cfg.assumed_bytes_per_s)
+
+    def back_bytes(self) -> int:
+        """Retention behind the playhead; follows the measured bitrate when it is configured in seconds."""
+        return self.cfg.back_bytes(self.bytes_per_s())
+
+    def _pinned_bytes(self) -> int:
+        pm = self.pm
+        return sum(len(pm.range_pieces(self.file_index, lo, hi)) for lo, hi in self.pinned) * pm.piece_length
+
+    @property
+    def max_window(self):
+        """Largest read-ahead window that keeps pins + back window + window + reserve inside the cache limit (None = unbounded)."""
+        if not self.cfg.cache_limit_bytes:
+            return None
+        return (self.cfg.cache_limit_bytes - self.cfg.cache_reserve(piece_len=self.pm.piece_length) - self.back_bytes()
+                - self._pinned_bytes() - 3 * self.pm.piece_length)
 
     def bitrate_known(self) -> bool:
         ps = self.player
@@ -270,7 +283,7 @@ class Scheduler:
         self._last_head_piece_abs = h // self.pm.piece_length
         if self.cfg.cache_limit_bytes:
             head = min(self.head_byte(), self.size - 1)
-            lo_b = max(0, head - self.cfg.back_bytes())
+            lo_b = max(0, head - self.back_bytes())
             hi_b = min(self.size - 1, head + self.window_bytes())
             f = self.file_index
             pinned = set()

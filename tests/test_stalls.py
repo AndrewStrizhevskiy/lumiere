@@ -92,7 +92,8 @@ class LostRequests(StallCase):
         stalled pieces must arrive promptly - via the forced cancel + re-request path - not after a 50-60 s timeout."""
         s, sd = await self.stream(800_000, piece_timeout=2.0, stuck_after=4.0)
         a, n = 6_000_000, 400_000
-        self.assertTrue(await eventually(lambda: s.store.stats().get("total_download", 0) > 0, 15))   # connection is up and carrying data
+        # the connection must be established and carrying data (the pinned container head/tail has arrived) before the black hole
+        self.assertTrue(await eventually(lambda: s.store.stats().get("pieces_have", 0) >= 20, 20))
         sd.set_upload_limit(1)                                                 # black hole
         req = asyncio.create_task(http_range(s.server.port, s.server.path, f"bytes={a}-{a + n - 1}", deadline_s=90))
         self.assertTrue(await eventually(lambda: s.server.stats["stalls"] >= 1, 15), "stall must be noticed")
