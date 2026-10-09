@@ -12,7 +12,9 @@ from .icons import icon
 
 
 def label(text: str = "", role: str = "", wrap: bool = False, align=None) -> QLabel:
-    l = QLabel(text)
+    l = QLabel()
+    l.setTextFormat(Qt.TextFormat.PlainText)       # torrent names and engine details are untrusted: never rich text
+    l.setText(text)
     if role:
         l.setProperty("role", role)
     l.setWordWrap(wrap)
@@ -318,6 +320,7 @@ class Toast(QLabel):
 
     def __init__(self, parent: QWidget):
         super().__init__(parent)
+        self.setTextFormat(Qt.TextFormat.PlainText)
         self.setStyleSheet(f"background:{T.ELEVATED}; border:1px solid {T.OUTLINE}; border-radius:{T.R_CTRL}px; padding:10px 16px;")
         self._fx = QGraphicsOpacityEffect(self)
         self.setGraphicsEffect(self._fx)

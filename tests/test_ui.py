@@ -53,6 +53,17 @@ class Pure(unittest.TestCase):
         self.assertEqual(fmt_bytes(4 << 30), "4.0 GB")
 
 
+class Untrusted(unittest.TestCase):
+    def test_labels_never_render_rich_text(self):
+        from PyQt6.QtCore import Qt
+        from kino_stream_ui.widgets import Toast, label
+        from PyQt6.QtWidgets import QWidget
+        l = label('<a href="http://evil">x</a><img src="http://evil/p.png">')
+        self.assertEqual(l.textFormat(), Qt.TextFormat.PlainText)
+        parent = QWidget()
+        self.assertEqual(Toast(parent).textFormat(), Qt.TextFormat.PlainText)
+
+
 class Window(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())

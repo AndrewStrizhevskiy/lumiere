@@ -229,9 +229,11 @@ class SettingsScreen(QWidget):
             self.saved_list.addWidget(row)
 
     def _confirm_delete(self, infohash: str, name: str, size: int) -> None:
-        r = QMessageBox.question(self, tr("Delete saved data", "Settings"),
-                                 tr("Delete the saved streaming data for “%1”? This frees %2. The video stays in your list and will download again when you play it.", "Settings")
-                                 .replace("%1", name).replace("%2", fmt_bytes(size)),
-                                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel, QMessageBox.StandardButton.Cancel)
+        box = QMessageBox(QMessageBox.Icon.Question, tr("Delete saved data", "Settings"), "", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel, self)
+        box.setDefaultButton(QMessageBox.StandardButton.Cancel)
+        box.setTextFormat(Qt.TextFormat.PlainText)
+        box.setText(tr("Delete the saved streaming data for “%1”? This frees %2. The video stays in your list and will download again when you play it.", "Settings")
+                     .replace("%1", name).replace("%2", fmt_bytes(size)))
+        r = box.exec()
         if r == QMessageBox.StandardButton.Yes:
             self.deleteCacheRequested.emit(infohash)
