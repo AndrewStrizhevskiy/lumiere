@@ -180,6 +180,11 @@ class EngineService:
         from .doctor import network_report
         return asyncio.run_coroutine_threadsafe(self._in_thread(network_report), self.loop)
 
+    def check_ready(self) -> concurrent.futures.Future:
+        """Quick offline self-check for the UI's "ready to stream" light: libtorrent, a writable cache root, hole punching, free space."""
+        root = self.settings.cache_root_path
+        return asyncio.run_coroutine_threadsafe(self._in_thread(lambda: readiness(root)), self.loop)
+
     async def _in_thread(self, fn):
         return await asyncio.get_running_loop().run_in_executor(None, fn)
 
@@ -423,3 +428,37 @@ class EngineService:
         if st.get("error") and not getattr(self, "_reported_store_error", False):
             self._reported_store_error = True
             self._event(ev.STORE_FAILED, ev.ERROR, message=str(st.get("error")))
+
+
+def readiness(root: Path) -> dict:
+    """-> {"ok": bool, "problems": [codes], "punch": bool, "free_bytes": int, "detail": {...}}. Offline, touches only a scratch file."""
+    import shutil
+    from .punch import supports_punch
+    problems, detail = [], {}
+    try:
+        import libtorrent as lt
+        detail["libtorrent"] = lt.__version__
+    except Exception as e:
+        problems.append("NO_LIBTORRENT")
+        detail["libtorrent_error"] = str(e)
+    try:
+        import mpv  # noqa: F401
+    except Exception as e:
+        problems.append("NO_MPV")
+        detail["mpv_error"] = str(e)
+    root = Path(root)
+    try:
+        root.mkdir(parents=True, exist_ok=True)
+        punch, why = supports_punch(root)
+        detail["punch"] = why
+        free = shutil.disk_usage(root).free
+    except OSError as e:
+        return {"ok": False, "problems": problems + ["CACHE_DIR_UNUSABLE"], "punch": False, "free_bytes": 0, "detail": {**detail, "error": str(e)}}
+    if not punch:
+        problems.append("CACHE_UNSUPPORTED_FS")
+    if free < (1 << 30):
+        problems.append("LOW_DISK_SPACE")
+    from .caches import list_caches
+    caches = list_caches(root)
+    return {"ok": not problems, "problems": problems, "punch": punch, "free_bytes": free, "detail": detail,
+            "cache_bytes": sum(c["bytes"] for c in caches), "caches": caches}
