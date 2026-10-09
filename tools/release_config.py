@@ -22,7 +22,7 @@ def tracked_text_files():
     out = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True, check=True).stdout.split()
     for f in out:
         p = ROOT / f
-        if p.suffix in (".png", ".svg") or f == "tools/release_config.py":
+        if p.suffix in (".png", ".svg") or f in ("tools/release_config.py", "tests/test_release_config.py"):
             continue
         try:
             yield f, p.read_text(encoding="utf-8")
