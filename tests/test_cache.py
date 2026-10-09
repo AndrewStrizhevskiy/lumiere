@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Stage 2: bounded cache, safe eviction, crash recovery. Local swarm only (no internet)."""
 import asyncio
 import hashlib

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Spike 1: can a piece with priority 0 be downloaded because it has a deadline? Real libtorrent, local throttled swarm.
 
 Variants (each repeated in fresh sessions to expose flakiness):

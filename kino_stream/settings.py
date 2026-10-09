@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """User settings (toolkit-agnostic): plain words in the file, validated on load, mapped to the engine's Config.
 
 Stored in $XDG_CONFIG_HOME/kino-stream/settings.json (default ~/.config/kino-stream). A damaged file is moved aside

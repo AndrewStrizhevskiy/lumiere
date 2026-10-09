@@ -1,4 +1,5 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-3.0-or-later
 # Install Kino Stream for the current user. Needs no root, no network and no pip; touches only the paths listed below.
 #   packaging/install.sh [--check] [--no-desktop-db]
 #   --check           only verify the system dependencies and print what would be installed
@@ -18,7 +19,7 @@ for a in "$@"; do
   case "$a" in
     --check) CHECK=1 ;;
     --no-desktop-db) DESKTOP_DB=0 ;;
-    -h|--help) sed -n '2,12p' "$0"; exit 0 ;;
+    -h|--help) sed -n '3,13p' "$0"; exit 0 ;;
     *) echo "unknown option: $a" >&2; exit 2 ;;
   esac
 done

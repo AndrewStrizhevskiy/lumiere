@@ -1,0 +1,3 @@
+#!/bin/sh
+# Refuses to push while release placeholders are unfilled or LICENSE is missing. Enable with: git config core.hooksPath .githooks
+exec python3 "$(git rev-parse --show-toplevel)/tools/release_config.py" check

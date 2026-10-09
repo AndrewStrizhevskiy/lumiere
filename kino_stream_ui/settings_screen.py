@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Settings: few controls, each explained in one plain sentence. Every change is saved automatically."""
 from __future__ import annotations
 

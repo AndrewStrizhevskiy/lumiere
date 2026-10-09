@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Plain-language wording for every engine code. All strings go through Qt's translation system (English is the source language)."""
 from __future__ import annotations
 

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """First-run tutorial: navigation, skip/finish, persistence across restarts, Help reopen, sizes, reduced motion, isolation from the engine."""
 import os
 import tempfile

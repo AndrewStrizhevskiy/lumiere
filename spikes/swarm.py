@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Local test swarm helpers (no DHT/trackers/internet): a seeder session and leecher sessions on 127.0.0.1."""
 import os, time, hashlib
 import libtorrent as lt

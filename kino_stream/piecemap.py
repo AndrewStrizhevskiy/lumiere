@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Torrent geometry: absolute torrent offsets <-> pieces <-> files.
 
 A torrent is one byte string made of the files laid out back to back; pieces cut that string into equal chunks

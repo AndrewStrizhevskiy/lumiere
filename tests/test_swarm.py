@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Real libtorrent against a local, throttled seeder: tracker-less, DHT-less, no internet."""
 import asyncio
 import random

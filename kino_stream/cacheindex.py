@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """CacheIndex: the durable, authoritative record of which pieces are physically present, plus the eviction journal.
 
 Rules (see docs/STAGE2_DESIGN.md):

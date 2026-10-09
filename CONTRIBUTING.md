@@ -12,7 +12,7 @@ Thanks for helping. Bug reports with the **Diagnostics** text (Help → Diagnost
 ## Setup
 ```bash
 sudo apt install python3-libtorrent python3-pyqt6 python3-pyqt6.qtsvg python3-mpv libmpv2 mpv ffmpeg
-git clone <repo> && cd kino-stream
+git clone https://github.com/@@GITHUB_REPO@@.git && cd kino-stream
 python3 -m kino_stream_ui        # run the app from the checkout
 ./bin/kino-stream --help         # CLI from the checkout
 ```
@@ -29,4 +29,4 @@ GUI tests set `XDG_*` to temp dirs; keep it that way so tests never touch a real
 
 ## Pull requests
 Small, focused changes with tests; explain user-visible behaviour changes in the description and `CHANGELOG.md`. By contributing you agree your work is
-released under the project's license (see README → License).
+released under GPL-3.0-or-later (see LICENSE and docs/LICENSING.md); there is no contributor license agreement. New source files should start with `# SPDX-License-Identifier: GPL-3.0-or-later`.

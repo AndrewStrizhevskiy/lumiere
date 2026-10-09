@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Real public swarm validation (opt-in; needs internet). Blender open-movie torrents distributed by webtorrent.io:
 legal, CC-licensed, public trackers + DHT, no private trackers.
 

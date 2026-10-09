@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Kill the whole kino-stream process group (SIGKILL) at random moments while a 6 MiB cache is evicting, N times, then
 recover once and verify integrity. Reports how many kills landed inside an open eviction transaction."""
 import hashlib, json, os, random, shutil, signal, socket, subprocess, sys, tempfile, time

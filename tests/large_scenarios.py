@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Large-file validation (opt-in, slow). ~25 GB files, local throttled seeder, real mpv.
 
     python -m tests.largemedia                       # once: generate the files (~20 min, ~75 GB in ~/.cache)

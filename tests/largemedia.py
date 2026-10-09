@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Generate ~25 GB synthetic-but-playable test videos (our own testsrc2/sine, no third-party content).
 
 A 60 s CBR segment (~28 Mbit/s = 3.5 MB/s) is encoded once and stream-copied N times, so a file of ~2 h / ~25 GB exists

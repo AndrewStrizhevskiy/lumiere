@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Playback screen: embedded libmpv video, controls, availability seek bar, track menus, buffering feedback, connection panel."""
 from __future__ import annotations
 

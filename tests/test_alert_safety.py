@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Regression tests for the libtorrent crash (root cause: wait_for_alert() hands out a pointer into the live alert queue)."""
 import re
 import subprocess

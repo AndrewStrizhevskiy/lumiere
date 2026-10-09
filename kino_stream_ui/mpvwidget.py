@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """libmpv rendered into a QOpenGLWidget (validated in P0 on Ubuntu 24.04 / GNOME / Wayland).
 
 Rules that keep it stable: LC_NUMERIC=C before mpv is created; flip_y=True; mpv's update callback runs on mpv's own thread and

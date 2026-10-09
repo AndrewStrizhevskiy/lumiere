@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Small, read-only network probes (used by `kino-stream doctor --network`). They send a handful of tiny packets to
 public DHT nodes / UDP trackers / DNS resolvers (the same hosts BitTorrent itself talks to) and report what came back.
 Every result is a single 4-second sample: an observation, not proof of who is responsible."""

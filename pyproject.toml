@@ -3,6 +3,8 @@ name = "kino-stream"
 version = "0.3.0"
 description = "Watch a torrent while it downloads, with a hard-bounded disk cache (desktop app and CLI)"
 requires-python = ">=3.12"
+license = {text = "GPL-3.0-or-later"}
+classifiers = ["License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)", "Operating System :: POSIX :: Linux", "Development Status :: 4 - Beta"]
 # python-libtorrent is NOT pip-installed: use the distribution package (sudo apt install python3-libtorrent mpv)
 dependencies = []
 

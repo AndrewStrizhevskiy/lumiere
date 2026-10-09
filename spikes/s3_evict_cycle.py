@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Spike S3 (Stage 2): evict by  REMOVE torrent -> punch holes -> RE-ADD with exact have_pieces.
 
 Order matters: the torrent is removed *before* the holes are punched, so libtorrent cannot serve a half-evicted piece

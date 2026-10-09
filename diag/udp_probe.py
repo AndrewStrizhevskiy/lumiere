@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Raw protocol probes, direct interface vs default route. Read-only; sockets live for a few seconds.
 Answers: does UDP work? do DHT bootstrap nodes answer a BEP 5 ping? does a UDP tracker answer a BEP 15 connect request?
 Do BitTorrent TCP handshakes to real peers complete / get reset?"""

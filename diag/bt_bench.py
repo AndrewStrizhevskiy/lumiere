@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Plain libtorrent benchmark (NOT the kino-stream application): isolates the network from our code.
 
     python3 diag/bt_bench.py sintel --seconds 60 [--iface wlan0] [--enc default|forced|disabled] [--label x]

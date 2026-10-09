@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Spike 0: print the real libtorrent Python API (docstring signatures) on this machine."""
 import libtorrent as lt
 print("libtorrent", lt.__version__)

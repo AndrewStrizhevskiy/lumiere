@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """`kino-stream doctor`: read-only checks with an explicit separation of CONFIRMED observations and HYPOTHESES."""
 from __future__ import annotations
 

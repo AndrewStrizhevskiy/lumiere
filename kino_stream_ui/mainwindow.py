@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Main window: screens, navigation, menus, and the glue between user actions and the engine bridge."""
 from __future__ import annotations
 

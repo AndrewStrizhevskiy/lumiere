@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Does libtorrent's Python binding crash when alerts are read with wait_for_alert() from a second thread?
 
     python3 diag/alert_stress.py wait|tpoll|poll SECONDS

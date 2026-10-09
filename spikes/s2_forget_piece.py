@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Spike 2: how can libtorrent 'forget' a completed piece?  clear_piece() is absent from this binding (see s0_api.py),
 so we measure what a hole-punched (evicted) piece looks like to libtorrent, to peers, after recheck, after resume, after re-add.
 """

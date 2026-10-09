@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Install / uninstall in a throw-away HOME: the packaging promises (only our files, nothing else touched, clean removal) are tested, not assumed."""
 import json
 import os
@@ -19,8 +20,8 @@ class Packaging(unittest.TestCase):
         self.env.update(HOME=str(self.home), QT_QPA_PLATFORM="offscreen", KINO_REDUCE_MOTION="1")
         # things that belong to other applications and must survive untouched
         self.sentinels = {
-            self.home / ".local/bin/otherapp": "#!/bin/sh\necho kino\n",
-            self.home / ".local/share/applications/otherapp.desktop": "[Desktop Entry]\nName=Kino\n",
+            self.home / ".local/bin/otherapp": "#!/bin/sh\necho other\n",
+            self.home / ".local/share/applications/otherapp.desktop": "[Desktop Entry]\nName=Other\n",
             self.home / ".local/share/applications/org.qbittorrent.qBittorrent.desktop": "[Desktop Entry]\nName=qBittorrent\n",
             self.home / ".config/qBittorrent/qBittorrent.conf": "[BitTorrent]\n",
             self.home / ".config/mimeapps.list": "[Default Applications]\nx-scheme-handler/magnet=org.qbittorrent.qBittorrent.desktop\n",

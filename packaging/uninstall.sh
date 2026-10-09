@@ -1,4 +1,5 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-3.0-or-later
 # Remove what packaging/install.sh created. Your settings, history and downloaded cache data are KEPT unless you pass --purge-data.
 #   packaging/uninstall.sh [--purge-data] [--dry-run] [--no-desktop-db]
 # --purge-data removes ONLY: $XDG_CONFIG_HOME/kino-stream, $XDG_STATE_HOME/kino-stream and the cache folder from settings.json when it is
@@ -15,7 +16,7 @@ for a in "$@"; do
     --purge-data) PURGE=1 ;;
     --dry-run) DRY=1 ;;
     --no-desktop-db) DESKTOP_DB=0 ;;
-    -h|--help) sed -n '2,8p' "$0"; exit 0 ;;
+    -h|--help) sed -n '3,9p' "$0"; exit 0 ;;
     *) echo "unknown option: $a" >&2; exit 2 ;;
   esac
 done

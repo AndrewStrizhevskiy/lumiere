@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """StreamSession: wires store -> scheduler -> HTTP server (-> mpv). One torrent, one selected video file."""
 from __future__ import annotations
 

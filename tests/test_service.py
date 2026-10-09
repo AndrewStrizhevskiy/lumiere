@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Engine facade (no GUI): settings, recent items, managed caches, EngineService on a local swarm."""
 import asyncio
 import json

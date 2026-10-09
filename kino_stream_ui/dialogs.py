@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Modal dialogs: opening overlay, error explanation, diagnostics, network check result."""
 from __future__ import annotations
 

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Launcher behaviour: argument parsing, single instance hand-over, external open requests, diagnostics redaction."""
 import os
 import tempfile

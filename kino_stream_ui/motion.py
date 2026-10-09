@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Reduced-motion preference. Qt 6.4 has no API for it, so: KINO_REDUCE_MOTION=1/0 overrides; otherwise GNOME's
 org.gnome.desktop.interface enable-animations is read (read-only, once). Anything unknown means animations stay on."""
 from __future__ import annotations

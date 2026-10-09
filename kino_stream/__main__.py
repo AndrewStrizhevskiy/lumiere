@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """kino-stream: watch a torrent while it downloads, optionally with a hard-bounded disk cache.
 
     python3 -m kino_stream play file.torrent --save-path DIR --cache-limit-gb 3

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """HTTP Range server behaviour on a fake store (deterministic, no libtorrent)."""
 import asyncio
 import random

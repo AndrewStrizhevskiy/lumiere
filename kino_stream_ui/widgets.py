@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Reusable building blocks. Everything visual that appears on more than one screen lives here."""
 from __future__ import annotations
 

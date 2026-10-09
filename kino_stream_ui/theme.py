@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Design tokens + Qt stylesheet. One place for colours, type scale, spacing and motion so every screen stays consistent."""
 from __future__ import annotations
 

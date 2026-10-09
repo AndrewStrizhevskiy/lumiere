@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """End-to-end: real libtorrent swarm -> kino-stream -> real mpv (headless), three container layouts.
 
 Each run: start, play, seek forward, seek backward, check bytes/bounds, record startup and seek latency.

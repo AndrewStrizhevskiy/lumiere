@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """PersistentFileStore: a PieceStore on top of one libtorrent session with ordinary persistent files.
 
 libtorrent APIs used (all verified against 2.0.10 in spikes/s0_api.py):

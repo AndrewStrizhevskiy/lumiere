@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """First-run tutorial: five short steps with painted, gently animated illustrations.
 Pure UI: it knows nothing about torrents, the engine or the player, and it only draws over the window and takes keyboard focus while open."""
 from __future__ import annotations

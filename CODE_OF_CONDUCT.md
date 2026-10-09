@@ -11,7 +11,7 @@ diagnostics output or addresses) without permission; sustained disruption of dis
 **Scope:** issues, pull requests, discussions and any space where someone represents the project.
 
 **Enforcement:** maintainers may edit or remove contributions that violate this code and may restrict participation. Report concerns privately to
-`<CONDUCT-CONTACT-EMAIL — to be filled in by the maintainer before publishing>`; reports are handled confidentially.
+`@@CONDUCT_EMAIL@@`; reports are handled confidentially.
 
 This text is a short, original statement in the spirit of the Contributor Covenant (https://www.contributor-covenant.org); the maintainer may
 replace it with the full Covenant text.

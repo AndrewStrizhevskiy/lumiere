@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
 """P0 spike: does libmpv rendering into a QOpenGLWidget work reliably on this machine (Ubuntu 24.04, GNOME, Wayland)?
 
     python3 spikes/p0_qt_mpv.py FILE_OR_URL [--hwdec no|auto-safe] [--platform wayland|xcb|offscreen] [--seconds 20] [--out DIR]

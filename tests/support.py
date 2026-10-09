@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Test environment: generated legal media, a local throttled seeder, tracker-less leecher config, raw HTTP client."""
 from __future__ import annotations
 

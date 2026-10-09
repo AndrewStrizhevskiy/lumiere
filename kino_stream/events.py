@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Structured engine events: codes + details, no user-facing text (the UI owns wording and translation)."""
 from __future__ import annotations
 

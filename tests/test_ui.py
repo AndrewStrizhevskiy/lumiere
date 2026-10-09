@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """GUI tests (offscreen): message mapping, drop zone validation, settings persistence, window flow."""
 import os
 import tempfile

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """End-to-end through the real command line: kino-stream play ... --cache-limit-mb ... with headless mpv, seeks through
 mpv's IPC socket, and a real SIGKILL of the whole process group at different moments, followed by recovery."""
 import json

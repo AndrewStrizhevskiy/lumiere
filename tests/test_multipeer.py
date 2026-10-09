@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Several seeders with different speeds: libtorrent must keep the stream going when peers come and go, and the
 scheduler must not depend on one particular peer. Also: lost alerts must never leave an HTTP request waiting forever."""
 import asyncio

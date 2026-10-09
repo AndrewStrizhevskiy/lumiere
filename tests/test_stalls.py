@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Regression tests for the 'long seek' class of problems (a 54 s seek was seen once): stalled/lost block requests,
 unreachable peers, reconnects, obsolete requests. Rule: no request waits indefinitely, obsolete requests go away."""
 import asyncio
@@ -96,7 +97,10 @@ class LostRequests(StallCase):
         self.assertTrue(await eventually(lambda: s.store.stats().get("pieces_have", 0) >= 20, 20))
         sd.set_upload_limit(1)                                                 # black hole
         req = asyncio.create_task(http_range(s.server.port, s.server.path, f"bytes={a}-{a + n - 1}", deadline_s=90))
-        self.assertTrue(await eventually(lambda: s.server.stats["stalls"] >= 1, 15), "stall must be noticed")
+        noticed = await eventually(lambda: s.server.stats["stalls"] >= 1, 15)
+        self.assertTrue(noticed, f"stall must be noticed; server={s.server.stats} store={ {k: v for k, v in s.store.stats().items() if k in ('peers', 'pieces_have', 'restarts', 'total_download')} } "
+                                 f"range=({a},{a + n - 1}) req_done={req.done()} piece_len={s.store.piece_map.piece_length} "
+                                 f"have_in_range={[s.store.have(p_) for p_ in s.store.piece_map.range_pieces(s.file_index, a, a + n - 1)]}")
         self.assertFalse(req.done())
         self.assertTrue(await eventually(lambda: s.store.stats()["restarts"] >= 1, 20),
                         "a connected-but-silent peer must trigger the stuck-connection restart")

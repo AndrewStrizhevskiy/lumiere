@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """PieceStore: the only thing the scheduler and the HTTP server know about storage.
 
 Deliberately does NOT promise that a piece, once present, stays present: `read()` may raise PieceUnavailable even

@@ -21,7 +21,7 @@ Optional: the *Inter* font (`fonts-inter`) for the intended look; Kino Stream fa
 ## Install
 
 ```bash
-git clone <this repository> kino-stream
+git clone https://github.com/@@GITHUB_REPO@@.git kino-stream
 cd kino-stream
 ./packaging/install.sh --check     # lists missing packages and the exact paths it would write
 ./packaging/install.sh
@@ -61,7 +61,7 @@ started, because they must not share a cache).
 
 `--purge-data` never deletes a custom cache folder you chose in Settings; it prints its location so you can remove it yourself.
 If you made Kino Stream your default for `.torrent`/magnet with `xdg-mime`, set another default again afterwards
-(`xdg-mime default org.qbittorrent.qBittorrent.desktop x-scheme-handler/magnet` for example).
+(for example `xdg-mime default <other-app>.desktop x-scheme-handler/magnet`).
 The APT packages are not removed (other programs may use them): `sudo apt remove python3-mpv python3-pyqt6.qtsvg` if you want them gone.
 See [FILES_AND_DATA.md](FILES_AND_DATA.md) for everything the program can create.
 

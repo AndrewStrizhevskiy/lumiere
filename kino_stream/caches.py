@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Managed cache directories: one per torrent under a cache root, each marked so that only directories this program
 created can ever be removed. Nothing is deleted unless the user's settings or an explicit action ask for it."""
 from __future__ import annotations

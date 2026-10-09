@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Qt side of the engine connection: owns the EngineService, turns its thread callbacks into Qt signals, keeps settings and history.
 This is the ONLY module of the UI that knows the engine exists, and it never touches torrents or the cache itself."""
 from __future__ import annotations

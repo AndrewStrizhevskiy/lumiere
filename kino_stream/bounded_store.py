@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """BoundedSparseStore: PersistentFileStore + a hard disk limit, safe eviction and crash recovery.
 
 Eviction transaction (docs/STAGE2_DESIGN.md has the full table of crash points):

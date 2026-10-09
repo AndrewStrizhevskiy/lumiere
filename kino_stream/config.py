@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """All tunables in one place. Sizes are bytes, times are seconds unless the name says otherwise."""
 from __future__ import annotations
 

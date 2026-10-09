@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Scheduler logic on a fake store: no sockets, no libtorrent, deterministic clock."""
 import asyncio
 import unittest

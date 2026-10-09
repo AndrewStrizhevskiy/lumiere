@@ -2,8 +2,8 @@
 
 Kino Stream is pre-1.0 software. Security reports are welcome.
 
-**Report privately** — do not open a public issue. Use GitHub's "Report a vulnerability" (private advisory) on this repository, or email
-`<SECURITY-CONTACT-EMAIL — to be filled in by the maintainer before publishing>`. Include the version, steps to reproduce and the impact you see.
+**Report privately** — do not open a public issue. Use GitHub's "Report a vulnerability" (private advisory: https://github.com/@@GITHUB_REPO@@/security/advisories/new), or email
+`@@SECURITY_EMAIL@@`. Include the version, steps to reproduce and the impact you see.
 You will get an acknowledgement; this is a volunteer project, so no response-time guarantee is made.
 
 **Supported versions:** only the latest release.

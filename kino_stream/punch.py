@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Hole punching (fallocate FALLOC_FL_PUNCH_HOLE) and allocated-space accounting.
 
 Hole punching alone is NOT a safe way to evict from a live libtorrent torrent (it keeps advertising the piece and serves

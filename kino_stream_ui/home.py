@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Home screen: one obvious thing to do (open a video), recent items, readiness. Plus the status strip shared by all screens."""
 from __future__ import annotations
 

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Own small icon set (24x24 outline icons, stroke 2, round caps) rendered from inline SVG in any colour: no icon-font dependency."""
 from __future__ import annotations
 

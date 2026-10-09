@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Demand-driven HTTP/1.1 Range server (asyncio, stdlib only).
 
 Contract:

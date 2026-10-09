@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """EngineService: the one object a user interface talks to. No Qt/GTK imports; thread-safe from the outside.
 
 * It owns a dedicated thread running an asyncio loop. EVERY libtorrent call happens on that thread (the Python binding is not safe to

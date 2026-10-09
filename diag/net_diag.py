@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Network diagnostics (read-only, per-process; changes nothing on the system).
 
     python3 diag/net_diag.py [--iface wlan0] [--out diag/net_diag_<label>.json] [--label home]

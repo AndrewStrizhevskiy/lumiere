@@ -52,7 +52,7 @@ How well that works depends on the people sharing the video and on your network 
 
 ```bash
 sudo apt install python3-libtorrent python3-pyqt6 python3-pyqt6.qtsvg python3-mpv libmpv2 mpv
-git clone <this repository> kino-stream && cd kino-stream
+git clone https://github.com/@@GITHUB_REPO@@.git kino-stream && cd kino-stream
 ./packaging/install.sh          # user-level: no root, no network; --check shows what it would do
 ```
 
@@ -82,7 +82,7 @@ kino-stream doctor --network
 * [Install / uninstall](docs/INSTALL.md) · [CLI reference](docs/CLI.md)
 * [Known limitations](docs/KNOWN_ISSUES.md) · [Changelog](CHANGELOG.md) · [Release readiness](docs/RELEASE_READINESS.md)
 * Design and validation notes: [bounded cache design](docs/STAGE2_DESIGN.md), [engine validation](docs/STAGE1_VALIDATION.md), [GUI stage reports](docs/gui/)
-* [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md) · [Code of conduct](CODE_OF_CONDUCT.md)
+* [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md) · [Code of conduct](CODE_OF_CONDUCT.md) · [Licensing](docs/LICENSING.md)
 
 ## Known limitations
 
@@ -104,9 +104,9 @@ python3 -m unittest tests.test_ui_player        # real libmpv/OpenGL player on a
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the test layout. Opt-in heavy tools: `tests/large_scenarios.py` (25 GB files),
-`tests/realswarm.py` (uses the internet), `diag/` (network diagnostics, stress tools).
+`tests/realswarm.py` (uses the internet), `diag/` (network diagnostics, stress tools; findings in [docs/NETWORK_FINDINGS.md](docs/NETWORK_FINDINGS.md)).
 
 ## License
 
-Not yet chosen — see [docs/LICENSE_DECISION.md](docs/LICENSE_DECISION.md). Until a `LICENSE` file is added, no one but the author has
-permission to copy or modify this code.
+GPL-3.0-or-later — see [LICENSE](LICENSE), [docs/LICENSING.md](docs/LICENSING.md) (dependencies, compatibility, redistribution notes) and
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Kino Stream does not bundle third-party code or binaries.

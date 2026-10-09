@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """GUI + engine + real libmpv end to end on a local swarm (offscreen Qt, audio disabled)."""
 import os
 import shutil

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """mpv launcher + JSON IPC client. IPC is the authoritative source of playback state."""
 from __future__ import annotations
 

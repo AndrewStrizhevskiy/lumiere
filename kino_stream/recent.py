@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Recently opened items ("Continue watching"). Toolkit-agnostic, atomic JSON in the state directory."""
 from __future__ import annotations
 

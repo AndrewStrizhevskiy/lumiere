@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Stream scheduler: decides which pieces matter and how far HTTP connections may run.
 
 Concepts (kept apart on purpose):
