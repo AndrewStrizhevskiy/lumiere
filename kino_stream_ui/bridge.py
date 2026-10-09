@@ -21,6 +21,7 @@ class EngineBridge(QObject):
     closed = pyqtSignal()
     ready = pyqtSignal(dict)                   # readiness() result
     networkChecked = pyqtSignal(dict)
+    availability = pyqtSignal(list)            # per-slice fractions of the file that are on disk
     settingsChanged = pyqtSignal(object)
 
     def __init__(self, settings: Settings | None = None, state_dir: Path | None = None, recent: RecentItems | None = None, parent=None):
@@ -48,9 +49,9 @@ class EngineBridge(QObject):
             self.closed.emit()
 
     # --------------------------------------------------------------------------------------------------- commands
-    def open_source(self, source: str, temporary: bool = False, title: str | None = None, overrides: dict | None = None) -> None:
+    def open_source(self, source: str, temporary: bool = False, title: str | None = None, overrides: dict | None = None, peers: list | None = None) -> None:
         self.source = source
-        opts = OpenOptions(temporary=temporary, title=title, engine_overrides=overrides or {})
+        opts = OpenOptions(temporary=temporary, title=title, engine_overrides=overrides or {}, peers=peers or [])
         fut = self.service.open(source, opts)
 
         def done(f):
@@ -76,6 +77,17 @@ class EngineBridge(QObject):
 
     def player_event(self, name: str, detail: dict) -> None:
         self.service.report_player_event(name, detail)
+
+    def request_availability(self, bins: int = 240) -> None:
+        f = self.service.availability_async(bins)
+        f.add_done_callback(lambda fu: self.availability.emit(fu.result() if not fu.exception() else []))
+
+    def save_position(self, infohash: str, pos: float, dur: float) -> None:
+        self.recent.update_position(infohash, pos, dur)
+
+    def mpv_limits(self, temporary: bool) -> tuple[int, int]:
+        c = self.settings.to_config(temporary)
+        return c.mpv_cache_bytes, c.mpv_back_bytes
 
     def check_ready(self) -> None:
         f = self.service.check_ready()

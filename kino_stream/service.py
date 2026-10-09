@@ -183,6 +183,10 @@ class EngineService:
     def check_ready(self) -> concurrent.futures.Future:
         """Quick offline self-check for the UI's "ready to stream" light: libtorrent, a writable cache root, hole punching, free space."""
         root = self.settings.cache_root_path
+        if self.loop is None:                                       # already shut down
+            f: concurrent.futures.Future = concurrent.futures.Future()
+            f.set_exception(RuntimeError("engine is stopped"))
+            return f
         return asyncio.run_coroutine_threadsafe(self._in_thread(lambda: readiness(root)), self.loop)
 
     async def _in_thread(self, fn):
@@ -339,6 +343,21 @@ class EngineService:
                 c = sum(1 for p in range(a, b) if store.have(p))
             out.append(round(c / (b - a), 2))
         return out
+
+    def availability_async(self, bins: int = 200) -> concurrent.futures.Future:
+        """availability() evaluated on the engine thread (the store is only ever touched there); returns a Future."""
+        fut: concurrent.futures.Future = concurrent.futures.Future()
+
+        def run():
+            try:
+                fut.set_result(self.availability(bins))
+            except Exception as e:
+                fut.set_exception(e)
+        if self.loop:
+            self.loop.call_soon_threadsafe(run)
+        else:
+            fut.set_result([])
+        return fut
 
     async def _tick(self) -> None:
         sess, media = self._session, self._media

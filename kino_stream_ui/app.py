@@ -32,6 +32,8 @@ def run(argv: list[str] | None = None) -> int:
     from PyQt6.QtWidgets import QApplication
     from kino_stream.settings import Settings
     argv = list(sys.argv if argv is None else argv)
+    from .mpvwidget import set_default_surface_format
+    set_default_surface_format()
     app = QApplication(argv)
     app.setApplicationName("Kino Stream")
     app.setDesktopFileName("kino-stream")

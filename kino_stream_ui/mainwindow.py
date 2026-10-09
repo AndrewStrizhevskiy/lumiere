@@ -23,7 +23,7 @@ from .widgets import Banner, Toast, fade_in
 class MainWindow(QMainWindow):
     HOME, PLAYER, SETTINGS = 0, 1, 2
 
-    def __init__(self, bridge: EngineBridge):
+    def __init__(self, bridge: EngineBridge, mpv_options: dict | None = None):
         super().__init__()
         self.bridge = bridge
         self.setWindowTitle("Kino Stream")
@@ -32,7 +32,7 @@ class MainWindow(QMainWindow):
         self.ready_info: dict | None = None
         self._pending: tuple[str, str] | None = None
         self.home = HomeScreen()
-        self.player = PlayerScreen()
+        self.player = PlayerScreen(bridge, mpv_options)
         self.settings_screen = SettingsScreen(bridge.settings)
         self.stack = QStackedWidget()
         for w in (self.home, self.player, self.settings_screen):
@@ -98,6 +98,9 @@ class MainWindow(QMainWindow):
         self.settings_screen.clearHistoryRequested.connect(self._clear_history)
         self.settings_screen.deleteCacheRequested.connect(self._delete_cache)
         self.player.backRequested.connect(self.stop_and_home)
+        self.player.fullscreenRequested.connect(self.set_fullscreen)
+        self.player.diagnosticsRequested.connect(self.show_diagnostics)
+        self.player.networkCheckRequested.connect(self.bridge.network_check)
         self.overlay.cancelled.connect(self._cancel_open)
         self.banner.dismissed.connect(self.banner.hide)
         self.banner.action.connect(self._banner_action)
@@ -114,7 +117,8 @@ class MainWindow(QMainWindow):
         if index == self.SETTINGS:
             self.refresh_saved_data()
         self.stack.setCurrentIndex(index)
-        fade_in(self.stack.currentWidget(), T.DUR_BASE)
+        if index != self.PLAYER:                     # a graphics effect on the parent of the GL video widget breaks its rendering
+            fade_in(self.stack.currentWidget(), T.DUR_BASE)
         if index != self.PLAYER:
             self.banner.hide() if index == self.HOME and not self._banner_sticky() else None
 
@@ -208,6 +212,8 @@ class MainWindow(QMainWindow):
         self.bridge.check_ready()
 
     def stop_and_home(self) -> None:
+        if self.isFullScreen():
+            self.set_fullscreen(False)
         self.player.stop()
         self.bridge.close_media()
         self.go(self.HOME)
@@ -241,6 +247,16 @@ class MainWindow(QMainWindow):
         d.runCheck.connect(self.bridge.network_check)
         d.exec()
 
+    def set_fullscreen(self, on: bool) -> None:
+        if on:
+            self.showFullScreen()
+        else:
+            self.showNormal()
+        self.menuBar().setVisible(not on)
+        self.strip.setVisible(not on)
+        self.player.set_fullscreen_icon(on)
+        self.player.setFocus()
+
     def maybe_show_tour(self) -> None:
         if not self.bridge.settings.tour_done:
             QTimer.singleShot(250, self.show_tour)
@@ -256,7 +272,7 @@ class MainWindow(QMainWindow):
     def closeEvent(self, e):
         self.hide()
         try:
-            self.player.stop()
+            self.player.shutdown()
         finally:
             self.bridge.shutdown()
         e.accept()
