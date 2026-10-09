@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import time
 from pathlib import Path
@@ -18,6 +19,14 @@ class NotManaged(Exception):
     pass
 
 
+_HASH = re.compile(r"^(?:[0-9a-f]{40}|[0-9a-f]{64})$")
+
+
+def valid_infohash(h: object) -> bool:
+    """Only plain lowercase hex (v1: 40, v2: 64 chars). Anything else - separators, dots, spaces - can never reach a path."""
+    return isinstance(h, str) and bool(_HASH.match(h))
+
+
 def cache_dir_for(root: Path, infohash: str, temporary: bool = False) -> Path:
     return Path(root) / (f"tmp-{infohash}" if temporary else infohash)
 
@@ -25,6 +34,8 @@ def cache_dir_for(root: Path, infohash: str, temporary: bool = False) -> Path:
 def prepare_cache_dir(root: Path, infohash: str, temporary: bool = False) -> Path:
     """Create (or reuse) the managed directory of a torrent. A pre-existing non-empty directory without our marker is foreign:
     it is refused, never adopted."""
+    if not valid_infohash(infohash):
+        raise CacheDirNotManagedError(f"refusing to create a cache directory for the invalid info-hash {infohash!r}")
     d = cache_dir_for(root, infohash, temporary)
     marker = d / MARKER
     if d.exists() and not marker.exists() and any(d.iterdir()):
@@ -44,19 +55,25 @@ def read_marker(d: Path) -> dict | None:
 
 def delete_managed_cache(root: Path, d: Path, state_dir: Path | None = None) -> int:
     """Remove a managed cache directory (and its index/resume files). Refuses anything that is not a direct child of `root`
-    carrying our marker. Returns the bytes released."""
+    that carries our marker AND is named after the info-hash recorded in that marker (a marker is just a file: its content is
+    treated as untrusted, validated as plain hex, and never used to build a path unless it matches the directory name).
+    Returns the bytes released."""
     root_r, d_r = Path(root).resolve(), Path(d).resolve()
     m = read_marker(d_r)
-    if d_r.parent != root_r or m is None or not str(m.get("infohash", "")):
+    ih = None if m is None else m.get("infohash")
+    if d_r.parent != root_r or not valid_infohash(ih) or d_r.name not in (ih, f"tmp-{ih}") or d_r.is_symlink():
         raise NotManaged(f"{d} is not a Kino Stream cache directory: not touching it")
     freed = allocated_bytes(d_r)
     shutil.rmtree(d_r)
     if state_dir:
+        sd = Path(state_dir).resolve()
         for suffix in (".cache.json", ".cache.json.tmp", ".resume"):
-            try:
-                (Path(state_dir) / f"{m['infohash']}{suffix}").unlink()
-            except FileNotFoundError:
-                pass
+            f = (sd / f"{ih}{suffix}")
+            if f.resolve().parent == sd:                    # belt and braces: the file must be directly inside the state directory
+                try:
+                    f.unlink()
+                except FileNotFoundError:
+                    pass
     return freed
 
 
@@ -67,6 +84,6 @@ def list_caches(root: Path) -> list[dict]:
         return out
     for d in sorted(root.iterdir()):
         m = read_marker(d) if d.is_dir() else None
-        if m:
+        if m and valid_infohash(m.get("infohash")):
             out.append({"path": str(d), "infohash": m.get("infohash"), "temporary": bool(m.get("temporary")), "bytes": allocated_bytes(d)})
     return out

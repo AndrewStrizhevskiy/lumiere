@@ -113,6 +113,53 @@ class CacheDirTests(unittest.TestCase):
         self.assertTrue(outside.exists())
 
 
+class CacheDeletionIsConfined(unittest.TestCase):
+    """A marker file is untrusted data: a hostile or damaged one must never steer deletion outside the cache root."""
+
+    def setUp(self):
+        self.base = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.base, True)
+        self.root, self.state = self.base / "root", self.base / "state"
+        self.root.mkdir(); self.state.mkdir()
+        self.victim = self.base / "victim.cache.json"
+        self.victim.write_text("do not delete")
+
+    def test_traversal_in_the_marker_infohash_is_refused(self):
+        d = self.root / "evil"
+        d.mkdir()
+        (d / MARKER).write_text(json.dumps({"infohash": "../victim"}))
+        (d / "data").write_text("x")
+        with self.assertRaises(NotManaged):
+            delete_managed_cache(self.root, d, self.state)
+        self.assertEqual(self.victim.read_text(), "do not delete")
+        self.assertTrue((d / "data").exists())
+
+    def test_marker_must_match_the_directory_name(self):
+        d = self.root / ("aa" * 20)
+        d.mkdir()
+        (d / MARKER).write_text(json.dumps({"infohash": "bb" * 20}))
+        with self.assertRaises(NotManaged):
+            delete_managed_cache(self.root, d, self.state)
+        self.assertTrue(d.exists())
+
+    def test_symlinked_directory_is_refused_and_target_survives(self):
+        target = self.base / "target"
+        target.mkdir()
+        (target / MARKER).write_text(json.dumps({"infohash": "cc" * 20}))
+        (target / "keep.txt").write_text("keep")
+        link = self.root / ("cc" * 20)
+        link.symlink_to(target, target_is_directory=True)
+        with self.assertRaises(NotManaged):
+            delete_managed_cache(self.root, link, self.state)
+        self.assertEqual((target / "keep.txt").read_text(), "keep")
+
+    def test_invalid_infohash_never_becomes_a_directory(self):
+        for bad in ("../x", "a/b", "", "ZZ" * 20, "ab" * 19):
+            with self.assertRaises(CacheDirNotManagedError):
+                prepare_cache_dir(self.root, bad)
+        self.assertEqual([p.name for p in self.root.iterdir()], [])
+
+
 class ServiceCase(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="ks-svc-"))
