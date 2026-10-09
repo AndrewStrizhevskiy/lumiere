@@ -1,0 +1,4 @@
+#!/bin/sh
+# Run kino-stream from this checkout without installing anything.
+HERE="$(cd "$(dirname "$0")/.." && pwd)"
+PYTHONPATH="$HERE${PYTHONPATH:+:$PYTHONPATH}" exec python3 -m kino_stream "$@"

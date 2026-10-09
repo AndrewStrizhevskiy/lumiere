@@ -1,0 +1,17 @@
+[project]
+name = "kino-stream"
+version = "0.2.0"
+description = "Watch a torrent while it downloads, with a hard-bounded disk cache"
+requires-python = ">=3.12"
+# python-libtorrent is NOT pip-installed: use the distribution package (sudo apt install python3-libtorrent mpv)
+dependencies = []
+
+[project.scripts]
+kino-stream = "kino_stream.__main__:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["kino_stream"]

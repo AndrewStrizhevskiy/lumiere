@@ -1,0 +1,4623 @@
+[
+ {
+  "torrent": "sintel",
+  "mode": "torrent",
+  "web_seeds": false,
+  "trial": 0,
+  "file_total_bytes": 129302391,
+  "metadata_s": 0.04,
+  "selected_file": "Sintel/Sintel.mp4",
+  "selected_file_bytes": 129241752,
+  "piece_length": 131072,
+  "pieces_total": 987,
+  "torrent_files": [
+   [
+    "Sintel/Sintel.de.srt",
+    1652
+   ],
+   [
+    "Sintel/Sintel.en.srt",
+    1514
+   ],
+   [
+    "Sintel/Sintel.es.srt",
+    1554
+   ],
+   [
+    "Sintel/Sintel.fr.srt",
+    1618
+   ],
+   [
+    "Sintel/Sintel.it.srt",
+    1546
+   ],
+   [
+    "Sintel/Sintel.mp4",
+    129241752
+   ],
+   [
+    "Sintel/Sintel.nl.srt",
+    1537
+   ],
+   [
+    "Sintel/Sintel.pl.srt",
+    1536
+   ],
+   [
+    "Sintel/Sintel.pt.srt",
+    1551
+   ],
+   [
+    "Sintel/Sintel.ru.srt",
+    2016
+   ],
+   [
+    "Sintel/poster.jpg",
+    46115
+   ]
+  ],
+  "startup_s": 15.75,
+  "initial_buffer_s": 0.0,
+  "bytes_at_first_frame": 5743181,
+  "pieces_at_first_frame": 36,
+  "duration_s": 888.064,
+  "steady": {
+   "wall_s": 90,
+   "played_s": 90.0,
+   "rebuffers": 0,
+   "rebuffer_s": 0.0
+  },
+  "seeks": [
+   {
+    "target_s": 88.8064,
+    "restart_event_s": 0.03,
+    "recovery_s": 0.21,
+    "downloaded_MB": 0.5,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "10%"
+   },
+   {
+    "target_s": 444.032,
+    "restart_event_s": 4.15,
+    "recovery_s": 4.17,
+    "downloaded_MB": 7.4,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50%"
+   },
+   {
+    "target_s": 817.01888,
+    "restart_event_s": 5.96,
+    "recovery_s": 5.99,
+    "downloaded_MB": 17.9,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "92%"
+   },
+   {
+    "target_s": 17.76128,
+    "restart_event_s": 0.2,
+    "recovery_s": 0.38,
+    "downloaded_MB": 0.1,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "2%"
+   },
+   {
+    "target_s": 444.032,
+    "restart_event_s": 0.08,
+    "recovery_s": 0.11,
+    "downloaded_MB": 2.6,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50% again"
+   },
+   {
+    "target_s": 879.18336,
+    "restart_event_s": 5.03,
+    "recovery_s": 5.21,
+    "downloaded_MB": 1.1,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "99%"
+   },
+   {
+    "target_s": 5.0,
+    "restart_event_s": 0.12,
+    "recovery_s": 0.14,
+    "downloaded_MB": 0.0,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "0:05"
+   }
+  ],
+  "peer_outage_12s": {
+   "peers_during_outage": 0,
+   "recovered_playback_s": 2.0,
+   "restarts": 1,
+   "zero_peer_s_added": 9.3,
+   "http_stalls": 1,
+   "http_aborted": 0
+  },
+  "bytes_downloaded": 71266288,
+  "pieces_downloaded": 495,
+  "fraction_of_file": 0.551,
+  "peak_allocated_disk_bytes": 64757760,
+  "http_bytes_sent": 69806230,
+  "mpv_total_rebuffers": 0,
+  "mpv_total_rebuffer_s": 0.0,
+  "hash_failed": 0,
+  "restarts": 2,
+  "peer_connects": 2020,
+  "peer_disconnects": 2019,
+  "zero_peer_s": 10.3,
+  "peers_min": 0,
+  "peers_median": 148.0,
+  "peers_max": 167,
+  "seeds_max": 33,
+  "pieces_ever_demanded": 534,
+  "pieces_downloaded_but_never_demanded": [],
+  "count_outside_window": 0,
+  "deadline_sets": 296,
+  "obsolete_pieces_cancelled": 281,
+  "http_mismatch": 0,
+  "seeks_detected": 6,
+  "stalls": 3,
+  "series_every_5s": [
+   {
+    "t": 0.0,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 0,
+    "have": 0
+   },
+   {
+    "t": 5.0,
+    "peers": 8,
+    "seeds": 6,
+    "list_peers": 326,
+    "rate_kBps": 211,
+    "disk": 1200128,
+    "have": 4
+   },
+   {
+    "t": 10.0,
+    "peers": 11,
+    "seeds": 10,
+    "list_peers": 368,
+    "rate_kBps": 215,
+    "disk": 2449408,
+    "have": 9
+   },
+   {
+    "t": 15.0,
+    "peers": 17,
+    "seeds": 11,
+    "list_peers": 411,
+    "rate_kBps": 469,
+    "disk": 5009408,
+    "have": 34
+   },
+   {
+    "t": 20.0,
+    "peers": 87,
+    "seeds": 18,
+    "list_peers": 448,
+    "rate_kBps": 560,
+    "disk": 7598080,
+    "have": 51
+   },
+   {
+    "t": 25.1,
+    "peers": 156,
+    "seeds": 21,
+    "list_peers": 450,
+    "rate_kBps": 823,
+    "disk": 11325440,
+    "have": 83
+   },
+   {
+    "t": 30.1,
+    "peers": 149,
+    "seeds": 24,
+    "list_peers": 452,
+    "rate_kBps": 673,
+    "disk": 13479936,
+    "have": 101
+   },
+   {
+    "t": 35.1,
+    "peers": 125,
+    "seeds": 29,
+    "list_peers": 453,
+    "rate_kBps": 361,
+    "disk": 14290944,
+    "have": 109
+   },
+   {
+    "t": 40.1,
+    "peers": 149,
+    "seeds": 28,
+    "list_peers": 453,
+    "rate_kBps": 165,
+    "disk": 14827520,
+    "have": 112
+   },
+   {
+    "t": 45.1,
+    "peers": 165,
+    "seeds": 27,
+    "list_peers": 473,
+    "rate_kBps": 130,
+    "disk": 15290368,
+    "have": 116
+   },
+   {
+    "t": 50.1,
+    "peers": 149,
+    "seeds": 27,
+    "list_peers": 473,
+    "rate_kBps": 119,
+    "disk": 16007168,
+    "have": 122
+   },
+   {
+    "t": 55.1,
+    "peers": 153,
+    "seeds": 28,
+    "list_peers": 473,
+    "rate_kBps": 141,
+    "disk": 16576512,
+    "have": 125
+   },
+   {
+    "t": 60.2,
+    "peers": 160,
+    "seeds": 29,
+    "list_peers": 475,
+    "rate_kBps": 185,
+    "disk": 17387520,
+    "have": 132
+   },
+   {
+    "t": 65.2,
+    "peers": 149,
+    "seeds": 27,
+    "list_peers": 475,
+    "rate_kBps": 191,
+    "disk": 18173952,
+    "have": 138
+   },
+   {
+    "t": 70.2,
+    "peers": 148,
+    "seeds": 28,
+    "list_peers": 475,
+    "rate_kBps": 133,
+    "disk": 18735104,
+    "have": 142
+   },
+   {
+    "t": 75.2,
+    "peers": 154,
+    "seeds": 28,
+    "list_peers": 475,
+    "rate_kBps": 192,
+    "disk": 19734528,
+    "have": 149
+   },
+   {
+    "t": 80.2,
+    "peers": 159,
+    "seeds": 31,
+    "list_peers": 477,
+    "rate_kBps": 132,
+    "disk": 20271104,
+    "have": 154
+   },
+   {
+    "t": 85.2,
+    "peers": 147,
+    "seeds": 32,
+    "list_peers": 477,
+    "rate_kBps": 136,
+    "disk": 21057536,
+    "have": 160
+   },
+   {
+    "t": 90.3,
+    "peers": 140,
+    "seeds": 31,
+    "list_peers": 477,
+    "rate_kBps": 116,
+    "disk": 21532672,
+    "have": 163
+   },
+   {
+    "t": 95.3,
+    "peers": 148,
+    "seeds": 31,
+    "list_peers": 477,
+    "rate_kBps": 134,
+    "disk": 22106112,
+    "have": 168
+   },
+   {
+    "t": 100.3,
+    "peers": 158,
+    "seeds": 31,
+    "list_peers": 478,
+    "rate_kBps": 92,
+    "disk": 22630400,
+    "have": 172
+   },
+   {
+    "t": 105.3,
+    "peers": 145,
+    "seeds": 31,
+    "list_peers": 478,
+    "rate_kBps": 86,
+    "disk": 22892544,
+    "have": 174
+   },
+   {
+    "t": 110.3,
+    "peers": 146,
+    "seeds": 32,
+    "list_peers": 480,
+    "rate_kBps": 118,
+    "disk": 23408640,
+    "have": 176
+   },
+   {
+    "t": 115.3,
+    "peers": 157,
+    "seeds": 32,
+    "list_peers": 481,
+    "rate_kBps": 440,
+    "disk": 27078656,
+    "have": 193
+   },
+   {
+    "t": 120.3,
+    "peers": 157,
+    "seeds": 33,
+    "list_peers": 481,
+    "rate_kBps": 1019,
+    "disk": 33865728,
+    "have": 240
+   },
+   {
+    "t": 125.3,
+    "peers": 148,
+    "seeds": 32,
+    "list_peers": 481,
+    "rate_kBps": 1981,
+    "disk": 45903872,
+    "have": 334
+   },
+   {
+    "t": 130.4,
+    "peers": 139,
+    "seeds": 31,
+    "list_peers": 481,
+    "rate_kBps": 1052,
+    "disk": 47087616,
+    "have": 346
+   },
+   {
+    "t": 135.4,
+    "peers": 138,
+    "seeds": 31,
+    "list_peers": 481,
+    "rate_kBps": 778,
+    "disk": 49438720,
+    "have": 373
+   },
+   {
+    "t": 140.4,
+    "peers": 149,
+    "seeds": 32,
+    "list_peers": 483,
+    "rate_kBps": 393,
+    "disk": 50475008,
+    "have": 380
+   },
+   {
+    "t": 145.4,
+    "peers": 154,
+    "seeds": 31,
+    "list_peers": 484,
+    "rate_kBps": 133,
+    "disk": 50487296,
+    "have": 381
+   },
+   {
+    "t": 150.4,
+    "peers": 159,
+    "seeds": 31,
+    "list_peers": 490,
+    "rate_kBps": 44,
+    "disk": 50696192,
+    "have": 381
+   },
+   {
+    "t": 155.4,
+    "peers": 132,
+    "seeds": 31,
+    "list_peers": 501,
+    "rate_kBps": 1129,
+    "disk": 59539456,
+    "have": 442
+   },
+   {
+    "t": 160.4,
+    "peers": 150,
+    "seeds": 31,
+    "list_peers": 501,
+    "rate_kBps": 1272,
+    "disk": 64552960,
+    "have": 482
+   },
+   {
+    "t": 165.5,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 463,
+    "disk": 64757760,
+    "have": 485
+   }
+  ]
+ },
+ {
+  "torrent": "tears-of-steel",
+  "mode": "torrent",
+  "web_seeds": false,
+  "trial": 0,
+  "file_total_bytes": 571426507,
+  "metadata_s": 0.05,
+  "selected_file": "Tears of Steel/Tears of Steel.webm",
+  "selected_file_bytes": 571346576,
+  "piece_length": 524288,
+  "pieces_total": 1090,
+  "torrent_files": [
+   [
+    "Tears of Steel/Tears of Steel.de.srt",
+    4850
+   ],
+   [
+    "Tears of Steel/Tears of Steel.en.srt",
+    4755
+   ],
+   [
+    "Tears of Steel/Tears of Steel.es.srt",
+    4944
+   ],
+   [
+    "Tears of Steel/Tears of Steel.fr.srt",
+    4618
+   ],
+   [
+    "Tears of Steel/Tears of Steel.it.srt",
+    4746
+   ],
+   [
+    "Tears of Steel/Tears of Steel.nl.srt",
+    4531
+   ],
+   [
+    "Tears of Steel/Tears of Steel.no.srt",
+    9558
+   ],
+   [
+    "Tears of Steel/Tears of Steel.ru.srt",
+    5933
+   ],
+   [
+    "Tears of Steel/Tears of Steel.webm",
+    571346576
+   ],
+   [
+    "Tears of Steel/poster.jpg",
+    35996
+   ]
+  ],
+  "startup_s": 10.35,
+  "initial_buffer_s": 0.0,
+  "bytes_at_first_frame": 1516373,
+  "pieces_at_first_frame": 1,
+  "duration_s": 734.167,
+  "steady": {
+   "wall_s": 90,
+   "played_s": 73.5,
+   "rebuffers": 4,
+   "rebuffer_s": 16.1
+  },
+  "seeks": [
+   {
+    "target_s": 73.4167,
+    "restart_event_s": 0.46,
+    "recovery_s": 0.63,
+    "downloaded_MB": 2.1,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "10%"
+   },
+   {
+    "target_s": 367.0835,
+    "restart_event_s": 12.05,
+    "recovery_s": 12.24,
+    "downloaded_MB": 31.4,
+    "rebuffers": 1,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50%"
+   },
+   {
+    "target_s": 675.4336400000001,
+    "restart_event_s": 5.79,
+    "recovery_s": 8.25,
+    "downloaded_MB": 48.4,
+    "rebuffers": 1,
+    "rebuffer_s": 4.1,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "92%"
+   },
+   {
+    "target_s": 14.683340000000001,
+    "restart_event_s": 6.8,
+    "recovery_s": 6.83,
+    "downloaded_MB": 7.5,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "2%"
+   },
+   {
+    "target_s": 367.0835,
+    "restart_event_s": 0.4,
+    "recovery_s": 0.43,
+    "downloaded_MB": 3.9,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50% again"
+   },
+   {
+    "target_s": 726.82533,
+    "restart_event_s": 1.75,
+    "recovery_s": 1.93,
+    "downloaded_MB": 1.0,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "99%"
+   },
+   {
+    "target_s": 5.0,
+    "restart_event_s": 0.22,
+    "recovery_s": 0.35,
+    "downloaded_MB": 0.0,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "0:05"
+   }
+  ],
+  "peer_outage_12s": {
+   "peers_during_outage": 0,
+   "recovered_playback_s": null,
+   "restarts": 7,
+   "zero_peer_s_added": 78.7,
+   "http_stalls": 11,
+   "http_aborted": 0
+  },
+  "bytes_downloaded": 235761376,
+  "pieces_downloaded": 415,
+  "fraction_of_file": 0.413,
+  "peak_allocated_disk_bytes": 222113792,
+  "http_bytes_sent": 156290918,
+  "mpv_total_rebuffers": 8,
+  "mpv_total_rebuffer_s": 123.8,
+  "hash_failed": 0,
+  "restarts": 8,
+  "peer_connects": 1947,
+  "peer_disconnects": 1945,
+  "zero_peer_s": 83.17,
+  "peers_min": 0,
+  "peers_median": 106.5,
+  "peers_max": 165,
+  "seeds_max": 20,
+  "pieces_ever_demanded": 456,
+  "pieces_downloaded_but_never_demanded": [],
+  "count_outside_window": 0,
+  "deadline_sets": 276,
+  "obsolete_pieces_cancelled": 144,
+  "http_mismatch": 0,
+  "seeks_detected": 7,
+  "stalls": 19,
+  "series_every_5s": [
+   {
+    "t": 0.0,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 0,
+    "have": 0
+   },
+   {
+    "t": 5.0,
+    "peers": 6,
+    "seeds": 3,
+    "list_peers": 136,
+    "rate_kBps": 0,
+    "disk": 20480,
+    "have": 0
+   },
+   {
+    "t": 10.0,
+    "peers": 36,
+    "seeds": 7,
+    "list_peers": 138,
+    "rate_kBps": 172,
+    "disk": 1441792,
+    "have": 1
+   },
+   {
+    "t": 15.0,
+    "peers": 109,
+    "seeds": 17,
+    "list_peers": 141,
+    "rate_kBps": 272,
+    "disk": 3305472,
+    "have": 3
+   },
+   {
+    "t": 20.1,
+    "peers": 104,
+    "seeds": 19,
+    "list_peers": 141,
+    "rate_kBps": 559,
+    "disk": 6729728,
+    "have": 5
+   },
+   {
+    "t": 25.1,
+    "peers": 106,
+    "seeds": 19,
+    "list_peers": 143,
+    "rate_kBps": 1250,
+    "disk": 14438400,
+    "have": 22
+   },
+   {
+    "t": 30.1,
+    "peers": 125,
+    "seeds": 19,
+    "list_peers": 143,
+    "rate_kBps": 2197,
+    "disk": 26832896,
+    "have": 42
+   },
+   {
+    "t": 35.1,
+    "peers": 127,
+    "seeds": 18,
+    "list_peers": 143,
+    "rate_kBps": 2172,
+    "disk": 35483648,
+    "have": 52
+   },
+   {
+    "t": 40.1,
+    "peers": 115,
+    "seeds": 20,
+    "list_peers": 143,
+    "rate_kBps": 2069,
+    "disk": 46039040,
+    "have": 87
+   },
+   {
+    "t": 45.1,
+    "peers": 91,
+    "seeds": 19,
+    "list_peers": 143,
+    "rate_kBps": 1565,
+    "disk": 50843648,
+    "have": 97
+   },
+   {
+    "t": 50.1,
+    "peers": 113,
+    "seeds": 19,
+    "list_peers": 143,
+    "rate_kBps": 910,
+    "disk": 53923840,
+    "have": 101
+   },
+   {
+    "t": 55.1,
+    "peers": 102,
+    "seeds": 19,
+    "list_peers": 143,
+    "rate_kBps": 944,
+    "disk": 58654720,
+    "have": 110
+   },
+   {
+    "t": 60.2,
+    "peers": 110,
+    "seeds": 19,
+    "list_peers": 143,
+    "rate_kBps": 805,
+    "disk": 62287872,
+    "have": 117
+   },
+   {
+    "t": 65.2,
+    "peers": 118,
+    "seeds": 19,
+    "list_peers": 143,
+    "rate_kBps": 877,
+    "disk": 66953216,
+    "have": 125
+   },
+   {
+    "t": 70.2,
+    "peers": 128,
+    "seeds": 19,
+    "list_peers": 143,
+    "rate_kBps": 946,
+    "disk": 71979008,
+    "have": 134
+   },
+   {
+    "t": 75.2,
+    "peers": 142,
+    "seeds": 20,
+    "list_peers": 143,
+    "rate_kBps": 869,
+    "disk": 75997184,
+    "have": 141
+   },
+   {
+    "t": 80.2,
+    "peers": 142,
+    "seeds": 20,
+    "list_peers": 143,
+    "rate_kBps": 887,
+    "disk": 80416768,
+    "have": 148
+   },
+   {
+    "t": 85.2,
+    "peers": 142,
+    "seeds": 20,
+    "list_peers": 143,
+    "rate_kBps": 771,
+    "disk": 83873792,
+    "have": 157
+   },
+   {
+    "t": 90.2,
+    "peers": 143,
+    "seeds": 20,
+    "list_peers": 143,
+    "rate_kBps": 730,
+    "disk": 86982656,
+    "have": 163
+   },
+   {
+    "t": 95.3,
+    "peers": 141,
+    "seeds": 19,
+    "list_peers": 143,
+    "rate_kBps": 378,
+    "disk": 87891968,
+    "have": 167
+   },
+   {
+    "t": 100.3,
+    "peers": 142,
+    "seeds": 20,
+    "list_peers": 143,
+    "rate_kBps": 487,
+    "disk": 91127808,
+    "have": 172
+   },
+   {
+    "t": 105.3,
+    "peers": 141,
+    "seeds": 20,
+    "list_peers": 145,
+    "rate_kBps": 472,
+    "disk": 92897280,
+    "have": 177
+   },
+   {
+    "t": 110.3,
+    "peers": 144,
+    "seeds": 20,
+    "list_peers": 145,
+    "rate_kBps": 611,
+    "disk": 96768000,
+    "have": 177
+   },
+   {
+    "t": 115.3,
+    "peers": 160,
+    "seeds": 20,
+    "list_peers": 160,
+    "rate_kBps": 1295,
+    "disk": 105779200,
+    "have": 194
+   },
+   {
+    "t": 120.3,
+    "peers": 153,
+    "seeds": 20,
+    "list_peers": 162,
+    "rate_kBps": 2461,
+    "disk": 120254464,
+    "have": 220
+   },
+   {
+    "t": 125.3,
+    "peers": 161,
+    "seeds": 20,
+    "list_peers": 162,
+    "rate_kBps": 2746,
+    "disk": 136024064,
+    "have": 244
+   },
+   {
+    "t": 130.4,
+    "peers": 161,
+    "seeds": 19,
+    "list_peers": 162,
+    "rate_kBps": 4061,
+    "disk": 160071680,
+    "have": 288
+   },
+   {
+    "t": 135.4,
+    "peers": 139,
+    "seeds": 19,
+    "list_peers": 162,
+    "rate_kBps": 3564,
+    "disk": 172380160,
+    "have": 315
+   },
+   {
+    "t": 140.4,
+    "peers": 161,
+    "seeds": 19,
+    "list_peers": 162,
+    "rate_kBps": 1215,
+    "disk": 173584384,
+    "have": 322
+   },
+   {
+    "t": 145.4,
+    "peers": 161,
+    "seeds": 20,
+    "list_peers": 161,
+    "rate_kBps": 896,
+    "disk": 177082368,
+    "have": 336
+   },
+   {
+    "t": 150.4,
+    "peers": 158,
+    "seeds": 19,
+    "list_peers": 161,
+    "rate_kBps": 813,
+    "disk": 181792768,
+    "have": 346
+   },
+   {
+    "t": 155.4,
+    "peers": 159,
+    "seeds": 19,
+    "list_peers": 161,
+    "rate_kBps": 304,
+    "disk": 181792768,
+    "have": 346
+   },
+   {
+    "t": 160.4,
+    "peers": 160,
+    "seeds": 20,
+    "list_peers": 164,
+    "rate_kBps": 175,
+    "disk": 183840768,
+    "have": 346
+   },
+   {
+    "t": 165.5,
+    "peers": 156,
+    "seeds": 20,
+    "list_peers": 165,
+    "rate_kBps": 1417,
+    "disk": 195063808,
+    "have": 361
+   },
+   {
+    "t": 170.5,
+    "peers": 161,
+    "seeds": 20,
+    "list_peers": 165,
+    "rate_kBps": 2403,
+    "disk": 209694720,
+    "have": 395
+   },
+   {
+    "t": 175.5,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 2748,
+    "disk": 220250112,
+    "have": 413
+   },
+   {
+    "t": 181.0,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 220250112,
+    "have": 413
+   },
+   {
+    "t": 186.0,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 220250112,
+    "have": 413
+   },
+   {
+    "t": 191.0,
+    "peers": 10,
+    "seeds": 6,
+    "list_peers": 168,
+    "rate_kBps": 38,
+    "disk": 220385280,
+    "have": 413
+   },
+   {
+    "t": 196.0,
+    "peers": 3,
+    "seeds": 2,
+    "list_peers": 130,
+    "rate_kBps": 0,
+    "disk": 220872704,
+    "have": 413
+   },
+   {
+    "t": 201.1,
+    "peers": 53,
+    "seeds": 6,
+    "list_peers": 136,
+    "rate_kBps": 62,
+    "disk": 220872704,
+    "have": 413
+   },
+   {
+    "t": 206.1,
+    "peers": 132,
+    "seeds": 6,
+    "list_peers": 136,
+    "rate_kBps": 82,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 211.6,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 216.6,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 221.6,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 226.6,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 231.6,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 236.7,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 241.7,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 246.7,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 251.7,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 256.7,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 261.7,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 266.7,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 271.8,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 276.8,
+    "peers": 2,
+    "seeds": 1,
+    "list_peers": 60,
+    "rate_kBps": 0,
+    "disk": 221261824,
+    "have": 413
+   },
+   {
+    "t": 281.8,
+    "peers": 42,
+    "seeds": 7,
+    "list_peers": 133,
+    "rate_kBps": 92,
+    "disk": 221360128,
+    "have": 413
+   },
+   {
+    "t": 286.8,
+    "peers": 2,
+    "seeds": 2,
+    "list_peers": 132,
+    "rate_kBps": 0,
+    "disk": 222113792,
+    "have": 415
+   }
+  ]
+ },
+ {
+  "torrent": "sintel",
+  "mode": "torrent",
+  "web_seeds": true,
+  "trial": 0,
+  "file_total_bytes": 129302391,
+  "metadata_s": 0.06,
+  "selected_file": "Sintel/Sintel.mp4",
+  "selected_file_bytes": 129241752,
+  "piece_length": 131072,
+  "pieces_total": 987,
+  "torrent_files": [
+   [
+    "Sintel/Sintel.de.srt",
+    1652
+   ],
+   [
+    "Sintel/Sintel.en.srt",
+    1514
+   ],
+   [
+    "Sintel/Sintel.es.srt",
+    1554
+   ],
+   [
+    "Sintel/Sintel.fr.srt",
+    1618
+   ],
+   [
+    "Sintel/Sintel.it.srt",
+    1546
+   ],
+   [
+    "Sintel/Sintel.mp4",
+    129241752
+   ],
+   [
+    "Sintel/Sintel.nl.srt",
+    1537
+   ],
+   [
+    "Sintel/Sintel.pl.srt",
+    1536
+   ],
+   [
+    "Sintel/Sintel.pt.srt",
+    1551
+   ],
+   [
+    "Sintel/Sintel.ru.srt",
+    2016
+   ],
+   [
+    "Sintel/poster.jpg",
+    46115
+   ]
+  ],
+  "startup_s": 6.38,
+  "initial_buffer_s": 0.0,
+  "bytes_at_first_frame": 3362677,
+  "pieces_at_first_frame": 25,
+  "duration_s": 888.064,
+  "steady": {
+   "wall_s": 90,
+   "played_s": 89.9,
+   "rebuffers": 0,
+   "rebuffer_s": 0.0
+  },
+  "seeks": [
+   {
+    "target_s": 88.8064,
+    "restart_event_s": 0.04,
+    "recovery_s": 0.16,
+    "downloaded_MB": 0.3,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "10%"
+   },
+   {
+    "target_s": 444.032,
+    "restart_event_s": 5.09,
+    "recovery_s": 5.24,
+    "downloaded_MB": 7.4,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50%"
+   },
+   {
+    "target_s": 817.01888,
+    "restart_event_s": 10.33,
+    "recovery_s": 10.52,
+    "downloaded_MB": 18.0,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "92%"
+   },
+   {
+    "target_s": 17.76128,
+    "restart_event_s": 0.22,
+    "recovery_s": 0.36,
+    "downloaded_MB": 2.0,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "2%"
+   },
+   {
+    "target_s": 444.032,
+    "restart_event_s": 0.06,
+    "recovery_s": 0.13,
+    "downloaded_MB": 0.7,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50% again"
+   },
+   {
+    "target_s": 879.18336,
+    "restart_event_s": 4.5,
+    "recovery_s": 4.68,
+    "downloaded_MB": 1.1,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "99%"
+   },
+   {
+    "target_s": 5.0,
+    "restart_event_s": 0.13,
+    "recovery_s": 0.11,
+    "downloaded_MB": 0.0,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "0:05"
+   }
+  ],
+  "peer_outage_12s": {
+   "peers_during_outage": 1,
+   "recovered_playback_s": 2.0,
+   "restarts": 0,
+   "zero_peer_s_added": 0.0,
+   "http_stalls": 1,
+   "http_aborted": 0
+  },
+  "bytes_downloaded": 75367984,
+  "pieces_downloaded": 489,
+  "fraction_of_file": 0.583,
+  "peak_allocated_disk_bytes": 64827392,
+  "http_bytes_sent": 71997702,
+  "mpv_total_rebuffers": 0,
+  "mpv_total_rebuffer_s": 0.0,
+  "hash_failed": 0,
+  "restarts": 0,
+  "peer_connects": 2769,
+  "peer_disconnects": 2768,
+  "zero_peer_s": 0.75,
+  "peers_min": 0,
+  "peers_median": 137,
+  "peers_max": 166,
+  "seeds_max": 30,
+  "pieces_ever_demanded": 546,
+  "pieces_downloaded_but_never_demanded": [],
+  "count_outside_window": 0,
+  "deadline_sets": 333,
+  "obsolete_pieces_cancelled": 281,
+  "http_mismatch": 0,
+  "seeks_detected": 6,
+  "stalls": 1,
+  "series_every_5s": [
+   {
+    "t": 0.0,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 0,
+    "have": 0
+   },
+   {
+    "t": 5.0,
+    "peers": 8,
+    "seeds": 5,
+    "list_peers": 401,
+    "rate_kBps": 166,
+    "disk": 1630208,
+    "have": 12
+   },
+   {
+    "t": 10.0,
+    "peers": 8,
+    "seeds": 7,
+    "list_peers": 402,
+    "rate_kBps": 1089,
+    "disk": 8499200,
+    "have": 64
+   },
+   {
+    "t": 15.0,
+    "peers": 9,
+    "seeds": 8,
+    "list_peers": 402,
+    "rate_kBps": 881,
+    "disk": 12156928,
+    "have": 93
+   },
+   {
+    "t": 20.0,
+    "peers": 80,
+    "seeds": 13,
+    "list_peers": 403,
+    "rate_kBps": 380,
+    "disk": 12894208,
+    "have": 98
+   },
+   {
+    "t": 25.1,
+    "peers": 154,
+    "seeds": 15,
+    "list_peers": 413,
+    "rate_kBps": 203,
+    "disk": 13729792,
+    "have": 105
+   },
+   {
+    "t": 30.1,
+    "peers": 153,
+    "seeds": 15,
+    "list_peers": 413,
+    "rate_kBps": 135,
+    "disk": 14024704,
+    "have": 107
+   },
+   {
+    "t": 35.1,
+    "peers": 111,
+    "seeds": 15,
+    "list_peers": 413,
+    "rate_kBps": 151,
+    "disk": 14778368,
+    "have": 113
+   },
+   {
+    "t": 40.1,
+    "peers": 127,
+    "seeds": 18,
+    "list_peers": 414,
+    "rate_kBps": 83,
+    "disk": 15302656,
+    "have": 117
+   },
+   {
+    "t": 45.1,
+    "peers": 156,
+    "seeds": 18,
+    "list_peers": 414,
+    "rate_kBps": 129,
+    "disk": 15826944,
+    "have": 121
+   },
+   {
+    "t": 50.1,
+    "peers": 160,
+    "seeds": 18,
+    "list_peers": 414,
+    "rate_kBps": 117,
+    "disk": 16416768,
+    "have": 125
+   },
+   {
+    "t": 55.2,
+    "peers": 157,
+    "seeds": 18,
+    "list_peers": 414,
+    "rate_kBps": 128,
+    "disk": 17137664,
+    "have": 131
+   },
+   {
+    "t": 60.2,
+    "peers": 150,
+    "seeds": 19,
+    "list_peers": 414,
+    "rate_kBps": 152,
+    "disk": 18006016,
+    "have": 137
+   },
+   {
+    "t": 65.2,
+    "peers": 149,
+    "seeds": 19,
+    "list_peers": 414,
+    "rate_kBps": 204,
+    "disk": 18972672,
+    "have": 145
+   },
+   {
+    "t": 70.2,
+    "peers": 152,
+    "seeds": 19,
+    "list_peers": 414,
+    "rate_kBps": 142,
+    "disk": 19496960,
+    "have": 149
+   },
+   {
+    "t": 75.2,
+    "peers": 154,
+    "seeds": 19,
+    "list_peers": 414,
+    "rate_kBps": 149,
+    "disk": 20283392,
+    "have": 155
+   },
+   {
+    "t": 80.2,
+    "peers": 122,
+    "seeds": 20,
+    "list_peers": 414,
+    "rate_kBps": 99,
+    "disk": 20889600,
+    "have": 159
+   },
+   {
+    "t": 85.2,
+    "peers": 123,
+    "seeds": 19,
+    "list_peers": 414,
+    "rate_kBps": 120,
+    "disk": 21331968,
+    "have": 163
+   },
+   {
+    "t": 90.3,
+    "peers": 151,
+    "seeds": 19,
+    "list_peers": 414,
+    "rate_kBps": 72,
+    "disk": 21651456,
+    "have": 165
+   },
+   {
+    "t": 95.3,
+    "peers": 126,
+    "seeds": 21,
+    "list_peers": 436,
+    "rate_kBps": 79,
+    "disk": 22380544,
+    "have": 171
+   },
+   {
+    "t": 100.3,
+    "peers": 114,
+    "seeds": 20,
+    "list_peers": 442,
+    "rate_kBps": 45,
+    "disk": 22544384,
+    "have": 172
+   },
+   {
+    "t": 105.3,
+    "peers": 130,
+    "seeds": 20,
+    "list_peers": 474,
+    "rate_kBps": 290,
+    "disk": 24829952,
+    "have": 183
+   },
+   {
+    "t": 110.3,
+    "peers": 152,
+    "seeds": 21,
+    "list_peers": 474,
+    "rate_kBps": 843,
+    "disk": 30208000,
+    "have": 223
+   },
+   {
+    "t": 115.3,
+    "peers": 148,
+    "seeds": 22,
+    "list_peers": 487,
+    "rate_kBps": 1389,
+    "disk": 36913152,
+    "have": 259
+   },
+   {
+    "t": 120.4,
+    "peers": 126,
+    "seeds": 23,
+    "list_peers": 497,
+    "rate_kBps": 1027,
+    "disk": 40759296,
+    "have": 289
+   },
+   {
+    "t": 125.4,
+    "peers": 144,
+    "seeds": 25,
+    "list_peers": 501,
+    "rate_kBps": 1064,
+    "disk": 43507712,
+    "have": 326
+   },
+   {
+    "t": 130.4,
+    "peers": 145,
+    "seeds": 30,
+    "list_peers": 501,
+    "rate_kBps": 646,
+    "disk": 44769280,
+    "have": 336
+   },
+   {
+    "t": 135.4,
+    "peers": 159,
+    "seeds": 30,
+    "list_peers": 501,
+    "rate_kBps": 342,
+    "disk": 45731840,
+    "have": 341
+   },
+   {
+    "t": 140.4,
+    "peers": 135,
+    "seeds": 29,
+    "list_peers": 501,
+    "rate_kBps": 149,
+    "disk": 45817856,
+    "have": 344
+   },
+   {
+    "t": 145.4,
+    "peers": 145,
+    "seeds": 29,
+    "list_peers": 502,
+    "rate_kBps": 49,
+    "disk": 45817856,
+    "have": 344
+   },
+   {
+    "t": 150.4,
+    "peers": 138,
+    "seeds": 29,
+    "list_peers": 534,
+    "rate_kBps": 241,
+    "disk": 47644672,
+    "have": 348
+   },
+   {
+    "t": 155.5,
+    "peers": 137,
+    "seeds": 29,
+    "list_peers": 535,
+    "rate_kBps": 445,
+    "disk": 50503680,
+    "have": 365
+   },
+   {
+    "t": 160.5,
+    "peers": 160,
+    "seeds": 29,
+    "list_peers": 539,
+    "rate_kBps": 555,
+    "disk": 53215232,
+    "have": 393
+   },
+   {
+    "t": 165.5,
+    "peers": 1,
+    "seeds": 1,
+    "list_peers": 0,
+    "rate_kBps": 793,
+    "disk": 56696832,
+    "have": 422
+   },
+   {
+    "t": 170.5,
+    "peers": 1,
+    "seeds": 1,
+    "list_peers": 0,
+    "rate_kBps": 767,
+    "disk": 59109376,
+    "have": 445
+   },
+   {
+    "t": 175.5,
+    "peers": 1,
+    "seeds": 1,
+    "list_peers": 0,
+    "rate_kBps": 824,
+    "disk": 63123456,
+    "have": 476
+   },
+   {
+    "t": 180.5,
+    "peers": 1,
+    "seeds": 1,
+    "list_peers": 0,
+    "rate_kBps": 530,
+    "disk": 64827392,
+    "have": 489
+   },
+   {
+    "t": 185.6,
+    "peers": 1,
+    "seeds": 1,
+    "list_peers": 0,
+    "rate_kBps": 174,
+    "disk": 64827392,
+    "have": 489
+   }
+  ]
+ },
+ {
+  "cache_limit_bytes": 50331648,
+  "torrent": "sintel",
+  "mode": "torrent",
+  "web_seeds": false,
+  "trial": 0,
+  "file_total_bytes": 129302391,
+  "metadata_s": 0.07,
+  "selected_file": "Sintel/Sintel.mp4",
+  "selected_file_bytes": 129241752,
+  "piece_length": 131072,
+  "pieces_total": 987,
+  "torrent_files": [
+   [
+    "Sintel/Sintel.de.srt",
+    1652
+   ],
+   [
+    "Sintel/Sintel.en.srt",
+    1514
+   ],
+   [
+    "Sintel/Sintel.es.srt",
+    1554
+   ],
+   [
+    "Sintel/Sintel.fr.srt",
+    1618
+   ],
+   [
+    "Sintel/Sintel.it.srt",
+    1546
+   ],
+   [
+    "Sintel/Sintel.mp4",
+    129241752
+   ],
+   [
+    "Sintel/Sintel.nl.srt",
+    1537
+   ],
+   [
+    "Sintel/Sintel.pl.srt",
+    1536
+   ],
+   [
+    "Sintel/Sintel.pt.srt",
+    1551
+   ],
+   [
+    "Sintel/Sintel.ru.srt",
+    2016
+   ],
+   [
+    "Sintel/poster.jpg",
+    46115
+   ]
+  ],
+  "startup_s": 7.32,
+  "initial_buffer_s": 0.0,
+  "bytes_at_first_frame": 9135415,
+  "pieces_at_first_frame": 68,
+  "duration_s": 888.064,
+  "steady": {
+   "wall_s": 90,
+   "played_s": 89.9,
+   "rebuffers": 0,
+   "rebuffer_s": 0.0
+  },
+  "seeks": [
+   {
+    "target_s": 88.8064,
+    "restart_event_s": 0.03,
+    "recovery_s": 0.17,
+    "downloaded_MB": 0.2,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "10%"
+   },
+   {
+    "target_s": 444.032,
+    "restart_event_s": 2.55,
+    "recovery_s": 2.63,
+    "downloaded_MB": 13.6,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50%"
+   },
+   {
+    "target_s": 817.01888,
+    "restart_event_s": 4.74,
+    "recovery_s": 4.82,
+    "downloaded_MB": 11.7,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "92%"
+   },
+   {
+    "target_s": 17.76128,
+    "restart_event_s": 3.83,
+    "recovery_s": 3.96,
+    "downloaded_MB": 10.9,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "2%"
+   },
+   {
+    "target_s": 444.032,
+    "restart_event_s": 0.04,
+    "recovery_s": 0.1,
+    "downloaded_MB": 0.9,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50% again"
+   },
+   {
+    "target_s": 879.18336,
+    "restart_event_s": 3.26,
+    "recovery_s": 3.44,
+    "downloaded_MB": 1.0,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "99%"
+   },
+   {
+    "target_s": 5.0,
+    "restart_event_s": 0.13,
+    "recovery_s": 0.38,
+    "downloaded_MB": 1.8,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "0:05"
+   }
+  ],
+  "peer_outage_12s": {
+   "peers_during_outage": 0,
+   "recovered_playback_s": 2.0,
+   "restarts": 1,
+   "zero_peer_s_added": 12.1,
+   "http_stalls": 1,
+   "http_aborted": 0
+  },
+  "bytes_downloaded": 85177109,
+  "pieces_downloaded": 271,
+  "fraction_of_file": 0.659,
+  "peak_allocated_disk_bytes": 50868224,
+  "http_bytes_sent": 58271894,
+  "mpv_total_rebuffers": 0,
+  "mpv_total_rebuffer_s": 0.0,
+  "hash_failed": 0,
+  "restarts": 2,
+  "peer_connects": 1043,
+  "peer_disconnects": 1030,
+  "zero_peer_s": 13.39,
+  "peers_min": 0,
+  "peers_median": 47,
+  "peers_max": 190,
+  "seeds_max": 47,
+  "pieces_ever_demanded": 547,
+  "pieces_downloaded_but_never_demanded": [],
+  "count_outside_window": 0,
+  "deadline_sets": 425,
+  "obsolete_pieces_cancelled": 231,
+  "http_mismatch": 0,
+  "seeks_detected": 6,
+  "stalls": 4,
+  "series_every_5s": [
+   {
+    "t": 0.0,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 0,
+    "have": 0
+   },
+   {
+    "t": 5.0,
+    "peers": 23,
+    "seeds": 4,
+    "list_peers": 28,
+    "rate_kBps": 1322,
+    "disk": 8790016,
+    "have": 64
+   },
+   {
+    "t": 10.0,
+    "peers": 23,
+    "seeds": 6,
+    "list_peers": 29,
+    "rate_kBps": 1104,
+    "disk": 11374592,
+    "have": 86
+   },
+   {
+    "t": 15.0,
+    "peers": 29,
+    "seeds": 6,
+    "list_peers": 50,
+    "rate_kBps": 473,
+    "disk": 12419072,
+    "have": 93
+   },
+   {
+    "t": 20.1,
+    "peers": 47,
+    "seeds": 10,
+    "list_peers": 409,
+    "rate_kBps": 174,
+    "disk": 12541952,
+    "have": 95
+   },
+   {
+    "t": 25.1,
+    "peers": 33,
+    "seeds": 16,
+    "list_peers": 419,
+    "rate_kBps": 109,
+    "disk": 12914688,
+    "have": 97
+   },
+   {
+    "t": 30.1,
+    "peers": 52,
+    "seeds": 23,
+    "list_peers": 429,
+    "rate_kBps": 102,
+    "disk": 13447168,
+    "have": 101
+   },
+   {
+    "t": 35.1,
+    "peers": 156,
+    "seeds": 28,
+    "list_peers": 430,
+    "rate_kBps": 145,
+    "disk": 14221312,
+    "have": 106
+   },
+   {
+    "t": 40.1,
+    "peers": 168,
+    "seeds": 29,
+    "list_peers": 433,
+    "rate_kBps": 91,
+    "disk": 14573568,
+    "have": 111
+   },
+   {
+    "t": 45.1,
+    "peers": 137,
+    "seeds": 29,
+    "list_peers": 434,
+    "rate_kBps": 117,
+    "disk": 15237120,
+    "have": 115
+   },
+   {
+    "t": 50.2,
+    "peers": 169,
+    "seeds": 29,
+    "list_peers": 434,
+    "rate_kBps": 160,
+    "disk": 16044032,
+    "have": 120
+   },
+   {
+    "t": 55.2,
+    "peers": 164,
+    "seeds": 29,
+    "list_peers": 434,
+    "rate_kBps": 155,
+    "disk": 16662528,
+    "have": 127
+   },
+   {
+    "t": 60.2,
+    "peers": 154,
+    "seeds": 31,
+    "list_peers": 438,
+    "rate_kBps": 179,
+    "disk": 17518592,
+    "have": 131
+   },
+   {
+    "t": 65.2,
+    "peers": 139,
+    "seeds": 30,
+    "list_peers": 438,
+    "rate_kBps": 158,
+    "disk": 18161664,
+    "have": 136
+   },
+   {
+    "t": 70.2,
+    "peers": 168,
+    "seeds": 31,
+    "list_peers": 440,
+    "rate_kBps": 205,
+    "disk": 18993152,
+    "have": 145
+   },
+   {
+    "t": 75.2,
+    "peers": 149,
+    "seeds": 33,
+    "list_peers": 551,
+    "rate_kBps": 175,
+    "disk": 19939328,
+    "have": 151
+   },
+   {
+    "t": 80.3,
+    "peers": 85,
+    "seeds": 40,
+    "list_peers": 562,
+    "rate_kBps": 119,
+    "disk": 20275200,
+    "have": 154
+   },
+   {
+    "t": 85.3,
+    "peers": 151,
+    "seeds": 38,
+    "list_peers": 562,
+    "rate_kBps": 115,
+    "disk": 21020672,
+    "have": 158
+   },
+   {
+    "t": 90.3,
+    "peers": 163,
+    "seeds": 39,
+    "list_peers": 565,
+    "rate_kBps": 104,
+    "disk": 21319680,
+    "have": 162
+   },
+   {
+    "t": 95.3,
+    "peers": 158,
+    "seeds": 39,
+    "list_peers": 565,
+    "rate_kBps": 67,
+    "disk": 21794816,
+    "have": 165
+   },
+   {
+    "t": 100.3,
+    "peers": 177,
+    "seeds": 43,
+    "list_peers": 566,
+    "rate_kBps": 68,
+    "disk": 22118400,
+    "have": 169
+   },
+   {
+    "t": 105.3,
+    "peers": 149,
+    "seeds": 45,
+    "list_peers": 566,
+    "rate_kBps": 1883,
+    "disk": 34480128,
+    "have": 260
+   },
+   {
+    "t": 110.3,
+    "peers": 144,
+    "seeds": 46,
+    "list_peers": 566,
+    "rate_kBps": 1927,
+    "disk": 42741760,
+    "have": 304
+   },
+   {
+    "t": 115.9,
+    "peers": 1,
+    "seeds": 0,
+    "list_peers": 171,
+    "rate_kBps": 0,
+    "disk": 35602432,
+    "have": 269
+   },
+   {
+    "t": 120.9,
+    "peers": 13,
+    "seeds": 8,
+    "list_peers": 418,
+    "rate_kBps": 759,
+    "disk": 40488960,
+    "have": 297
+   },
+   {
+    "t": 125.9,
+    "peers": 21,
+    "seeds": 14,
+    "list_peers": 437,
+    "rate_kBps": 1091,
+    "disk": 46424064,
+    "have": 349
+   },
+   {
+    "t": 130.9,
+    "peers": 22,
+    "seeds": 17,
+    "list_peers": 535,
+    "rate_kBps": 566,
+    "disk": 47697920,
+    "have": 358
+   },
+   {
+    "t": 136.4,
+    "peers": 1,
+    "seeds": 1,
+    "list_peers": 7,
+    "rate_kBps": 0,
+    "disk": 34918400,
+    "have": 263
+   },
+   {
+    "t": 141.5,
+    "peers": 13,
+    "seeds": 11,
+    "list_peers": 378,
+    "rate_kBps": 256,
+    "disk": 37978112,
+    "have": 272
+   },
+   {
+    "t": 146.5,
+    "peers": 3,
+    "seeds": 2,
+    "list_peers": 153,
+    "rate_kBps": 0,
+    "disk": 31440896,
+    "have": 233
+   },
+   {
+    "t": 151.5,
+    "peers": 13,
+    "seeds": 10,
+    "list_peers": 367,
+    "rate_kBps": 645,
+    "disk": 34975744,
+    "have": 259
+   },
+   {
+    "t": 156.5,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 248,
+    "disk": 35270656,
+    "have": 260
+   },
+   {
+    "t": 161.6,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 35270656,
+    "have": 260
+   },
+   {
+    "t": 166.6,
+    "peers": 2,
+    "seeds": 1,
+    "list_peers": 258,
+    "rate_kBps": 0,
+    "disk": 35270656,
+    "have": 260
+   },
+   {
+    "t": 171.6,
+    "peers": 12,
+    "seeds": 9,
+    "list_peers": 489,
+    "rate_kBps": 244,
+    "disk": 36446208,
+    "have": 265
+   },
+   {
+    "t": 176.7,
+    "peers": 10,
+    "seeds": 7,
+    "list_peers": 362,
+    "rate_kBps": 56,
+    "disk": 37195776,
+    "have": 268
+   }
+  ]
+ },
+ {
+  "cache_limit_bytes": 50331648,
+  "torrent": "sintel",
+  "mode": "torrent",
+  "web_seeds": false,
+  "trial": 1,
+  "file_total_bytes": 129302391,
+  "metadata_s": 0.12,
+  "selected_file": "Sintel/Sintel.mp4",
+  "selected_file_bytes": 129241752,
+  "piece_length": 131072,
+  "pieces_total": 987,
+  "torrent_files": [
+   [
+    "Sintel/Sintel.de.srt",
+    1652
+   ],
+   [
+    "Sintel/Sintel.en.srt",
+    1514
+   ],
+   [
+    "Sintel/Sintel.es.srt",
+    1554
+   ],
+   [
+    "Sintel/Sintel.fr.srt",
+    1618
+   ],
+   [
+    "Sintel/Sintel.it.srt",
+    1546
+   ],
+   [
+    "Sintel/Sintel.mp4",
+    129241752
+   ],
+   [
+    "Sintel/Sintel.nl.srt",
+    1537
+   ],
+   [
+    "Sintel/Sintel.pl.srt",
+    1536
+   ],
+   [
+    "Sintel/Sintel.pt.srt",
+    1551
+   ],
+   [
+    "Sintel/Sintel.ru.srt",
+    2016
+   ],
+   [
+    "Sintel/poster.jpg",
+    46115
+   ]
+  ],
+  "startup_s": 13.49,
+  "initial_buffer_s": 0.0,
+  "bytes_at_first_frame": 11519662,
+  "pieces_at_first_frame": 84,
+  "duration_s": 888.064,
+  "steady": {
+   "wall_s": 90,
+   "played_s": 90.0,
+   "rebuffers": 0,
+   "rebuffer_s": 0.0
+  },
+  "seeks": [
+   {
+    "target_s": 88.8064,
+    "restart_event_s": 0.02,
+    "recovery_s": 0.2,
+    "downloaded_MB": 0.3,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "10%"
+   },
+   {
+    "target_s": 444.032,
+    "restart_event_s": 1.46,
+    "recovery_s": 9.59,
+    "downloaded_MB": 12.8,
+    "rebuffers": 1,
+    "rebuffer_s": 8.2,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50%"
+   },
+   {
+    "target_s": 817.01888,
+    "restart_event_s": 5.44,
+    "recovery_s": 5.47,
+    "downloaded_MB": 14.6,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "92%"
+   },
+   {
+    "target_s": 17.76128,
+    "restart_event_s": 3.52,
+    "recovery_s": 3.69,
+    "downloaded_MB": 10.2,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "2%"
+   },
+   {
+    "target_s": 444.032,
+    "restart_event_s": 0.71,
+    "recovery_s": 0.92,
+    "downloaded_MB": 1.0,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50% again"
+   },
+   {
+    "target_s": 879.18336,
+    "restart_event_s": 4.41,
+    "recovery_s": 4.45,
+    "downloaded_MB": 1.0,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "99%"
+   },
+   {
+    "target_s": 5.0,
+    "restart_event_s": 0.12,
+    "recovery_s": 0.09,
+    "downloaded_MB": 8.3,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "0:05"
+   }
+  ],
+  "peer_outage_12s": {
+   "peers_during_outage": 0,
+   "recovered_playback_s": 3.4,
+   "restarts": 1,
+   "zero_peer_s_added": 11.4,
+   "http_stalls": 2,
+   "http_aborted": 0
+  },
+  "bytes_downloaded": 86184317,
+  "pieces_downloaded": 289,
+  "fraction_of_file": 0.667,
+  "peak_allocated_disk_bytes": 46018560,
+  "http_bytes_sent": 65444102,
+  "mpv_total_rebuffers": 3,
+  "mpv_total_rebuffer_s": 11.0,
+  "hash_failed": 0,
+  "restarts": 2,
+  "peer_connects": 1158,
+  "peer_disconnects": 1145,
+  "zero_peer_s": 11.91,
+  "peers_min": 0,
+  "peers_median": 133.0,
+  "peers_max": 183,
+  "seeds_max": 46,
+  "pieces_ever_demanded": 558,
+  "pieces_downloaded_but_never_demanded": [],
+  "count_outside_window": 0,
+  "deadline_sets": 389,
+  "obsolete_pieces_cancelled": 286,
+  "http_mismatch": 0,
+  "seeks_detected": 6,
+  "stalls": 4,
+  "series_every_5s": [
+   {
+    "t": 0.0,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 0,
+    "have": 0
+   },
+   {
+    "t": 5.0,
+    "peers": 10,
+    "seeds": 8,
+    "list_peers": 438,
+    "rate_kBps": 179,
+    "disk": 1232896,
+    "have": 6
+   },
+   {
+    "t": 10.0,
+    "peers": 16,
+    "seeds": 10,
+    "list_peers": 453,
+    "rate_kBps": 917,
+    "disk": 6377472,
+    "have": 37
+   },
+   {
+    "t": 15.0,
+    "peers": 19,
+    "seeds": 14,
+    "list_peers": 468,
+    "rate_kBps": 1025,
+    "disk": 11337728,
+    "have": 85
+   },
+   {
+    "t": 20.1,
+    "peers": 89,
+    "seeds": 20,
+    "list_peers": 498,
+    "rate_kBps": 401,
+    "disk": 11755520,
+    "have": 89
+   },
+   {
+    "t": 25.1,
+    "peers": 177,
+    "seeds": 25,
+    "list_peers": 501,
+    "rate_kBps": 232,
+    "disk": 12873728,
+    "have": 92
+   },
+   {
+    "t": 30.1,
+    "peers": 153,
+    "seeds": 26,
+    "list_peers": 510,
+    "rate_kBps": 108,
+    "disk": 13123584,
+    "have": 95
+   },
+   {
+    "t": 35.1,
+    "peers": 145,
+    "seeds": 29,
+    "list_peers": 512,
+    "rate_kBps": 63,
+    "disk": 13258752,
+    "have": 98
+   },
+   {
+    "t": 40.1,
+    "peers": 149,
+    "seeds": 30,
+    "list_peers": 515,
+    "rate_kBps": 68,
+    "disk": 13668352,
+    "have": 101
+   },
+   {
+    "t": 45.1,
+    "peers": 158,
+    "seeds": 34,
+    "list_peers": 515,
+    "rate_kBps": 65,
+    "disk": 14053376,
+    "have": 106
+   },
+   {
+    "t": 50.2,
+    "peers": 172,
+    "seeds": 31,
+    "list_peers": 515,
+    "rate_kBps": 111,
+    "disk": 14737408,
+    "have": 109
+   },
+   {
+    "t": 55.2,
+    "peers": 136,
+    "seeds": 33,
+    "list_peers": 515,
+    "rate_kBps": 104,
+    "disk": 15548416,
+    "have": 113
+   },
+   {
+    "t": 60.2,
+    "peers": 174,
+    "seeds": 34,
+    "list_peers": 515,
+    "rate_kBps": 170,
+    "disk": 16228352,
+    "have": 120
+   },
+   {
+    "t": 65.2,
+    "peers": 181,
+    "seeds": 34,
+    "list_peers": 518,
+    "rate_kBps": 129,
+    "disk": 16637952,
+    "have": 124
+   },
+   {
+    "t": 70.2,
+    "peers": 151,
+    "seeds": 34,
+    "list_peers": 518,
+    "rate_kBps": 187,
+    "disk": 17592320,
+    "have": 132
+   },
+   {
+    "t": 75.2,
+    "peers": 146,
+    "seeds": 37,
+    "list_peers": 600,
+    "rate_kBps": 135,
+    "disk": 18182144,
+    "have": 136
+   },
+   {
+    "t": 80.2,
+    "peers": 117,
+    "seeds": 42,
+    "list_peers": 600,
+    "rate_kBps": 147,
+    "disk": 18948096,
+    "have": 144
+   },
+   {
+    "t": 85.3,
+    "peers": 138,
+    "seeds": 40,
+    "list_peers": 601,
+    "rate_kBps": 149,
+    "disk": 19685376,
+    "have": 149
+   },
+   {
+    "t": 90.3,
+    "peers": 157,
+    "seeds": 39,
+    "list_peers": 601,
+    "rate_kBps": 89,
+    "disk": 20086784,
+    "have": 153
+   },
+   {
+    "t": 95.3,
+    "peers": 165,
+    "seeds": 40,
+    "list_peers": 601,
+    "rate_kBps": 99,
+    "disk": 20545536,
+    "have": 157
+   },
+   {
+    "t": 100.3,
+    "peers": 172,
+    "seeds": 42,
+    "list_peers": 601,
+    "rate_kBps": 91,
+    "disk": 21078016,
+    "have": 160
+   },
+   {
+    "t": 105.3,
+    "peers": 164,
+    "seeds": 44,
+    "list_peers": 602,
+    "rate_kBps": 107,
+    "disk": 21594112,
+    "have": 165
+   },
+   {
+    "t": 110.3,
+    "peers": 150,
+    "seeds": 45,
+    "list_peers": 602,
+    "rate_kBps": 1289,
+    "disk": 29859840,
+    "have": 208
+   },
+   {
+    "t": 115.4,
+    "peers": 157,
+    "seeds": 46,
+    "list_peers": 602,
+    "rate_kBps": 825,
+    "disk": 32415744,
+    "have": 243
+   },
+   {
+    "t": 120.4,
+    "peers": 166,
+    "seeds": 46,
+    "list_peers": 602,
+    "rate_kBps": 531,
+    "disk": 33689600,
+    "have": 253
+   },
+   {
+    "t": 125.4,
+    "peers": 160,
+    "seeds": 45,
+    "list_peers": 603,
+    "rate_kBps": 1566,
+    "disk": 44171264,
+    "have": 325
+   },
+   {
+    "t": 130.9,
+    "peers": 10,
+    "seeds": 6,
+    "list_peers": 398,
+    "rate_kBps": 225,
+    "disk": 35328000,
+    "have": 266
+   },
+   {
+    "t": 135.9,
+    "peers": 17,
+    "seeds": 13,
+    "list_peers": 428,
+    "rate_kBps": 1034,
+    "disk": 42864640,
+    "have": 296
+   },
+   {
+    "t": 141.4,
+    "peers": 2,
+    "seeds": 0,
+    "list_peers": 313,
+    "rate_kBps": 0,
+    "disk": 35004416,
+    "have": 264
+   },
+   {
+    "t": 146.5,
+    "peers": 5,
+    "seeds": 4,
+    "list_peers": 406,
+    "rate_kBps": 71,
+    "disk": 35840000,
+    "have": 268
+   },
+   {
+    "t": 151.5,
+    "peers": 9,
+    "seeds": 7,
+    "list_peers": 413,
+    "rate_kBps": 83,
+    "disk": 36052992,
+    "have": 272
+   },
+   {
+    "t": 156.5,
+    "peers": 30,
+    "seeds": 15,
+    "list_peers": 450,
+    "rate_kBps": 1167,
+    "disk": 44249088,
+    "have": 332
+   },
+   {
+    "t": 161.6,
+    "peers": 8,
+    "seeds": 7,
+    "list_peers": 375,
+    "rate_kBps": 482,
+    "disk": 37781504,
+    "have": 279
+   },
+   {
+    "t": 166.6,
+    "peers": 14,
+    "seeds": 10,
+    "list_peers": 387,
+    "rate_kBps": 1105,
+    "disk": 44568576,
+    "have": 320
+   },
+   {
+    "t": 171.6,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 499,
+    "disk": 46018560,
+    "have": 342
+   },
+   {
+    "t": 176.7,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 46018560,
+    "have": 342
+   },
+   {
+    "t": 181.7,
+    "peers": 6,
+    "seeds": 4,
+    "list_peers": 442,
+    "rate_kBps": 70,
+    "disk": 35110912,
+    "have": 260
+   },
+   {
+    "t": 186.7,
+    "peers": 24,
+    "seeds": 22,
+    "list_peers": 520,
+    "rate_kBps": 329,
+    "disk": 38096896,
+    "have": 282
+   },
+   {
+    "t": 192.2,
+    "peers": 11,
+    "seeds": 8,
+    "list_peers": 452,
+    "rate_kBps": 115,
+    "disk": 38735872,
+    "have": 288
+   }
+  ]
+ },
+ {
+  "cache_limit_bytes": 167772160,
+  "torrent": "tears-of-steel",
+  "mode": "torrent",
+  "web_seeds": false,
+  "trial": 0,
+  "file_total_bytes": 571426507,
+  "metadata_s": 0.06,
+  "selected_file": "Tears of Steel/Tears of Steel.webm",
+  "selected_file_bytes": 571346576,
+  "piece_length": 524288,
+  "pieces_total": 1090,
+  "torrent_files": [
+   [
+    "Tears of Steel/Tears of Steel.de.srt",
+    4850
+   ],
+   [
+    "Tears of Steel/Tears of Steel.en.srt",
+    4755
+   ],
+   [
+    "Tears of Steel/Tears of Steel.es.srt",
+    4944
+   ],
+   [
+    "Tears of Steel/Tears of Steel.fr.srt",
+    4618
+   ],
+   [
+    "Tears of Steel/Tears of Steel.it.srt",
+    4746
+   ],
+   [
+    "Tears of Steel/Tears of Steel.nl.srt",
+    4531
+   ],
+   [
+    "Tears of Steel/Tears of Steel.no.srt",
+    9558
+   ],
+   [
+    "Tears of Steel/Tears of Steel.ru.srt",
+    5933
+   ],
+   [
+    "Tears of Steel/Tears of Steel.webm",
+    571346576
+   ],
+   [
+    "Tears of Steel/poster.jpg",
+    35996
+   ]
+  ],
+  "startup_s": 12.24,
+  "initial_buffer_s": 0.0,
+  "bytes_at_first_frame": 12371966,
+  "pieces_at_first_frame": 21,
+  "duration_s": 734.167,
+  "steady": {
+   "wall_s": 90,
+   "played_s": 90.0,
+   "rebuffers": 0,
+   "rebuffer_s": 0.0
+  },
+  "seeks": [
+   {
+    "target_s": 73.4167,
+    "restart_event_s": 0.43,
+    "recovery_s": 0.51,
+    "downloaded_MB": 0.3,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "10%"
+   },
+   {
+    "target_s": 367.0835,
+    "restart_event_s": 10.87,
+    "recovery_s": 11.11,
+    "downloaded_MB": 28.4,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50%"
+   },
+   {
+    "target_s": 675.4336400000001,
+    "restart_event_s": 46.83,
+    "recovery_s": 64.25,
+    "downloaded_MB": 44.6,
+    "rebuffers": 2,
+    "rebuffer_s": 17.1,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "92%"
+   },
+   {
+    "target_s": 14.683340000000001,
+    "restart_event_s": 38.95,
+    "recovery_s": 40.25,
+    "downloaded_MB": 16.3,
+    "rebuffers": 2,
+    "rebuffer_s": 2.6,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "2%"
+   },
+   {
+    "target_s": 367.0835,
+    "restart_event_s": 14.85,
+    "recovery_s": 14.92,
+    "downloaded_MB": 8.3,
+    "rebuffers": 0,
+    "rebuffer_s": 1.8,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50% again"
+   },
+   {
+    "target_s": 726.82533,
+    "restart_event_s": 3.18,
+    "recovery_s": 3.2,
+    "downloaded_MB": 2.3,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "99%"
+   },
+   {
+    "target_s": 5.0,
+    "restart_event_s": 0.22,
+    "recovery_s": 0.35,
+    "downloaded_MB": 3.6,
+    "rebuffers": 1,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "0:05"
+   }
+  ],
+  "peer_outage_12s": {
+   "peers_during_outage": 0,
+   "recovered_playback_s": 6.6,
+   "restarts": 1,
+   "zero_peer_s_added": 11.8,
+   "http_stalls": 13,
+   "http_aborted": 0
+  },
+  "bytes_downloaded": 260297486,
+  "pieces_downloaded": 220,
+  "fraction_of_file": 0.456,
+  "peak_allocated_disk_bytes": 153247744,
+  "http_bytes_sent": 141872998,
+  "mpv_total_rebuffers": 7,
+  "mpv_total_rebuffer_s": 45.7,
+  "hash_failed": 0,
+  "restarts": 10,
+  "peer_connects": 4179,
+  "peer_disconnects": 4107,
+  "zero_peer_s": 15.17,
+  "peers_min": 0,
+  "peers_median": 112,
+  "peers_max": 169,
+  "seeds_max": 23,
+  "pieces_ever_demanded": 459,
+  "pieces_downloaded_but_never_demanded": [],
+  "count_outside_window": 0,
+  "deadline_sets": 371,
+  "obsolete_pieces_cancelled": 202,
+  "http_mismatch": 0,
+  "seeks_detected": 7,
+  "stalls": 23,
+  "series_every_5s": [
+   {
+    "t": 0.0,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 0,
+    "have": 0
+   },
+   {
+    "t": 5.0,
+    "peers": 8,
+    "seeds": 6,
+    "list_peers": 170,
+    "rate_kBps": 10,
+    "disk": 94208,
+    "have": 0
+   },
+   {
+    "t": 10.0,
+    "peers": 72,
+    "seeds": 11,
+    "list_peers": 194,
+    "rate_kBps": 973,
+    "disk": 7323648,
+    "have": 10
+   },
+   {
+    "t": 15.0,
+    "peers": 153,
+    "seeds": 17,
+    "list_peers": 194,
+    "rate_kBps": 1439,
+    "disk": 15245312,
+    "have": 24
+   },
+   {
+    "t": 20.1,
+    "peers": 131,
+    "seeds": 20,
+    "list_peers": 194,
+    "rate_kBps": 1744,
+    "disk": 25878528,
+    "have": 38
+   },
+   {
+    "t": 25.1,
+    "peers": 132,
+    "seeds": 20,
+    "list_peers": 194,
+    "rate_kBps": 3389,
+    "disk": 42749952,
+    "have": 74
+   },
+   {
+    "t": 30.1,
+    "peers": 139,
+    "seeds": 20,
+    "list_peers": 194,
+    "rate_kBps": 2579,
+    "disk": 51646464,
+    "have": 94
+   },
+   {
+    "t": 35.1,
+    "peers": 133,
+    "seeds": 20,
+    "list_peers": 194,
+    "rate_kBps": 1289,
+    "disk": 54546432,
+    "have": 101
+   },
+   {
+    "t": 40.1,
+    "peers": 143,
+    "seeds": 19,
+    "list_peers": 194,
+    "rate_kBps": 1111,
+    "disk": 60014592,
+    "have": 113
+   },
+   {
+    "t": 45.1,
+    "peers": 126,
+    "seeds": 20,
+    "list_peers": 195,
+    "rate_kBps": 959,
+    "disk": 64581632,
+    "have": 120
+   },
+   {
+    "t": 50.1,
+    "peers": 144,
+    "seeds": 19,
+    "list_peers": 195,
+    "rate_kBps": 891,
+    "disk": 68739072,
+    "have": 127
+   },
+   {
+    "t": 55.2,
+    "peers": 127,
+    "seeds": 19,
+    "list_peers": 195,
+    "rate_kBps": 1063,
+    "disk": 73949184,
+    "have": 138
+   },
+   {
+    "t": 60.2,
+    "peers": 119,
+    "seeds": 19,
+    "list_peers": 195,
+    "rate_kBps": 884,
+    "disk": 78843904,
+    "have": 149
+   },
+   {
+    "t": 65.2,
+    "peers": 145,
+    "seeds": 19,
+    "list_peers": 195,
+    "rate_kBps": 850,
+    "disk": 82743296,
+    "have": 156
+   },
+   {
+    "t": 70.2,
+    "peers": 129,
+    "seeds": 18,
+    "list_peers": 195,
+    "rate_kBps": 935,
+    "disk": 86441984,
+    "have": 162
+   },
+   {
+    "t": 75.2,
+    "peers": 129,
+    "seeds": 19,
+    "list_peers": 195,
+    "rate_kBps": 600,
+    "disk": 88616960,
+    "have": 168
+   },
+   {
+    "t": 80.2,
+    "peers": 126,
+    "seeds": 19,
+    "list_peers": 195,
+    "rate_kBps": 370,
+    "disk": 90091520,
+    "have": 170
+   },
+   {
+    "t": 85.3,
+    "peers": 121,
+    "seeds": 19,
+    "list_peers": 195,
+    "rate_kBps": 544,
+    "disk": 93257728,
+    "have": 176
+   },
+   {
+    "t": 90.3,
+    "peers": 135,
+    "seeds": 19,
+    "list_peers": 195,
+    "rate_kBps": 619,
+    "disk": 97124352,
+    "have": 183
+   },
+   {
+    "t": 95.3,
+    "peers": 130,
+    "seeds": 19,
+    "list_peers": 195,
+    "rate_kBps": 707,
+    "disk": 100114432,
+    "have": 190
+   },
+   {
+    "t": 100.3,
+    "peers": 129,
+    "seeds": 20,
+    "list_peers": 197,
+    "rate_kBps": 569,
+    "disk": 102608896,
+    "have": 195
+   },
+   {
+    "t": 105.3,
+    "peers": 134,
+    "seeds": 20,
+    "list_peers": 197,
+    "rate_kBps": 293,
+    "disk": 103194624,
+    "have": 196
+   },
+   {
+    "t": 110.3,
+    "peers": 129,
+    "seeds": 21,
+    "list_peers": 203,
+    "rate_kBps": 428,
+    "disk": 106172416,
+    "have": 197
+   },
+   {
+    "t": 115.3,
+    "peers": 147,
+    "seeds": 21,
+    "list_peers": 208,
+    "rate_kBps": 851,
+    "disk": 111054848,
+    "have": 204
+   },
+   {
+    "t": 120.4,
+    "peers": 144,
+    "seeds": 21,
+    "list_peers": 208,
+    "rate_kBps": 1612,
+    "disk": 122097664,
+    "have": 225
+   },
+   {
+    "t": 125.4,
+    "peers": 143,
+    "seeds": 21,
+    "list_peers": 208,
+    "rate_kBps": 3586,
+    "disk": 144678912,
+    "have": 263
+   },
+   {
+    "t": 130.4,
+    "peers": 4,
+    "seeds": 2,
+    "list_peers": 159,
+    "rate_kBps": 14,
+    "disk": 116768768,
+    "have": 222
+   },
+   {
+    "t": 135.4,
+    "peers": 43,
+    "seeds": 9,
+    "list_peers": 188,
+    "rate_kBps": 119,
+    "disk": 117813248,
+    "have": 222
+   },
+   {
+    "t": 140.4,
+    "peers": 122,
+    "seeds": 16,
+    "list_peers": 196,
+    "rate_kBps": 814,
+    "disk": 125087744,
+    "have": 230
+   },
+   {
+    "t": 145.4,
+    "peers": 3,
+    "seeds": 1,
+    "list_peers": 169,
+    "rate_kBps": 0,
+    "disk": 126164992,
+    "have": 234
+   },
+   {
+    "t": 150.4,
+    "peers": 44,
+    "seeds": 7,
+    "list_peers": 182,
+    "rate_kBps": 25,
+    "disk": 126234624,
+    "have": 234
+   },
+   {
+    "t": 155.5,
+    "peers": 128,
+    "seeds": 11,
+    "list_peers": 183,
+    "rate_kBps": 356,
+    "disk": 128200704,
+    "have": 235
+   },
+   {
+    "t": 160.5,
+    "peers": 4,
+    "seeds": 2,
+    "list_peers": 185,
+    "rate_kBps": 3,
+    "disk": 128950272,
+    "have": 236
+   },
+   {
+    "t": 165.5,
+    "peers": 40,
+    "seeds": 9,
+    "list_peers": 190,
+    "rate_kBps": 296,
+    "disk": 129724416,
+    "have": 238
+   },
+   {
+    "t": 170.5,
+    "peers": 129,
+    "seeds": 15,
+    "list_peers": 191,
+    "rate_kBps": 579,
+    "disk": 133369856,
+    "have": 246
+   },
+   {
+    "t": 175.5,
+    "peers": 3,
+    "seeds": 1,
+    "list_peers": 181,
+    "rate_kBps": 3,
+    "disk": 134275072,
+    "have": 246
+   },
+   {
+    "t": 180.5,
+    "peers": 48,
+    "seeds": 9,
+    "list_peers": 189,
+    "rate_kBps": 131,
+    "disk": 134619136,
+    "have": 246
+   },
+   {
+    "t": 185.6,
+    "peers": 128,
+    "seeds": 16,
+    "list_peers": 189,
+    "rate_kBps": 480,
+    "disk": 137244672,
+    "have": 253
+   },
+   {
+    "t": 190.6,
+    "peers": 6,
+    "seeds": 3,
+    "list_peers": 182,
+    "rate_kBps": 15,
+    "disk": 137949184,
+    "have": 255
+   },
+   {
+    "t": 195.6,
+    "peers": 67,
+    "seeds": 10,
+    "list_peers": 190,
+    "rate_kBps": 317,
+    "disk": 139407360,
+    "have": 255
+   },
+   {
+    "t": 200.6,
+    "peers": 154,
+    "seeds": 16,
+    "list_peers": 190,
+    "rate_kBps": 442,
+    "disk": 142008320,
+    "have": 259
+   },
+   {
+    "t": 205.7,
+    "peers": 5,
+    "seeds": 2,
+    "list_peers": 172,
+    "rate_kBps": 35,
+    "disk": 143224832,
+    "have": 259
+   },
+   {
+    "t": 210.7,
+    "peers": 78,
+    "seeds": 10,
+    "list_peers": 178,
+    "rate_kBps": 340,
+    "disk": 144343040,
+    "have": 262
+   },
+   {
+    "t": 215.7,
+    "peers": 150,
+    "seeds": 17,
+    "list_peers": 179,
+    "rate_kBps": 373,
+    "disk": 146149376,
+    "have": 263
+   },
+   {
+    "t": 220.8,
+    "peers": 3,
+    "seeds": 1,
+    "list_peers": 162,
+    "rate_kBps": 6,
+    "disk": 147087360,
+    "have": 264
+   },
+   {
+    "t": 225.8,
+    "peers": 61,
+    "seeds": 10,
+    "list_peers": 173,
+    "rate_kBps": 180,
+    "disk": 147226624,
+    "have": 264
+   },
+   {
+    "t": 230.8,
+    "peers": 141,
+    "seeds": 15,
+    "list_peers": 182,
+    "rate_kBps": 448,
+    "disk": 148807680,
+    "have": 267
+   },
+   {
+    "t": 235.8,
+    "peers": 2,
+    "seeds": 1,
+    "list_peers": 159,
+    "rate_kBps": 9,
+    "disk": 149721088,
+    "have": 269
+   },
+   {
+    "t": 240.8,
+    "peers": 61,
+    "seeds": 8,
+    "list_peers": 164,
+    "rate_kBps": 263,
+    "disk": 150577152,
+    "have": 270
+   },
+   {
+    "t": 245.8,
+    "peers": 3,
+    "seeds": 1,
+    "list_peers": 144,
+    "rate_kBps": 13,
+    "disk": 108089344,
+    "have": 205
+   },
+   {
+    "t": 250.8,
+    "peers": 5,
+    "seeds": 3,
+    "list_peers": 171,
+    "rate_kBps": 432,
+    "disk": 110829568,
+    "have": 209
+   },
+   {
+    "t": 255.9,
+    "peers": 52,
+    "seeds": 14,
+    "list_peers": 182,
+    "rate_kBps": 793,
+    "disk": 115601408,
+    "have": 217
+   },
+   {
+    "t": 260.9,
+    "peers": 132,
+    "seeds": 19,
+    "list_peers": 183,
+    "rate_kBps": 262,
+    "disk": 115634176,
+    "have": 218
+   },
+   {
+    "t": 265.9,
+    "peers": 144,
+    "seeds": 22,
+    "list_peers": 183,
+    "rate_kBps": 692,
+    "disk": 120090624,
+    "have": 221
+   },
+   {
+    "t": 270.9,
+    "peers": 128,
+    "seeds": 22,
+    "list_peers": 183,
+    "rate_kBps": 1150,
+    "disk": 127168512,
+    "have": 228
+   },
+   {
+    "t": 275.9,
+    "peers": 160,
+    "seeds": 22,
+    "list_peers": 183,
+    "rate_kBps": 1813,
+    "disk": 138452992,
+    "have": 241
+   },
+   {
+    "t": 281.4,
+    "peers": 2,
+    "seeds": 0,
+    "list_peers": 139,
+    "rate_kBps": 0,
+    "disk": 107274240,
+    "have": 203
+   },
+   {
+    "t": 286.5,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 287,
+    "disk": 109654016,
+    "have": 205
+   },
+   {
+    "t": 291.5,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 109654016,
+    "have": 205
+   },
+   {
+    "t": 296.5,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 109654016,
+    "have": 205
+   },
+   {
+    "t": 301.5,
+    "peers": 10,
+    "seeds": 7,
+    "list_peers": 201,
+    "rate_kBps": 149,
+    "disk": 110764032,
+    "have": 206
+   },
+   {
+    "t": 307.0,
+    "peers": 3,
+    "seeds": 1,
+    "list_peers": 163,
+    "rate_kBps": 0,
+    "disk": 112623616,
+    "have": 209
+   },
+   {
+    "t": 312.0,
+    "peers": 30,
+    "seeds": 7,
+    "list_peers": 176,
+    "rate_kBps": 700,
+    "disk": 115609600,
+    "have": 216
+   }
+  ]
+ },
+ {
+  "cache_limit_bytes": 50331648,
+  "torrent": "sintel",
+  "mode": "torrent",
+  "web_seeds": false,
+  "trial": 0,
+  "file_total_bytes": 129302391,
+  "metadata_s": 0.2,
+  "selected_file": "Sintel/Sintel.mp4",
+  "selected_file_bytes": 129241752,
+  "piece_length": 131072,
+  "pieces_total": 987,
+  "torrent_files": [
+   [
+    "Sintel/Sintel.de.srt",
+    1652
+   ],
+   [
+    "Sintel/Sintel.en.srt",
+    1514
+   ],
+   [
+    "Sintel/Sintel.es.srt",
+    1554
+   ],
+   [
+    "Sintel/Sintel.fr.srt",
+    1618
+   ],
+   [
+    "Sintel/Sintel.it.srt",
+    1546
+   ],
+   [
+    "Sintel/Sintel.mp4",
+    129241752
+   ],
+   [
+    "Sintel/Sintel.nl.srt",
+    1537
+   ],
+   [
+    "Sintel/Sintel.pl.srt",
+    1536
+   ],
+   [
+    "Sintel/Sintel.pt.srt",
+    1551
+   ],
+   [
+    "Sintel/Sintel.ru.srt",
+    2016
+   ],
+   [
+    "Sintel/poster.jpg",
+    46115
+   ]
+  ],
+  "startup_s": 11.71,
+  "initial_buffer_s": 0.0,
+  "bytes_at_first_frame": 2148005,
+  "pieces_at_first_frame": 14,
+  "duration_s": 888.064,
+  "steady": {
+   "wall_s": 90,
+   "played_s": 78.6,
+   "rebuffers": 1,
+   "rebuffer_s": 11.2
+  },
+  "seeks": [
+   {
+    "target_s": 88.8064,
+    "restart_event_s": 0.04,
+    "recovery_s": 0.11,
+    "downloaded_MB": 1.4,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "10%"
+   },
+   {
+    "target_s": 444.032,
+    "restart_event_s": 5.27,
+    "recovery_s": 8.69,
+    "downloaded_MB": 14.3,
+    "rebuffers": 1,
+    "rebuffer_s": 3.5,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50%"
+   },
+   {
+    "target_s": 817.01888,
+    "restart_event_s": 1.2,
+    "recovery_s": 1.32,
+    "downloaded_MB": 6.7,
+    "rebuffers": 1,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "92%"
+   },
+   {
+    "target_s": 17.76128,
+    "restart_event_s": 3.87,
+    "recovery_s": 4.05,
+    "downloaded_MB": 7.4,
+    "rebuffers": 0,
+    "rebuffer_s": 1.3,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "2%"
+   },
+   {
+    "target_s": 444.032,
+    "restart_event_s": 0.03,
+    "recovery_s": 0.05,
+    "downloaded_MB": 1.2,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50% again"
+   },
+   {
+    "target_s": 879.18336,
+    "restart_event_s": 5.69,
+    "recovery_s": 5.87,
+    "downloaded_MB": 1.2,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "99%"
+   },
+   {
+    "target_s": 5.0,
+    "restart_event_s": 0.18,
+    "recovery_s": 0.37,
+    "downloaded_MB": 0.3,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "0:05"
+   }
+  ],
+  "peer_outage_12s": {
+   "peers_during_outage": 0,
+   "recovered_playback_s": 11.0,
+   "restarts": 2,
+   "zero_peer_s_added": 12.3,
+   "http_stalls": 3,
+   "http_aborted": 0
+  },
+  "bytes_downloaded": 70480132,
+  "pieces_downloaded": 330,
+  "fraction_of_file": 0.545,
+  "peak_allocated_disk_bytes": 43716608,
+  "http_bytes_sent": 47523990,
+  "mpv_total_rebuffers": 4,
+  "mpv_total_rebuffer_s": 34.1,
+  "hash_failed": 0,
+  "restarts": 2,
+  "peer_connects": 1133,
+  "peer_disconnects": 1116,
+  "zero_peer_s": 14.57,
+  "peers_min": 0,
+  "peers_median": 148.0,
+  "peers_max": 178,
+  "seeds_max": 31,
+  "pieces_ever_demanded": 510,
+  "pieces_downloaded_but_never_demanded": [],
+  "count_outside_window": 0,
+  "deadline_sets": 423,
+  "obsolete_pieces_cancelled": 296,
+  "http_mismatch": 0,
+  "seeks_detected": 6,
+  "stalls": 5,
+  "series_every_5s": [
+   {
+    "t": 0.0,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 0,
+    "have": 0
+   },
+   {
+    "t": 5.0,
+    "peers": 5,
+    "seeds": 4,
+    "list_peers": 391,
+    "rate_kBps": 56,
+    "disk": 307200,
+    "have": 0
+   },
+   {
+    "t": 10.0,
+    "peers": 7,
+    "seeds": 6,
+    "list_peers": 422,
+    "rate_kBps": 217,
+    "disk": 1634304,
+    "have": 7
+   },
+   {
+    "t": 15.0,
+    "peers": 27,
+    "seeds": 8,
+    "list_peers": 426,
+    "rate_kBps": 267,
+    "disk": 3153920,
+    "have": 21
+   },
+   {
+    "t": 20.1,
+    "peers": 136,
+    "seeds": 15,
+    "list_peers": 430,
+    "rate_kBps": 398,
+    "disk": 5345280,
+    "have": 34
+   },
+   {
+    "t": 25.1,
+    "peers": 161,
+    "seeds": 15,
+    "list_peers": 462,
+    "rate_kBps": 691,
+    "disk": 9244672,
+    "have": 65
+   },
+   {
+    "t": 30.1,
+    "peers": 170,
+    "seeds": 19,
+    "list_peers": 464,
+    "rate_kBps": 835,
+    "disk": 13344768,
+    "have": 100
+   },
+   {
+    "t": 35.1,
+    "peers": 152,
+    "seeds": 23,
+    "list_peers": 473,
+    "rate_kBps": 308,
+    "disk": 13529088,
+    "have": 101
+   },
+   {
+    "t": 40.1,
+    "peers": 167,
+    "seeds": 24,
+    "list_peers": 478,
+    "rate_kBps": 159,
+    "disk": 13901824,
+    "have": 105
+   },
+   {
+    "t": 45.1,
+    "peers": 174,
+    "seeds": 24,
+    "list_peers": 478,
+    "rate_kBps": 70,
+    "disk": 14073856,
+    "have": 107
+   },
+   {
+    "t": 50.1,
+    "peers": 149,
+    "seeds": 27,
+    "list_peers": 481,
+    "rate_kBps": 43,
+    "disk": 14262272,
+    "have": 109
+   },
+   {
+    "t": 55.2,
+    "peers": 162,
+    "seeds": 28,
+    "list_peers": 484,
+    "rate_kBps": 34,
+    "disk": 14393344,
+    "have": 110
+   },
+   {
+    "t": 60.2,
+    "peers": 175,
+    "seeds": 27,
+    "list_peers": 488,
+    "rate_kBps": 33,
+    "disk": 14647296,
+    "have": 112
+   },
+   {
+    "t": 65.2,
+    "peers": 159,
+    "seeds": 28,
+    "list_peers": 488,
+    "rate_kBps": 100,
+    "disk": 15429632,
+    "have": 115
+   },
+   {
+    "t": 70.2,
+    "peers": 160,
+    "seeds": 29,
+    "list_peers": 488,
+    "rate_kBps": 142,
+    "disk": 16191488,
+    "have": 120
+   },
+   {
+    "t": 75.2,
+    "peers": 157,
+    "seeds": 29,
+    "list_peers": 488,
+    "rate_kBps": 146,
+    "disk": 16867328,
+    "have": 128
+   },
+   {
+    "t": 80.2,
+    "peers": 158,
+    "seeds": 31,
+    "list_peers": 491,
+    "rate_kBps": 204,
+    "disk": 17846272,
+    "have": 133
+   },
+   {
+    "t": 85.3,
+    "peers": 153,
+    "seeds": 31,
+    "list_peers": 493,
+    "rate_kBps": 156,
+    "disk": 18370560,
+    "have": 137
+   },
+   {
+    "t": 90.3,
+    "peers": 166,
+    "seeds": 29,
+    "list_peers": 493,
+    "rate_kBps": 177,
+    "disk": 19210240,
+    "have": 146
+   },
+   {
+    "t": 95.3,
+    "peers": 148,
+    "seeds": 29,
+    "list_peers": 493,
+    "rate_kBps": 159,
+    "disk": 19976192,
+    "have": 150
+   },
+   {
+    "t": 100.3,
+    "peers": 163,
+    "seeds": 29,
+    "list_peers": 494,
+    "rate_kBps": 99,
+    "disk": 20275200,
+    "have": 154
+   },
+   {
+    "t": 105.3,
+    "peers": 164,
+    "seeds": 31,
+    "list_peers": 494,
+    "rate_kBps": 182,
+    "disk": 21573632,
+    "have": 163
+   },
+   {
+    "t": 110.3,
+    "peers": 151,
+    "seeds": 31,
+    "list_peers": 496,
+    "rate_kBps": 1463,
+    "disk": 31449088,
+    "have": 227
+   },
+   {
+    "t": 115.3,
+    "peers": 158,
+    "seeds": 31,
+    "list_peers": 497,
+    "rate_kBps": 672,
+    "disk": 33431552,
+    "have": 253
+   },
+   {
+    "t": 120.8,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 100,
+    "rate_kBps": 0,
+    "disk": 31752192,
+    "have": 239
+   },
+   {
+    "t": 125.9,
+    "peers": 5,
+    "seeds": 4,
+    "list_peers": 410,
+    "rate_kBps": 236,
+    "disk": 33730560,
+    "have": 251
+   },
+   {
+    "t": 130.9,
+    "peers": 10,
+    "seeds": 7,
+    "list_peers": 420,
+    "rate_kBps": 716,
+    "disk": 38408192,
+    "have": 284
+   },
+   {
+    "t": 135.9,
+    "peers": 27,
+    "seeds": 15,
+    "list_peers": 425,
+    "rate_kBps": 559,
+    "disk": 40431616,
+    "have": 303
+   },
+   {
+    "t": 140.9,
+    "peers": 141,
+    "seeds": 22,
+    "list_peers": 439,
+    "rate_kBps": 317,
+    "disk": 41672704,
+    "have": 310
+   },
+   {
+    "t": 145.9,
+    "peers": 163,
+    "seeds": 20,
+    "list_peers": 445,
+    "rate_kBps": 105,
+    "disk": 41684992,
+    "have": 311
+   },
+   {
+    "t": 150.9,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 17,
+    "rate_kBps": 0,
+    "disk": 34738176,
+    "have": 262
+   },
+   {
+    "t": 155.9,
+    "peers": 4,
+    "seeds": 3,
+    "list_peers": 385,
+    "rate_kBps": 153,
+    "disk": 36323328,
+    "have": 271
+   },
+   {
+    "t": 160.9,
+    "peers": 2,
+    "seeds": 2,
+    "list_peers": 314,
+    "rate_kBps": 2,
+    "disk": 36335616,
+    "have": 272
+   },
+   {
+    "t": 166.0,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 143,
+    "disk": 37298176,
+    "have": 276
+   },
+   {
+    "t": 171.5,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 37298176,
+    "have": 276
+   },
+   {
+    "t": 176.5,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 3,
+    "rate_kBps": 0,
+    "disk": 37298176,
+    "have": 276
+   },
+   {
+    "t": 181.5,
+    "peers": 15,
+    "seeds": 13,
+    "list_peers": 508,
+    "rate_kBps": 106,
+    "disk": 37969920,
+    "have": 278
+   },
+   {
+    "t": 186.5,
+    "peers": 5,
+    "seeds": 3,
+    "list_peers": 362,
+    "rate_kBps": 93,
+    "disk": 40361984,
+    "have": 292
+   },
+   {
+    "t": 191.5,
+    "peers": 10,
+    "seeds": 8,
+    "list_peers": 427,
+    "rate_kBps": 493,
+    "disk": 42827776,
+    "have": 315
+   },
+   {
+    "t": 196.6,
+    "peers": 16,
+    "seeds": 13,
+    "list_peers": 427,
+    "rate_kBps": 336,
+    "disk": 43716608,
+    "have": 328
+   }
+  ]
+ },
+ {
+  "cache_limit_bytes": 50331648,
+  "torrent": "sintel",
+  "mode": "torrent",
+  "web_seeds": false,
+  "trial": 1,
+  "file_total_bytes": 129302391,
+  "metadata_s": 0.13,
+  "selected_file": "Sintel/Sintel.mp4",
+  "selected_file_bytes": 129241752,
+  "piece_length": 131072,
+  "pieces_total": 987,
+  "torrent_files": [
+   [
+    "Sintel/Sintel.de.srt",
+    1652
+   ],
+   [
+    "Sintel/Sintel.en.srt",
+    1514
+   ],
+   [
+    "Sintel/Sintel.es.srt",
+    1554
+   ],
+   [
+    "Sintel/Sintel.fr.srt",
+    1618
+   ],
+   [
+    "Sintel/Sintel.it.srt",
+    1546
+   ],
+   [
+    "Sintel/Sintel.mp4",
+    129241752
+   ],
+   [
+    "Sintel/Sintel.nl.srt",
+    1537
+   ],
+   [
+    "Sintel/Sintel.pl.srt",
+    1536
+   ],
+   [
+    "Sintel/Sintel.pt.srt",
+    1551
+   ],
+   [
+    "Sintel/Sintel.ru.srt",
+    2016
+   ],
+   [
+    "Sintel/poster.jpg",
+    46115
+   ]
+  ],
+  "startup_s": 11.94,
+  "initial_buffer_s": 0.0,
+  "bytes_at_first_frame": 2282901,
+  "pieces_at_first_frame": 16,
+  "duration_s": 888.064,
+  "steady": {
+   "wall_s": 90,
+   "played_s": 89.9,
+   "rebuffers": 0,
+   "rebuffer_s": 0.0
+  },
+  "seeks": [
+   {
+    "target_s": 88.8064,
+    "restart_event_s": 0.04,
+    "recovery_s": 0.13,
+    "downloaded_MB": 0.1,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "10%"
+   },
+   {
+    "target_s": 444.032,
+    "restart_event_s": 4.26,
+    "recovery_s": 4.3,
+    "downloaded_MB": 15.0,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50%"
+   },
+   {
+    "target_s": 817.01888,
+    "restart_event_s": 13.18,
+    "recovery_s": 15.67,
+    "downloaded_MB": 14.0,
+    "rebuffers": 1,
+    "rebuffer_s": 2.6,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "92%"
+   },
+   {
+    "target_s": 17.76128,
+    "restart_event_s": 27.76,
+    "recovery_s": 27.8,
+    "downloaded_MB": 10.9,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "2%"
+   },
+   {
+    "target_s": 444.032,
+    "restart_event_s": 0.1,
+    "recovery_s": 0.08,
+    "downloaded_MB": 0.0,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "50% again"
+   },
+   {
+    "target_s": 879.18336,
+    "restart_event_s": 2.71,
+    "recovery_s": 2.94,
+    "downloaded_MB": 1.1,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "99%"
+   },
+   {
+    "target_s": 5.0,
+    "restart_event_s": 0.16,
+    "recovery_s": 0.34,
+    "downloaded_MB": 0.7,
+    "rebuffers": 0,
+    "rebuffer_s": 0.0,
+    "stale_deadlines_after": 0,
+    "head_source": "player",
+    "label": "0:05"
+   }
+  ],
+  "peer_outage_12s": {
+   "peers_during_outage": 0,
+   "recovered_playback_s": 6.2,
+   "restarts": 1,
+   "zero_peer_s_added": 12.3,
+   "http_stalls": 3,
+   "http_aborted": 0
+  },
+  "bytes_downloaded": 92071461,
+  "pieces_downloaded": 263,
+  "fraction_of_file": 0.712,
+  "peak_allocated_disk_bytes": 44953600,
+  "http_bytes_sent": 81078422,
+  "mpv_total_rebuffers": 2,
+  "mpv_total_rebuffer_s": 9.2,
+  "hash_failed": 0,
+  "restarts": 2,
+  "peer_connects": 1087,
+  "peer_disconnects": 1076,
+  "zero_peer_s": 14.57,
+  "peers_min": 0,
+  "peers_median": 26,
+  "peers_max": 190,
+  "seeds_max": 49,
+  "pieces_ever_demanded": 588,
+  "pieces_downloaded_but_never_demanded": [],
+  "count_outside_window": 0,
+  "deadline_sets": 321,
+  "obsolete_pieces_cancelled": 255,
+  "http_mismatch": 0,
+  "seeks_detected": 6,
+  "stalls": 5,
+  "series_every_5s": [
+   {
+    "t": 0.0,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 0,
+    "have": 0
+   },
+   {
+    "t": 5.0,
+    "peers": 14,
+    "seeds": 2,
+    "list_peers": 316,
+    "rate_kBps": 218,
+    "disk": 1773568,
+    "have": 13
+   },
+   {
+    "t": 10.0,
+    "peers": 21,
+    "seeds": 9,
+    "list_peers": 388,
+    "rate_kBps": 96,
+    "disk": 1966080,
+    "have": 14
+   },
+   {
+    "t": 15.0,
+    "peers": 20,
+    "seeds": 14,
+    "list_peers": 468,
+    "rate_kBps": 1476,
+    "disk": 10534912,
+    "have": 72
+   },
+   {
+    "t": 20.1,
+    "peers": 27,
+    "seeds": 19,
+    "list_peers": 475,
+    "rate_kBps": 941,
+    "disk": 13447168,
+    "have": 100
+   },
+   {
+    "t": 25.1,
+    "peers": 64,
+    "seeds": 18,
+    "list_peers": 568,
+    "rate_kBps": 317,
+    "disk": 13524992,
+    "have": 101
+   },
+   {
+    "t": 30.1,
+    "peers": 145,
+    "seeds": 22,
+    "list_peers": 588,
+    "rate_kBps": 138,
+    "disk": 13746176,
+    "have": 102
+   },
+   {
+    "t": 35.1,
+    "peers": 183,
+    "seeds": 24,
+    "list_peers": 588,
+    "rate_kBps": 144,
+    "disk": 14450688,
+    "have": 107
+   },
+   {
+    "t": 40.1,
+    "peers": 153,
+    "seeds": 28,
+    "list_peers": 589,
+    "rate_kBps": 155,
+    "disk": 15081472,
+    "have": 112
+   },
+   {
+    "t": 45.1,
+    "peers": 173,
+    "seeds": 35,
+    "list_peers": 589,
+    "rate_kBps": 124,
+    "disk": 15577088,
+    "have": 116
+   },
+   {
+    "t": 50.2,
+    "peers": 156,
+    "seeds": 40,
+    "list_peers": 595,
+    "rate_kBps": 67,
+    "disk": 15806464,
+    "have": 117
+   },
+   {
+    "t": 55.2,
+    "peers": 168,
+    "seeds": 42,
+    "list_peers": 595,
+    "rate_kBps": 239,
+    "disk": 16637952,
+    "have": 125
+   },
+   {
+    "t": 60.2,
+    "peers": 172,
+    "seeds": 44,
+    "list_peers": 595,
+    "rate_kBps": 195,
+    "disk": 17473536,
+    "have": 131
+   },
+   {
+    "t": 65.2,
+    "peers": 162,
+    "seeds": 43,
+    "list_peers": 595,
+    "rate_kBps": 148,
+    "disk": 18026496,
+    "have": 137
+   },
+   {
+    "t": 70.2,
+    "peers": 167,
+    "seeds": 44,
+    "list_peers": 595,
+    "rate_kBps": 164,
+    "disk": 18853888,
+    "have": 143
+   },
+   {
+    "t": 75.2,
+    "peers": 165,
+    "seeds": 42,
+    "list_peers": 596,
+    "rate_kBps": 166,
+    "disk": 19701760,
+    "have": 149
+   },
+   {
+    "t": 80.2,
+    "peers": 162,
+    "seeds": 43,
+    "list_peers": 596,
+    "rate_kBps": 176,
+    "disk": 20443136,
+    "have": 155
+   },
+   {
+    "t": 85.3,
+    "peers": 171,
+    "seeds": 42,
+    "list_peers": 596,
+    "rate_kBps": 88,
+    "disk": 20713472,
+    "have": 158
+   },
+   {
+    "t": 90.3,
+    "peers": 169,
+    "seeds": 46,
+    "list_peers": 604,
+    "rate_kBps": 110,
+    "disk": 21286912,
+    "have": 159
+   },
+   {
+    "t": 95.3,
+    "peers": 167,
+    "seeds": 47,
+    "list_peers": 604,
+    "rate_kBps": 119,
+    "disk": 21856256,
+    "have": 167
+   },
+   {
+    "t": 100.3,
+    "peers": 163,
+    "seeds": 47,
+    "list_peers": 609,
+    "rate_kBps": 82,
+    "disk": 22183936,
+    "have": 168
+   },
+   {
+    "t": 105.3,
+    "peers": 158,
+    "seeds": 49,
+    "list_peers": 609,
+    "rate_kBps": 66,
+    "disk": 22548480,
+    "have": 172
+   },
+   {
+    "t": 110.3,
+    "peers": 167,
+    "seeds": 49,
+    "list_peers": 613,
+    "rate_kBps": 1180,
+    "disk": 32542720,
+    "have": 230
+   },
+   {
+    "t": 115.4,
+    "peers": 169,
+    "seeds": 49,
+    "list_peers": 613,
+    "rate_kBps": 1215,
+    "disk": 39235584,
+    "have": 282
+   },
+   {
+    "t": 120.4,
+    "peers": 11,
+    "seeds": 5,
+    "list_peers": 398,
+    "rate_kBps": 13,
+    "disk": 35041280,
+    "have": 264
+   },
+   {
+    "t": 125.4,
+    "peers": 15,
+    "seeds": 11,
+    "list_peers": 452,
+    "rate_kBps": 604,
+    "disk": 39313408,
+    "have": 283
+   },
+   {
+    "t": 130.4,
+    "peers": 23,
+    "seeds": 20,
+    "list_peers": 552,
+    "rate_kBps": 551,
+    "disk": 41926656,
+    "have": 316
+   },
+   {
+    "t": 135.5,
+    "peers": 11,
+    "seeds": 8,
+    "list_peers": 408,
+    "rate_kBps": 962,
+    "disk": 41455616,
+    "have": 308
+   },
+   {
+    "t": 140.5,
+    "peers": 23,
+    "seeds": 18,
+    "list_peers": 437,
+    "rate_kBps": 855,
+    "disk": 44896256,
+    "have": 339
+   },
+   {
+    "t": 145.6,
+    "peers": 33,
+    "seeds": 29,
+    "list_peers": 448,
+    "rate_kBps": 282,
+    "disk": 44908544,
+    "have": 340
+   },
+   {
+    "t": 151.1,
+    "peers": 7,
+    "seeds": 4,
+    "list_peers": 428,
+    "rate_kBps": 25,
+    "disk": 44941312,
+    "have": 340
+   },
+   {
+    "t": 156.1,
+    "peers": 14,
+    "seeds": 11,
+    "list_peers": 440,
+    "rate_kBps": 12,
+    "disk": 44941312,
+    "have": 340
+   },
+   {
+    "t": 161.1,
+    "peers": 27,
+    "seeds": 25,
+    "list_peers": 447,
+    "rate_kBps": 7,
+    "disk": 44953600,
+    "have": 341
+   },
+   {
+    "t": 166.7,
+    "peers": 2,
+    "seeds": 1,
+    "list_peers": 395,
+    "rate_kBps": 0,
+    "disk": 35422208,
+    "have": 267
+   },
+   {
+    "t": 171.7,
+    "peers": 8,
+    "seeds": 4,
+    "list_peers": 440,
+    "rate_kBps": 37,
+    "disk": 36077568,
+    "have": 269
+   },
+   {
+    "t": 176.7,
+    "peers": 10,
+    "seeds": 7,
+    "list_peers": 446,
+    "rate_kBps": 91,
+    "disk": 36470784,
+    "have": 275
+   },
+   {
+    "t": 182.2,
+    "peers": 5,
+    "seeds": 2,
+    "list_peers": 377,
+    "rate_kBps": 0,
+    "disk": 35074048,
+    "have": 264
+   },
+   {
+    "t": 187.2,
+    "peers": 20,
+    "seeds": 18,
+    "list_peers": 420,
+    "rate_kBps": 1230,
+    "disk": 42995712,
+    "have": 303
+   },
+   {
+    "t": 192.8,
+    "peers": 14,
+    "seeds": 10,
+    "list_peers": 413,
+    "rate_kBps": 33,
+    "disk": 33730560,
+    "have": 248
+   },
+   {
+    "t": 197.8,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 281,
+    "disk": 36196352,
+    "have": 257
+   },
+   {
+    "t": 202.8,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 0,
+    "rate_kBps": 0,
+    "disk": 36196352,
+    "have": 257
+   },
+   {
+    "t": 207.8,
+    "peers": 9,
+    "seeds": 6,
+    "list_peers": 410,
+    "rate_kBps": 3,
+    "disk": 36212736,
+    "have": 257
+   },
+   {
+    "t": 212.8,
+    "peers": 28,
+    "seeds": 25,
+    "list_peers": 458,
+    "rate_kBps": 744,
+    "disk": 40554496,
+    "have": 301
+   },
+   {
+    "t": 218.4,
+    "peers": 0,
+    "seeds": 0,
+    "list_peers": 222,
+    "rate_kBps": 0,
+    "disk": 35201024,
+    "have": 260
+   }
+  ]
+ }
+]

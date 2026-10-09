@@ -1,0 +1,97 @@
+{
+ "seeks": {
+  "alerts_dropped": 0,
+  "bytes_downloaded": 401374657,
+  "deadline_resets": 26,
+  "deadline_sets": 179,
+  "file_bytes": 25067151573,
+  "hash_failed": 0,
+  "http_aborted": 0,
+  "http_bytes_sent": 238370369,
+  "http_mismatches": 0,
+  "initial_buffer_s": 0.0,
+  "obsolete_pieces_cancelled": 423,
+  "peak_allocated_disk_bytes": 394526720,
+  "peer_connects": 1,
+  "peer_disconnects": 0,
+  "peers_max": 1,
+  "piece_length": 4194304,
+  "pieces_downloaded": 91,
+  "pieces_total": 5977,
+  "playback_s": 9.9,
+  "rebuffer_count": 5,
+  "rebuffer_s": 4.6,
+  "seek_steps": [
+   {
+    "downloaded_MB": 57.7,
+    "head_source": "player",
+    "rebuffer_s": 1.0,
+    "rebuffers": 1,
+    "recovery_s": 3.43,
+    "restart_event_s": 3.3,
+    "stale_deadlines_after": 0,
+    "step": "0 -> 10 min",
+    "target_s": 600
+   },
+   {
+    "downloaded_MB": 54.6,
+    "head_source": "player",
+    "rebuffer_s": 0.8,
+    "rebuffers": 1,
+    "recovery_s": 3.64,
+    "restart_event_s": 2.91,
+    "stale_deadlines_after": 0,
+    "step": "10 min -> 105 min",
+    "target_s": 6300
+   },
+   {
+    "downloaded_MB": 61.3,
+    "head_source": "player",
+    "rebuffer_s": 1.0,
+    "rebuffers": 1,
+    "recovery_s": 3.38,
+    "restart_event_s": 3.26,
+    "stale_deadlines_after": 0,
+    "step": "105 min -> 30 min",
+    "target_s": 1800
+   },
+   {
+    "downloaded_MB": 68.4,
+    "head_source": "player",
+    "rebuffer_s": 1.5,
+    "rebuffers": 1,
+    "recovery_s": 5.72,
+    "restart_event_s": 3.88,
+    "stale_deadlines_after": 0,
+    "step": "30 min -> 2 min (near start)",
+    "target_s": 120
+   },
+   {
+    "downloaded_MB": 56.9,
+    "head_source": "player",
+    "rebuffer_s": 0.0,
+    "rebuffers": 0,
+    "recovery_s": 2.87,
+    "restart_event_s": 2.65,
+    "stale_deadlines_after": 0,
+    "step": "near start -> near end (118 min)",
+    "target_s": 7080
+   },
+   {
+    "downloaded_MB": 47.7,
+    "head_source": "player",
+    "rebuffer_s": 0.0,
+    "rebuffers": 0,
+    "recovery_s": 1.33,
+    "restart_event_s": 1.29,
+    "stale_deadlines_after": 0,
+    "step": "near end -> start",
+    "target_s": 5
+   }
+  ],
+  "seeks_detected": 6,
+  "stalls": 0,
+  "startup_s": 2.66,
+  "zero_peer_s": 0.0
+ }
+}
