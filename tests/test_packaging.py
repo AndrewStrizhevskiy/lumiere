@@ -71,7 +71,7 @@ class Packaging(unittest.TestCase):
         self.sh(gui, "--smoke")
         desk = self.home / ".local/share/applications/kino-stream.desktop"
         text = desk.read_text()
-        self.assertIn(f"Exec={gui} %U", text)
+        self.assertIn(f"Exec={gui} -- %U", text)   # "--": a file name can never be read as an option
         self.assertIn("MimeType=application/x-bittorrent;x-scheme-handler/magnet;", text)
         if shutil.which("desktop-file-validate"):
             self.sh("desktop-file-validate", desk)
