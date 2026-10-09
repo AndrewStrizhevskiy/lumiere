@@ -64,3 +64,8 @@ stack in `crash.log`.
 * Seeks into un-downloaded regions took 1.5-11 s on Sintel and 11-64 s on Tears of Steel (a slow swarm: the unbounded run also needed 7-12 s);
   restarts of the torrent after "no payload" were frequent there (10 in 5 min), so `stuck_after` was raised to 30 s.
   These numbers depend on the swarm and on the VPN path (`docs/NETWORK_FINDINGS.md`) and are not a property of the cache.
+
+## Intermittent: `test_magnet_link_plays_end_to_end` (GUI player test)
+
+Seen twice (2 of ~14 runs, both right after a long full-suite run); the failing runs took ~100 s because the test waited its full 60 s for playback after the open had succeeded. In the failing runs mpv never reached 2 s of playback within 60 s; the engine snapshot was not captured then (the failure message now includes the snapshot, mpv log lines and engine event codes).
+Not reproduced since: 1 + 12 solo runs, 12 runs with three in parallel, 6 module runs under full-CPU load, all passing. Root cause is **inconclusive**. Candidates, none confirmed: the magnet path's metadata→re-add step (the engine already waits 0.4 s there after a known peer-teardown race), or a local-port reuse race (`free_port()` hands out a port that is bound a moment later). If it recurs, read the snapshot in the assertion message first: `peers == 0` with `phase == opening/starting` points at the magnet re-add; `peers > 0` with no `pieces_have` growth points at the store.

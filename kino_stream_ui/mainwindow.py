@@ -16,6 +16,7 @@ from .dialogs import DiagnosticsDialog, MessageDialog, NetworkResultDialog, Open
 from .home import HomeScreen, StatusStrip, looks_like_magnet
 from .messages import for_code, tr
 from .player import PlayerScreen
+from .tour import TourOverlay
 from .settings_screen import SettingsScreen
 from .widgets import Banner, Toast, fade_in
 
@@ -51,6 +52,8 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central)
         self.overlay = OpeningOverlay(central)
         self.toast = Toast(central)
+        self.tour = TourOverlay(central, bridge.settings.cache_gb)
+        self.tour.finished.connect(self._tour_finished)
         self._menus()
         self._wire()
         self.home.set_recent(bridge.recent.items)
@@ -69,7 +72,7 @@ class MainWindow(QMainWindow):
         v = mb.addMenu(tr("&View", "Menu"))
         v.addAction(QAction(tr("Settings", "Menu"), self, shortcut=QKeySequence("Ctrl+,"), triggered=lambda: self.go(self.SETTINGS)))
         h = mb.addMenu(tr("&Help", "Menu"))
-        self.act_tour = QAction(tr("Show welcome tour", "Menu"), self, triggered=self.show_tour)
+        self.act_tour = QAction(tr("Show Tutorial Again", "Menu"), self, triggered=self.show_tour)
         h.addAction(self.act_tour)
         h.addAction(QAction(tr("Diagnostics…", "Menu"), self, triggered=self.show_diagnostics))
         h.addAction(QAction(tr("Check my connection", "Menu"), self, triggered=self.bridge.network_check))
@@ -261,13 +264,22 @@ class MainWindow(QMainWindow):
         if not self.bridge.settings.tour_done:
             QTimer.singleShot(250, self.show_tour)
 
-    def show_tour(self) -> None:           # replaced in P4
-        self.toast.say(tr("The welcome tour arrives in a later step.", "Menu"))
+    def show_tour(self) -> None:
+        self.tour.open(self.bridge.settings.cache_gb)
+
+    def _tour_finished(self, completed: bool) -> None:
+        """Finish and Skip both count as done, so the tutorial never nags; Help reopens it. Only the flag changes."""
+        if not self.bridge.settings.tour_done:
+            from dataclasses import replace
+            self.bridge.apply_settings(replace(self.bridge.settings, tour_done=True))
+            self.settings_screen.load(self.bridge.settings)
 
     def resizeEvent(self, e):
         super().resizeEvent(e)
         if self.overlay.isVisible():
             self.overlay.setGeometry(self.centralWidget().rect())
+        if self.tour.isVisible():
+            self.tour.setGeometry(self.centralWidget().rect())
 
     def closeEvent(self, e):
         self.hide()

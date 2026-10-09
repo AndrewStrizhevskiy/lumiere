@@ -96,7 +96,7 @@ class SettingsScreen(QWidget):
         self.saved_list.setSpacing(T.S2)
         saved_host = QWidget()
         saved_host.setLayout(self.saved_list)
-        tour_btn = button(tr("Show the welcome tour", "Settings"), "", "help")
+        tour_btn = button(tr("Show the tutorial", "Settings"), "", "help")
         tour_btn.clicked.connect(self.tourRequested)
         hist_btn = button(tr("Clear watch history", "Settings"), "", "trash")
         hist_btn.clicked.connect(self.confirm_clear_history)
@@ -118,7 +118,7 @@ class SettingsScreen(QWidget):
             (tr("When I close a video", "Settings"), tr("Streaming data is temporary. Keep it to resume quickly later, or delete it right away to free the space.", "Settings"), self.on_close, None),
             (tr("Cache folder", "Settings"), tr("Where streaming data is stored. Changing it does not move or delete data in the old folder.", "Settings"), frow, None),
             (tr("Saved streaming data", "Settings"), tr("Nothing is deleted unless you ask. Delete saved data for a video to free its space.", "Settings"), saved_host, None),
-            (tr("Welcome tour and history", "Settings"), tr("Reopen the short tour any time, or clear the list of recent videos.", "Settings"), srow, None),
+            (tr("Tutorial and history", "Settings"), tr("Reopen the short tutorial any time, or clear the list of recent videos.", "Settings"), srow, None),
         ]
         for i, (t, h, c, e) in enumerate(sections):
             if i:

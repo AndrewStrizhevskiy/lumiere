@@ -353,7 +353,10 @@ class Toast(QLabel):
         self._anim.start()
 
 
-def fade_in(w: QWidget, ms: int = T.DUR_BASE) -> QPropertyAnimation:
+def fade_in(w: QWidget, ms: int = T.DUR_BASE) -> QPropertyAnimation | None:
+    from .motion import reduced_motion
+    if reduced_motion():
+        return None
     fx = QGraphicsOpacityEffect(w)
     w.setGraphicsEffect(fx)
     a = QPropertyAnimation(fx, b"opacity", w)
