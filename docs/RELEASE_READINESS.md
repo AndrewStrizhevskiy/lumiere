@@ -11,7 +11,7 @@ All results below were measured on this exact source tree (the sanitized public 
   is given, and a custom cache folder is never deleted even then; a missing dependency is explained with the exact `apt` command; `desktop-file-validate` is clean.
 * **Desktop launch** (manual, disposable profile, real Wayland session): `gio launch` on the installed `.desktop` file started the app; a second launch (`-- magnet:?…`) handed the link to the running window and exited 0.
 * **Security-sensitive code**: magnet/`.torrent` hand-over (parsing, ownership-checked owner-only socket in `$XDG_RUNTIME_DIR`, size cap, `--` before `%U`), cache-deletion confinement, plain-text rendering of untrusted names, diagnostics redaction — all covered by tests.
-* **Publish gate**: `tools/release_config.py check` fails while any `@@PLACEHOLDER@@` remains or `LICENSE` is missing; `.githooks/pre-push` runs it (3 tests).
+* **Publish gate**: `tools/release_config.py check` fails while any `@@…@@` placeholder remains or `LICENSE` is missing; `.githooks/pre-push` runs it (3 tests).
 * **Documented commands match the implementation**: `install.sh --check/--no-desktop-db`, `uninstall.sh --dry-run/--purge-data/--no-desktop-db`, `kino-stream --version`, `kino-stream-gui --version`, `doctor --network`, `play` options were each run or checked against `--help`.
 * **Privacy audit** of every revision and every git object of the public repository: see the release report; no personal address, name, network, VPN or credential data found.
 
