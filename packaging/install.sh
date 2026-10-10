@@ -4,7 +4,7 @@
 #   packaging/install.sh [--check] [--no-desktop-db]
 #   --check           only verify the system dependencies and print what would be installed
 #   --no-desktop-db   do not run update-desktop-database
-# Installs into (all under $HOME unless XDG_* / KINO_STREAM_PREFIX say otherwise):
+# Installs into (all under $HOME unless XDG_* / KINO_STREAM_BIN say otherwise):
 #   $DATA/kino-stream/app/            the Python packages (kino_stream, kino_stream_ui)
 #   $BIN/kino-stream, $BIN/kino-stream-gui                 launchers
 #   $DATA/applications/kino-stream.desktop                 menu entry + .torrent / magnet: association (does NOT change your defaults)
@@ -14,6 +14,28 @@ HERE="$(cd "$(dirname "$0")/.." && pwd)"
 DATA="${XDG_DATA_HOME:-$HOME/.local/share}"
 BIN="${KINO_STREAM_BIN:-$HOME/.local/bin}"
 APP="$DATA/kino-stream/app"
+
+# Quoting helpers: the install paths are user-controlled and end up in a shell script and in a .desktop file.
+# Desktop Entry spec: the executable is written inside "...", inside the quotes  "  `  $  \  need a backslash, "%" is written "%%",
+# and because string values are unescaped first, every literal backslash is doubled again (one backslash becomes four).
+# This was verified by really launching entries with GIO for paths with spaces, quotes, $, backticks, backslashes, & | ; * ? # ( ) < > ~
+# and non-ASCII characters. Not representable: control characters (tab, newline...; desktop-file-validate fails) and "%" (valid per spec,
+# but GIO, which GNOME uses, rejects such an entry) - those are refused instead of installing a launcher that silently does not start.
+desktop_exec_quote() {
+  printf '%s' "$1" | sed -e 's/\\/\\\\\\\\/g' -e 's/"/\\\\"/g' -e 's/`/\\\\`/g' -e 's/\$/\\\\$/g' -e 's/%/%%/g'
+}
+sh_quote() {   # POSIX single quoting
+  printf "'%s'" "$(printf '%s' "$1" | sed "s/'/'\\\\''/g")"
+}
+for p in "$BIN" "$APP" "$DATA"; do
+  case "$p" in
+    *[[:cntrl:]]*) echo "refusing to install: the path contains a control character (tab, newline, ...): it cannot be used in a desktop entry" >&2; exit 1 ;;
+  esac
+done
+case "$BIN" in
+  *%*) echo "refusing to install: the launcher directory contains a '%' character, which GNOME's launcher rejects in desktop entries: $BIN" >&2
+       echo "choose another directory with KINO_STREAM_BIN=<dir without %>" >&2; exit 1 ;;
+esac
 CHECK=0; DESKTOP_DB=1
 for a in "$@"; do
   case "$a" in
@@ -64,21 +86,26 @@ for pair in "kino-stream:kino_stream" "kino-stream-gui:kino_stream_ui"; do
   if [ -e "$target" ] && ! grep -q "kino-stream installer" "$target" 2>/dev/null; then
     echo "refusing to overwrite $target (not created by this installer)" >&2; exit 1
   fi
-  cat > "$target" <<LAUNCHER
-#!/bin/sh
-# kino-stream installer: generated launcher, removed by packaging/uninstall.sh
-PYTHONPATH="$APP\${PYTHONPATH:+:\$PYTHONPATH}" exec python3 -m $mod "\$@"
-LAUNCHER
+  {
+    printf '%s\n' '#!/bin/sh' '# kino-stream installer: generated launcher, removed by packaging/uninstall.sh'
+    printf '%s\n' "PYTHONPATH=$(sh_quote "$APP")\"\${PYTHONPATH:+:\$PYTHONPATH}\" exec python3 -m $mod \"\$@\""
+  } > "$target"
   chmod 755 "$target"
 done
 
-sed "s|@BIN@|$BIN|" "$HERE/packaging/kino-stream.desktop.in" > "$DATA/applications/kino-stream.desktop"
+exec_line="Exec=\"$(desktop_exec_quote "$BIN/kino-stream-gui")\" -- %U"       # "--": a file name can never be read as an option
+while IFS= read -r line || [ -n "$line" ]; do
+  case "$line" in
+    "Exec=@EXEC@") printf '%s\n' "$exec_line" ;;
+    *) printf '%s\n' "$line" ;;
+  esac
+done < "$HERE/packaging/kino-stream.desktop.in" > "$DATA/applications/kino-stream.desktop"
 cp "$HERE/packaging/kino-stream.svg" "$DATA/icons/hicolor/scalable/apps/kino-stream.svg"
 if [ "$DESKTOP_DB" = 1 ]; then
   command -v update-desktop-database >/dev/null 2>&1 && update-desktop-database "$DATA/applications" 2>/dev/null || true
   command -v gtk-update-icon-cache >/dev/null 2>&1 && [ -f "$DATA/icons/hicolor/index.theme" ] && gtk-update-icon-cache -q "$DATA/icons/hicolor" 2>/dev/null || true
 fi
-echo "Installed Kino Stream $(python3 -c "import sys; sys.path.insert(0,'$APP'); import kino_stream; print(kino_stream.__version__)")"
+echo "Installed Kino Stream $(python3 -c 'import sys; sys.path.insert(0, sys.argv[1]); import kino_stream; print(kino_stream.__version__)' "$APP")"
 echo "  start it from the application menu, or run: $BIN/kino-stream-gui"
 case ":$PATH:" in *":$BIN:"*) ;; *) echo "  note: $BIN is not on your PATH; the menu entry works regardless" ;; esac
 echo "  your default apps for .torrent / magnet: links were NOT changed (see docs/INSTALL.md)"

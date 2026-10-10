@@ -17,5 +17,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are p
 - Fixed a native crash caused by `wait_for_alert()` use-after-free in the libtorrent Python binding (alerts are now read with `pop_alerts()` only; guarded by a test).
 - Network diagnostics (`doctor --network`) with confirmed / observed / hypothesis verdicts.
 
+### Fixed (since the first internal build)
+- Installer: a launcher directory containing a space (or other shell/desktop-entry special characters) produced a desktop entry that GNOME silently refused to launch. The executable is now quoted per the Desktop Entry
+  specification and the generated launcher script uses safe quoting; `%` in the launcher directory and control characters in any install path are refused with an explanation.
+- Engine: after a restart or cache eviction a healthy download could be declared "stuck" and the torrent restarted every 30 s; the restart message now also reports the threshold actually used.
+
 ### Known issues
 See `docs/KNOWN_ISSUES.md`. Notably: tested on Ubuntu 24.04 / Wayland / ext4 only; one unexplained intermittent magnet test failure.

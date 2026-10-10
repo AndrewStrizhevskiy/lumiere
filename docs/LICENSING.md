@@ -20,7 +20,7 @@ Kino Stream **does not bundle or redistribute** any third-party code or binaries
 | PyQt6 (and Qt 6) | desktop app | PyQt6: **GPL-3** (or commercial); Qt 6: LGPL-3 / GPL | compatible: the combined app is GPL-3, which is what we are |
 | libmpv / mpv 0.37 | embedded player; `mpv` is also run as a separate process by the CLI | source GPL-2+ or LGPL-2.1+; **Ubuntu's binaries are GPL-3+** (linked to libsmbclient) | compatible |
 | python-mpv 1.0.4 | app | GPL-2+ **or** LGPL-2.1+ (dual) | compatible (either option works with GPL-3) |
-| libtorrent-rasterbar 2.0 (python3-libtorrent) | engine | BSD-3-Clause (plus Boost/zlib/public-domain parts) | compatible (permissive) |
+| libtorrent-rasterbar 2.0 (python3-libtorrent) | engine | BSD-3-Clause; the Ubuntu copyright file also lists Boost (BSL-1.0), zlib, MIT/Expat, public-domain and GPL-2+ components | compatible (GPL-2+ is compatible with GPL-3; the exact origin of the GPL-2+ files was not examined) |
 | Python 3.12 standard library | everything | PSF License | compatible |
 | ffmpeg | **tests only**, run as a separate process | LGPL/GPL | not linked, not redistributed |
 | Inter font | optional look; **not bundled**, used only if installed | SIL OFL 1.1 | not distributed |

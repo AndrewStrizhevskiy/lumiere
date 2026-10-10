@@ -5,6 +5,7 @@ import os
 import shutil
 import subprocess
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -71,7 +72,7 @@ class Packaging(unittest.TestCase):
         self.sh(gui, "--smoke")
         desk = self.home / ".local/share/applications/kino-stream.desktop"
         text = desk.read_text()
-        self.assertIn(f"Exec={gui} -- %U", text)   # "--": a file name can never be read as an option
+        self.assertIn(f'Exec="{gui}" -- %U', text)   # executable quoted; "--": a file name can never be read as an option
         self.assertIn("MimeType=application/x-bittorrent;x-scheme-handler/magnet;", text)
         if shutil.which("desktop-file-validate"):
             self.sh("desktop-file-validate", desk)
@@ -143,6 +144,89 @@ class Packaging(unittest.TestCase):
         self.assertNotEqual(r.returncode, 0)
         self.assertIn("python3-pyqt6.qtsvg", r.stderr)
         self.assertIn("sudo apt install", r.stderr)
+
+
+class PathHandling(unittest.TestCase):
+    """The install path is user-controlled and ends up in a shell script and in a .desktop file: every character that can be escaped must work
+    (verified end to end by launching the entry through GIO), the two that cannot be expressed ("%" for GNOME, control characters) must be refused cleanly."""
+
+    WORKING = ["plain", "with space", "two  spaces", "sq'uote", 'dq"uote', "dollar$HOME", "back`tick", "back\\slash", "double\\\\slash",
+               "amp&pipe|semi;", "star*q?hash#", "paren(x)<>~", "ünï-çødé", "mix a\"b$c`d\\e'g"]
+
+    def setUp(self):
+        self.root = Path(tempfile.mkdtemp(prefix="ks-paths-"))
+        self.addCleanup(shutil.rmtree, self.root, True)
+
+    def env_for(self, name):
+        home = self.root / name
+        home.mkdir()
+        env = {k: v for k, v in os.environ.items() if not k.startswith("XDG_") and k != "KINO_STREAM_BIN"}
+        env.update(HOME=str(home), QT_QPA_PLATFORM="offscreen")
+        return home, env
+
+    def run_script(self, script, env, *args):
+        return subprocess.run([str(PKG / script), *args], env=env, capture_output=True, text=True, timeout=120)
+
+    def test_every_escapable_character_installs_validates_launches_and_uninstalls(self):
+        try:
+            from gi.repository import Gio
+        except Exception:
+            Gio = None
+        for i, name in enumerate(self.WORKING):
+            with self.subTest(path=name):
+                home, env = self.env_for(f"{i}-{name}")
+                before = {str(p.relative_to(home)) for p in home.rglob("*") if p.is_file()}
+                r = self.run_script("install.sh", env, "--no-desktop-db")
+                self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+                gui = home / ".local/bin/kino-stream-gui"
+                desk = home / ".local/share/applications/kino-stream.desktop"
+                self.assertIn("kino-stream 0.", subprocess.run([str(gui), "--version"], env=env, capture_output=True, text=True).stdout)      # generated launcher quoting
+                self.assertIn("kino-stream 0.", subprocess.run([str(home / ".local/bin/kino-stream"), "--version"], env=env, capture_output=True, text=True).stdout)
+                if shutil.which("desktop-file-validate"):
+                    v = subprocess.run(["desktop-file-validate", str(desk)], capture_output=True, text=True)
+                    self.assertEqual(v.returncode, 0, v.stdout + v.stderr)
+                if Gio is not None:                              # what the desktop would really run: replace the launcher by a stub that records its argv
+                    out = self.root / f"argv-{i}.txt"                # clean path: the stub itself must not depend on quoting
+                    gui.write_text(f'#!/bin/sh\n# kino-stream installer: test stub\nprintf "%s\\n" "$0" "$@" > "{out}"\n')
+                    info = Gio.DesktopAppInfo.new_from_filename(str(desk))
+                    self.assertIsNotNone(info, "GIO must accept the entry")
+                    info.launch_uris(["file:///tmp/x%20y.torrent"], None)      # %U: GIO hands local files over as paths
+                    for _ in range(60):
+                        if out.exists() and out.read_text().count("\n") >= 3:
+                            break
+                        time.sleep(0.1)
+                    self.assertEqual(out.read_text().split("\n")[:3], [str(gui), "--", "/tmp/x y.torrent"])
+                    out.unlink()
+                u = self.run_script("uninstall.sh", env, "--no-desktop-db")
+                self.assertEqual(u.returncode, 0, u.stderr)
+                self.assertEqual({str(p.relative_to(home)) for p in home.rglob("*") if p.is_file()} - before, set(), "uninstall must leave no file behind")
+
+    def test_percent_and_control_characters_are_refused_without_writing_anything(self):
+        for name, expect in (("pct%U", "'%'"), ("tab\there", "control character"), ("new\nline", "control character")):
+            with self.subTest(path=name):
+                home, env = self.env_for(name)
+                r = self.run_script("install.sh", env, "--no-desktop-db")
+                self.assertNotEqual(r.returncode, 0)
+                self.assertIn(expect, r.stderr)
+                self.assertEqual([p for p in home.rglob("*") if p.is_file()], [], "a refused install must not create files")
+
+    def test_percent_in_another_directory_than_the_launchers_is_fine(self):
+        # only the launcher directory goes into the desktop entry; the app directory is single-quoted in the launcher script
+        home, env = self.env_for("data%dir")
+        env["XDG_DATA_HOME"] = str(home / "share%x")
+        env["KINO_STREAM_BIN"] = str(self.root / "cleanbin")
+        r = self.run_script("install.sh", env, "--no-desktop-db")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("kino-stream 0.", subprocess.run([str(self.root / "cleanbin" / "kino-stream-gui"), "--version"], env=env, capture_output=True, text=True).stdout)
+
+    def test_custom_launcher_directory_with_a_space(self):
+        home, env = self.env_for("home")
+        env["KINO_STREAM_BIN"] = str(home / "my bin")
+        r = self.run_script("install.sh", env, "--no-desktop-db")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn(f'Exec="{home}/my bin/kino-stream-gui" -- %U', (home / ".local/share/applications/kino-stream.desktop").read_text())
+        self.assertEqual(self.run_script("uninstall.sh", env, "--no-desktop-db").returncode, 0)
+        self.assertFalse((home / "my bin/kino-stream-gui").exists())
 
 
 if __name__ == "__main__":

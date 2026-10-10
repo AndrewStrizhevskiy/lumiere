@@ -36,6 +36,10 @@ The installer needs no root, no network and no pip. It copies the program into `
 | `~/.local/share/applications/kino-stream.desktop` | application-menu entry |
 | `~/.local/share/icons/hicolor/scalable/apps/kino-stream.svg` | icon |
 
+Install paths (your home folder, `XDG_DATA_HOME`, `KINO_STREAM_BIN`) may contain spaces and most special characters; the installer quotes them correctly for the launcher script
+and the desktop entry. Two cases are refused with an explanation instead of installing a launcher that would silently not start: a `%` in the launcher directory (valid in the
+specification, but GNOME's launcher library rejects it; choose another directory with `KINO_STREAM_BIN=<dir>`) and control characters such as tabs or newlines in any path.
+
 Then start **Kino Stream** from the application menu (you may have to log out and in once if the menu does not show it) or run `kino-stream-gui`.
 Without installing, you can run it from the checkout: `python3 -m kino_stream_ui` (app) and `./bin/kino-stream` (CLI).
 

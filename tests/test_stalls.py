@@ -165,5 +165,65 @@ class ForwardAndBackwardSeeks(StallCase):
         self.assertEqual(s.server.stats["mismatches"], 0)
 
 
+class NoFalseStuckAfterRestart(unittest.TestCase):
+    """Found by reading the sampler and reproduced on a local swarm (a healthy download restarted every 30 s after one earlier restart, with a false
+    "no payload" message): after a restart or eviction the new libtorrent handle counts payload from 0 while the progress mark kept the old high-water
+    value. The decision is a pure method now, so it is tested deterministically (a swarm-based version was timing-dependent and could pass vacuously)."""
+
+    def store(self, **cfg):
+        from kino_stream.config import Config
+        from kino_stream.lt_store import PersistentFileStore
+        st = object.__new__(PersistentFileStore)
+        st.cfg = Config()
+        for k, v in cfg.items():
+            setattr(st.cfg, k, v)
+        st._pay_mark, st._pay_t, st._last_restart = 0, 0.0, -100.0
+        st._ever_downloaded, st._dl_base = False, 0
+        st._applied = {1: (1, None)}                    # something is wanted
+        return st
+
+    def run_phase(self, st, start, seconds, rate, pay0=0, n=3):
+        """Feeds the sampler 4 times a second; returns the times at which it asked for a restart."""
+        hits, t = [], start
+        while t < start + seconds:
+            if st._payload_stalled(int(pay0 + rate * (t - start)), n, t):
+                hits.append(round(t - start, 2))
+            t += 0.25
+        return hits
+
+    def test_healthy_download_on_a_fresh_handle_is_never_called_stuck(self):
+        st = self.store()
+        self.assertEqual(self.run_phase(st, 0, 20, 2_000_000), [])         # 40 MB downloaded by the first handle
+        st._ever_downloaded = True
+        st._last_restart = 20.0                                             # restart / eviction: a NEW handle, its counter starts at 0
+        hits = self.run_phase(st, 20.0, 120, 20_000)                        # slow but steady: 20 kB/s, 20x the 1 kB/s threshold
+        self.assertEqual(hits, [], f"healthy download declared stuck at +{hits}s after a restart")
+
+    def test_a_silent_peer_is_still_detected_after_the_stuck_limit_and_not_before(self):
+        st = self.store(stuck_after=30.0)
+        self.run_phase(st, 0, 10, 1_000_000)
+        st._ever_downloaded = True
+        st._last_restart = 10.0
+        hits = self.run_phase(st, 10.0, 60, 0, pay0=0)                      # new handle, nothing arrives although peers are connected
+        self.assertTrue(hits, "a silent peer must still be detected")
+        self.assertGreaterEqual(hits[0], 30.0 - 0.5)
+        self.assertLessEqual(hits[0], 30.0 + 1.0)
+
+    def test_nothing_wanted_or_no_peers_is_not_a_stall(self):
+        st = self.store()
+        st._applied = {}
+        self.assertEqual(self.run_phase(st, 0, 100, 0), [])
+        st = self.store()
+        self.assertEqual(self.run_phase(st, 0, 100, 0, n=0), [])
+
+    def test_the_threshold_before_any_download_is_the_cold_one_and_the_message_reports_the_value_used(self):
+        st = self.store(stuck_after=30.0, restart_after_cold=7.0)
+        self.assertEqual(st._stuck_limit(), 7.0)
+        hits = self.run_phase(st, 0, 20, 0)
+        self.assertTrue(7.0 - 0.5 <= hits[0] <= 8.0, hits)
+        st._ever_downloaded = True
+        self.assertEqual(st._stuck_limit(), 30.0)
+
+
 if __name__ == "__main__":
     unittest.main()

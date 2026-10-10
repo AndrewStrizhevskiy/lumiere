@@ -1,6 +1,20 @@
 # Known issues and open risks (read this before relying on kino-stream)
 
 ## 0. Desktop app (0.3.0) — scope of what was verified
+* **Two of three first real-internet torrents did not start streaming in the GUI (cause not established).** In the developer's first real use, three public single-/multi-file `.torrent` files
+  (≈4.3 GB, ≈7.0 GB and ≈22.8 GB; all with 15 http/https/udp trackers and 4 MiB pieces) were opened in one app session. The 7 GB torrent played (the history records a known duration and a saved position of 84 s)
+  and logged no stuck warnings. The other two were opened afterwards: one was abandoned after ≈65 s (two restarts, 22–27 peers connected), the other after ≈2 minutes (five restarts, 3–5 peers),
+  with the log line "connected to N peers but no payload for 30s" at ≈25 s intervals and no data ever written to either cache. Investigation so far (details in `docs/RELEASE_READINESS.md` §7a):
+  * *Verified:* the restart triggers are exactly as in the code (peers connected, data wanted, <1 kB/s for 25 s before anything was ever downloaded, 30 s afterwards, at least 15 s between restarts); the logged "30s" was
+    wrong for the 25 s cold limit (fixed, see below); opening several different torrents one after another in one session works on a local swarm; a seeder that keeps us choked for 40 s or 70 s serves us within
+    0.4 s of unchoking despite the intervening restarts.
+  * *Not established:* why those peers sent nothing. The engine does not log whether peers choke us or lack the wanted pieces, so the existing logs cannot tell a swarm-side cause (peers that never unchoke us, or that
+    do not have the requested pieces) from a network-side cause. Not tested: any external network behaviour (no external test has been run).
+  * A proposed diagnostic (peer choke/interest summary in the restart message) is **not implemented** pending approval.
+* **Fixed after the first real use (found by code review, reproduced locally): false "no payload" restarts after any re-add.** After a restart or a bounded-cache eviction the new libtorrent handle counts downloaded
+  payload from zero, but the stall detector kept the old high-water mark, so healthy downloading was declared stuck and the torrent restarted every 30 s (dropping all connections) until the new handle had
+  downloaded as much as the old one. Reproduced on a local swarm (20 kB/s flowing, restarted at +30 s and +60 s) and fixed by rebasing the mark; thresholds are unchanged. Regression tests: `tests/test_stalls.py`
+  (`NoFalseStuckAfterRestart`). This did **not** cause the two failed openings above (nothing had ever been downloaded for them). It may have contributed to the frequent restarts noted in section 5 (unverified).
 * Verified on one machine: Ubuntu 24.04, GNOME/Wayland, ext4, Intel graphics, Python 3.12, PyQt6 6.6.1, libmpv 0.37. X11, NVIDIA/AMD, other
   distributions and filesystems are unverified.
 * The player was exercised end to end against **local** swarms (torrent file and magnet link, seeks, pause, volume, track selection). Real-internet

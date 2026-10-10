@@ -590,12 +590,8 @@ class PersistentFileStore(PieceStore):
             # connected but silent: a stuck connection never shows up as 'no peers', so watch payload progress too
             pay = stt.total_payload_download
             self._ever_downloaded = self._ever_downloaded or pay > 0 or self._dl_base > 0
-            if pay - self._pay_mark >= 1000 * max(now - self._pay_t, 0.25) or not self._applied:
-                self._pay_mark, self._pay_t = pay, now
-            elif (n > 0 and now - self._pay_t >= (self.cfg.stuck_after if self._ever_downloaded else self.cfg.restart_after_cold)
-                  and now - self._last_restart >= 15):
-                self._pay_t = now
-                asyncio.ensure_future(self._restart(f"connected to {n} peers but no payload for {self.cfg.stuck_after:.0f}s"))
+            if self._payload_stalled(pay, n, now):
+                asyncio.ensure_future(self._restart(f"connected to {n} peers but no payload for {self._stuck_limit():.0f}s"))
             self._ever_had_peer = self._ever_had_peer or n > 0
             if n == 0:
                 self._zero_peer_all_s += now - last
@@ -609,6 +605,27 @@ class PersistentFileStore(PieceStore):
             else:
                 self._no_peer_since = None
             last = now
+
+    def _payload_stalled(self, pay: int, n: int, now: float) -> bool:
+        """Progress bookkeeping for the sampler: True when `n` connected peers delivered no payload for _stuck_limit() seconds while data is wanted
+        (the caller then re-adds the torrent). `pay` is the payload counter of the *current* libtorrent handle."""
+        if pay < self._pay_mark:
+            # A new handle (restart or eviction re-add) counts payload from zero. Without this rebase the old high-water mark made healthy downloading
+            # look like "no payload" until the new handle had re-downloaded as much as the old one, and the torrent was restarted again every stuck_after
+            # seconds. The new handle gets a fresh observation window; the thresholds themselves are unchanged.
+            self._pay_mark, self._pay_t = pay, now
+        if pay - self._pay_mark >= 1000 * max(now - self._pay_t, 0.25) or not self._applied:
+            self._pay_mark, self._pay_t = pay, now
+            return False
+        if n > 0 and now - self._pay_t >= self._stuck_limit() and now - self._last_restart >= 15:
+            self._pay_t = now
+            return True
+        return False
+
+    def _stuck_limit(self) -> float:
+        """Seconds without payload (while peers are connected and data is wanted) before the torrent is re-added: the long limit once anything
+        has ever been downloaded, the cold-start limit before that. The restart message reports this actual value."""
+        return self.cfg.stuck_after if self._ever_downloaded else self.cfg.restart_after_cold
 
     def stats(self) -> dict:
         d = dict(self._counters)
