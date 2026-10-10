@@ -5,7 +5,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are p
 ## [0.3.0] — first public version (not yet published)
 
 ### Changed
-- **Product renamed to Lumière** (display name only: window title, menus, dialogs, messages, tutorial, desktop entry `Name=`, installer text, documentation). Technical identifiers are unchanged: `kino-stream` / `kino-stream-gui` commands, `kino_stream` / `kino_stream_ui` packages, `kino-stream.desktop` and icon names, `StartupWMClass`, settings/state/cache folders and the cache marker. `KINO_STREAM_BRAND=kino` restores the previous display name. The header shows the name in the installed serif; the outlined wordmark artwork is used only with `KINO_STREAM_WORDMARK_ART=1` (licensing question open). Engine/CLI error strings that say "Kino Stream" were left as they are.
+- **Release hygiene after 0.3.0-rc.1:** the optional outlined wordmark artwork, its generator and the `KINO_STREAM_WORDMARK_ART` switch were removed (the header name is plain text in the system serif; no font-derived artwork is shipped); `docs/NAMING.md` records the naming check (working name, not cleared); README screenshots regenerated; internal local paths and process references removed from the public documents; the unexplained crash is described in plain language in `docs/KNOWN_ISSUES.md` 0b; engine messages say Lumière; SPDX header added to the desktop-entry template.
+- **Product renamed to Lumière** (display name only: window title, menus, dialogs, messages, tutorial, desktop entry `Name=`, installer text, documentation). Technical identifiers are unchanged: `kino-stream` / `kino-stream-gui` commands, `kino_stream` / `kino_stream_ui` packages, `kino-stream.desktop` and icon names, `StartupWMClass`, settings/state/cache folders and the cache marker. `KINO_STREAM_BRAND=kino` restores the previous display name. The header shows the name in the installed serif. Engine/CLI error strings that say "Kino Stream" were left as they are.
 
 ### Added
 - Desktop app (PyQt6 + libmpv): Home with drop zone / magnet field / "Continue watching", Settings, first-run tutorial, error dialogs and a
@@ -15,7 +16,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are p
   rotating `gui.log`, `kino-stream --version`.
 - Documentation: how streaming and the bounded cache work, troubleshooting, files and data, install/uninstall, known limitations.
 
-### Interface refinements (design direction "Lumière"; the product is still called Kino Stream)
+### Interface refinements (design direction "Lumière")
 - Warm charcoal and ivory themes with documented contrast ratios; the player screen is always dark. Editorial serif for headings and film titles, local fonts only.
 - Home: balanced column, larger headline, two crop marks; "Continue watching" with serif heading and rule; cards show year, title (two lines, elided between words), progress and a thin progress line; original file name in the tooltip.
 - Offline title cleaner (`kino_stream/titles.py`): removes release noise, takes a year only on clear evidence, declines episodes/season packs/collections, never contacts a network. Stored history format is unchanged.

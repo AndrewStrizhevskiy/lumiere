@@ -2,7 +2,6 @@
 """Home screen: one obvious thing to do (open a video), recent items, readiness. Plus the status strip shared by all screens."""
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 from PyQt6.QtCore import QPointF, QRectF, Qt, pyqtSignal
@@ -27,16 +26,8 @@ def looks_like_magnet(s: str) -> bool:
 
 
 def brand_wordmark() -> QLabel:
-    """Header name set in the editorial serif (installed font, no artwork). The outlined wordmark asset is used only when KINO_STREAM_WORDMARK_ART=1: whether outlines of an
-    OFL font may be shipped is an open licensing question (THIRD_PARTY_NOTICES.md), so the default does not depend on it."""
-    name = brand.product_name()
-    lab = label(name, "wordmark")
-    if name == brand.PROPOSED_NAME and os.environ.get("KINO_STREAM_WORDMARK_ART") == "1":
-        pm = brand.wordmark_pixmap(26, T.TEXT)
-        if pm is not None:
-            lab.setPixmap(pm)
-            lab.setAccessibleName(name)
-    return lab
+    """Header name: plain text in the editorial serif (the first installed family of theme.SERIF_FAMILIES, a generic serif otherwise). No artwork, no bundled font."""
+    return label(brand.product_name(), "wordmark")
 
 
 def wrap_elide(text: str, font: QFont, width: int, max_lines: int = 2) -> list[str]:

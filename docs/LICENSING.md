@@ -25,7 +25,6 @@ Lumière **does not bundle or redistribute** any third-party code or binaries: e
 | ffmpeg | **tests only**, run as a separate process | LGPL/GPL | not linked, not redistributed |
 | Inter font | optional look; **not bundled**, used only if installed | SIL OFL 1.1 | not distributed |
 | Editorial serif fonts (Literata, Source Serif 4, EB Garamond, Charis SIL, Noto Serif, Liberation Serif, DejaVu Serif) | optional look for headings; **not bundled**, the first installed one is used | mostly SIL OFL 1.1 (each per its own package) | not distributed |
-| Wordmark artwork `kino_stream_ui/assets/lumiere-wordmark.svg` | shown only with `KINO_STREAM_WORDMARK_ART=1` (off by default); **is shipped in the package** | vector outlines of the word "Lumière" taken from EB Garamond (SIL OFL 1.1); whether outlined lettering is a derivative work of the font is **undetermined** (see THIRD_PARTY_NOTICES.md) | open question for a qualified reviewer; the file can be removed without affecting the application |
 | Icons | `kino_stream_ui/icons.py` | drawn for this project in the style of the Feather/Lucide icon sets; see [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) | notices included as a precaution |
 
 ## Redistribution notes and concerns (read before packaging)

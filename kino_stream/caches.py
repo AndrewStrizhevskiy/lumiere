@@ -40,7 +40,7 @@ def prepare_cache_dir(root: Path, infohash: str, temporary: bool = False) -> Pat
     d = cache_dir_for(root, infohash, temporary)
     marker = d / MARKER
     if d.exists() and not marker.exists() and any(d.iterdir()):
-        raise CacheDirNotManagedError(f"{d} already exists and was not created by Kino Stream: refusing to use or touch it.")
+        raise CacheDirNotManagedError(f"{d} already exists and was not created by Lumière (kino-stream): refusing to use or touch it.")
     d.mkdir(parents=True, exist_ok=True)
     if not marker.exists():
         marker.write_text(json.dumps({"infohash": infohash, "temporary": temporary, "created": time.time()}))
@@ -63,7 +63,7 @@ def delete_managed_cache(root: Path, d: Path, state_dir: Path | None = None) -> 
     m = read_marker(d_r)
     ih = None if m is None else m.get("infohash")
     if d_r.parent != root_r or not valid_infohash(ih) or d_r.name not in (ih, f"tmp-{ih}") or d_r.is_symlink():
-        raise NotManaged(f"{d} is not a Kino Stream cache directory: not touching it")
+        raise NotManaged(f"{d} is not a Lumière (kino-stream) cache directory: not touching it")
     freed = allocated_bytes(d_r)
     shutil.rmtree(d_r)
     if state_dir:

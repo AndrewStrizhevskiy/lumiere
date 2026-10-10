@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Brand constants and the vector symbol. Only DISPLAY text lives here; technical identifiers (package names, executables, desktop-entry id, settings and
+"""Brand constants and the vector symbol (the header name is plain text in the system serif; there is no wordmark artwork). Only DISPLAY text lives here; technical identifiers (package names, executables, desktop-entry id, settings and
 cache directories, URI handling) are deliberately NOT derived from the product name, so a rename never touches existing installations or user data.
 
 The product is shown as "Lumière" (owner decision, 2026-10-10; trademark and domain checks are still outstanding). The previous name "Kino Stream" is kept as SOURCE_NAME: the interface
@@ -7,18 +7,15 @@ strings are written with it and `messages.tr()` substitutes the display name, so
 from __future__ import annotations
 
 import os
-from pathlib import Path
 
-from PyQt6.QtCore import QByteArray, QRectF, Qt
+from PyQt6.QtCore import QRectF, Qt
 from PyQt6.QtGui import QColor, QPainter, QPainterPath, QPen, QPixmap
-from PyQt6.QtSvg import QSvgRenderer
 
 CURRENT_NAME = "Kino Stream"      # the previous product name; the text of the interface strings (see messages.tr); never an identifier
 PROPOSED_NAME = "Lumière"         # the product name now shown (kept under its old constant name for compatibility with tests and tools)
-ASSETS = Path(__file__).parent / "assets"
 
 
-# Symbol geometry on a 24-unit grid, shared by the in-app symbol and the application icon (tools/make_brand_assets.py). Tuned for 16-24 px: a 2.6 unit frame
+# Symbol geometry on a 24-unit grid, shared by the in-app symbol and the application icon (packaging/kino-stream.svg). Tuned for 16-24 px: a 2.6 unit frame
 # stroke stays about 1.7 px wide at 16 px (the first version, 2.0, antialiased to a dim 1 px grey line) and the lit panel stays several pixels large.
 FRAME = (2.5, 4.5, 19.0, 15.0)
 FRAME_RADIUS = 2.2
@@ -69,23 +66,5 @@ def symbol_pixmap(size: int, frame: str, light: str | None = None, dpr: float = 
     pm.fill(Qt.GlobalColor.transparent)
     p = QPainter(pm)
     paint_symbol(p, QRectF(0, 0, size, size), QColor(frame), QColor(light or frame), variant)
-    p.end()
-    return pm
-
-
-def wordmark_pixmap(height: int, color: str, dpr: float = 2.0) -> QPixmap | None:
-    """The outlined 'Lumière' wordmark (assets/lumiere-wordmark.svg, glyph outlines: no font needed at run time). None if the asset is missing."""
-    f = ASSETS / "lumiere-wordmark.svg"
-    if not f.exists():
-        return None
-    svg = f.read_text(encoding="utf-8").replace("currentColor", color)
-    r = QSvgRenderer(QByteArray(svg.encode("utf-8")))
-    vb = r.viewBoxF()
-    w = max(1, round(height * vb.width() / vb.height()))
-    pm = QPixmap(int(w * dpr), int(height * dpr))
-    pm.setDevicePixelRatio(dpr)
-    pm.fill(Qt.GlobalColor.transparent)
-    p = QPainter(pm)
-    r.render(p, QRectF(0, 0, w, height))
     p.end()
     return pm

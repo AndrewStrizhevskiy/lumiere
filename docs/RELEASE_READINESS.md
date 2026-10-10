@@ -1,4 +1,4 @@
-# Release readiness — Kino Stream 0.3.0 (pre-1.0)
+# Release readiness — Lumière 0.3.0 (pre-1.0)
 
 ## 0. Status of release candidate 0.3.0-rc.1 (2026-10-10) — supersedes §1–§10 below where they differ
 
@@ -15,6 +15,7 @@
 | `python3 -X faulthandler -m unittest discover -s tests -t . -v` | 0 | **360 tests, OK, 8 skipped** (the real-display player tests skip offscreen), 993 s — run on the tree just before the rename and the release configuration |
 | `python3 -X faulthandler -m unittest -v tests.test_ui_player` (real libmpv + OpenGL, Wayland) | 0 | **10 tests, OK**, 58 s |
 | after the rename: `test_theme test_tour test_launch test_packaging test_ui test_craft test_continue_watching test_accessibility`, then `test_release_config` | OK | 136 tests, 120 s; 4 tests |
+After the release candidate, a documentation/branding cleanup (wordmark removal, naming page, README, messages) was checked with `test_theme test_craft test_ui test_tour test_launch test_packaging test_release_config test_continue_watching` (126 tests OK), `test_service` (24 OK), an installer/uninstaller/`desktop-file-validate` check in a disposable profile and a link check of all Markdown files; no full run was repeated.
 Not run: `tests/realswarm.py` (internet), `tests/large_scenarios.py`. The release documentation changes after the full run touch no code except `kino_stream_ui/brand.py`, `home.py`, `app.py` (display name) and `tools/release_config.py`.
 
 ### 0.3 Defects found and fixed while preparing the release (regression tests red before, green after)
@@ -26,7 +27,7 @@ One SIGSEGV (exit 139) in 18 full runs of the interface work's automated tests (
 
 ### 0.5 Open items (not blockers for a labelled pre-release)
 * **Name:** "Lumière" is the intended display name but is **not legally cleared**. A proportionate search (2026-10-10) found other software with that name (a dormant GNOME media player from the 2000s, a prototype MPV/Slint player, a 1990s Corel video suite, a text-to-video research model, an image-generation product), `lumiere.app` and `lumiere.video` are registered, and the PyPI name `lumiere` is taken (this project is not published to PyPI). No trademark register (USPTO/EUIPO/other) was searched. A proper clearance is required before the name is treated as final; the name can be reverted with `KINO_STREAM_BRAND=kino` and the display strings are centralised in `kino_stream_ui/brand.py`.
-* **Wordmark artwork** (`kino_stream_ui/assets/lumiere-wordmark.svg`, outlines of an OFL font) is optional and off by default (`KINO_STREAM_WORDMARK_ART=1`); see `THIRD_PARTY_NOTICES.md`.
+* **Wordmark:** the header name is plain text in the system serif; the optional outlined artwork was removed after the release candidate (no artwork, no bundled font; see `THIRD_PARTY_NOTICES.md`).
 * **Copyright holder** is the collective "Lumière contributors" (`docs/LICENSING.md`).
 * **Security and conduct reports** go through GitHub's private advisories; no e-mail address is published.
 

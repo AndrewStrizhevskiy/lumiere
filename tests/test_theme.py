@@ -149,14 +149,6 @@ class Brand(unittest.TestCase):
             self.assertGreater(opaque / (size * size), 0.18, f"{size}px: symbol too faint")
             self.assertLess(opaque / (size * size), 0.75, f"{size}px: symbol too heavy")
 
-    def test_wordmark_asset_is_outlined_and_renders(self):
-        svg = (ROOT / "kino_stream_ui" / "assets" / "lumiere-wordmark.svg").read_text(encoding="utf-8")
-        self.assertNotIn("<text", svg)                                   # no font dependency at run time
-        self.assertIn("currentColor", svg)
-        pm = brand.wordmark_pixmap(24, "#EAE7E0", dpr=1.0)
-        self.assertIsNotNone(pm)
-        self.assertGreater(pm.width(), 80)
-
     def test_app_icon_is_text_free_so_it_survives_either_name(self):
         svg = (ROOT / "packaging" / "kino-stream.svg").read_text()
         self.assertNotIn("<text", svg)
@@ -208,28 +200,10 @@ class SmallSizeLegibility(unittest.TestCase):
             self.assertGreaterEqual(solid, min_frame, f"{size}px: only {solid} solid frame pixels")
             self.assertGreaterEqual(litpx, min_lit, f"{size}px: only {litpx} lit-panel pixels")
 
-    def test_wordmark_stem_and_accent_stay_visible_at_the_header_size_and_down_to_20_px(self):
-        for name, fg, bg in (("dark", "#EAE7E0", "#22211F"), ("light", "#22211F", "#F1EDE4")):
-            B = QColor(bg)
-            for height, min_stem, min_accent in ((20, 2, 12), (26, 3, 15), (32, 3, 25)):
-                img = brand.wordmark_pixmap(height, fg, dpr=1.0).toImage()
-                W, H = img.width(), img.height()
-
-                def col(x, y):
-                    c = img.pixelColor(x, y)
-                    a = c.alpha() / 255
-                    return QColor(int(c.red() * a + B.red() * (1 - a)), int(c.green() * a + B.green() * (1 - a)), int(c.blue() * a + B.blue() * (1 - a)))
-                run = best = 0
-                for x in range(int(W * 0.14)):
-                    run = run + 1 if self._ratio(col(x, int(H * 0.6)), B) >= 3 else 0
-                    best = max(best, run)
-                accent = sum(1 for x in range(int(W * 0.585), int(W * 0.74)) for y in range(int(H * 0.27)) if self._ratio(col(x, y), B) >= 3)
-                self.assertGreaterEqual(best, min_stem, f"{name} {height}px: L stem {best}px")
-                self.assertGreaterEqual(accent, min_accent, f"{name} {height}px: accent has {accent} legible pixels")
 
 
 class Packaging(unittest.TestCase):
-    def test_installer_ships_the_brand_assets_and_the_new_icon(self):
+    def test_installer_ships_the_brand_module_and_the_new_icon(self):
         import shutil
         import subprocess
         home = Path(tempfile.mkdtemp(prefix="ks-theme-home-"))
@@ -238,12 +212,10 @@ class Packaging(unittest.TestCase):
         env.update(HOME=str(home))
         r = subprocess.run([str(ROOT / "packaging" / "install.sh"), "--no-desktop-db"], env=env, capture_output=True, text=True, timeout=120)
         self.assertEqual(r.returncode, 0, r.stderr)
-        self.assertTrue((home / ".local/share/kino-stream/app/kino_stream_ui/assets/lumiere-wordmark.svg").exists())
+        self.assertTrue((home / ".local/share/kino-stream/app/kino_stream_ui/brand.py").exists())
+        self.assertFalse((home / ".local/share/kino-stream/app/kino_stream_ui/assets").exists(), "no artwork is shipped")
         self.assertEqual((home / ".local/share/icons/hicolor/scalable/apps/kino-stream.svg").read_text(), (ROOT / "packaging" / "kino-stream.svg").read_text())
         subprocess.run([str(ROOT / "packaging" / "uninstall.sh"), "--no-desktop-db"], env=env, capture_output=True, timeout=120)
-
-    def test_setuptools_package_data_lists_the_assets(self):
-        self.assertIn('kino_stream_ui = ["assets/*.svg"]', (ROOT / "pyproject.toml").read_text())
 
 
 if __name__ == "__main__":

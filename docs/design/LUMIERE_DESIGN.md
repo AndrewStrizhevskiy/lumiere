@@ -1,6 +1,6 @@
 # Lumière — design concept and sandbox implementation (v2, refinement phase)
 
-> **Status: provisional design direction, implemented in a sandbox, not adopted.** The owner has provisionally approved the *visual direction* for further refinement (charcoal and warm ivory, restrained burgundy, olive grey for secondary status, selective editorial serif, frame symbol + wordmark, always-dark playback).
+> **Status (2026-10-10): the design direction is adopted and implemented in the release candidate** (the name Lumière is applied; see `docs/NAMING.md`). This document is the design record and still contains the earlier exploration. It originally read: "provisional design direction, implemented in a sandbox, not adopted"; the owner had provisionally approved the *visual direction* for further refinement (charcoal and warm ivory, restrained burgundy, olive grey for secondary status, selective editorial serif, frame symbol + wordmark, always-dark playback).
 > **Update 2026-10-10:** Lumière is now the displayed product name (owner decision); it has still **not** been checked for trademark or domain availability. Earlier text: "the displayed name stays Kino Stream unless `KINO_STREAM_BRAND=lumiere` is set"; today the switch is reversed (`KINO_STREAM_BRAND=kino` shows the old name). No technical identifier is renamed.
 > Nothing here is committed to, merged into or installed from the public release candidate; the sandbox is a local working copy (not part of this repository).
 
@@ -104,6 +104,8 @@ Tests: `tests/test_accessibility.py::SeekBarRendering*` render the real widget a
 **Text contrast, both themes:** all text pairs ≥ 4.5:1 (table above); the lowest is TEXT3 on SURFACE at 5.01 (dark) / 5.23 (light).
 
 ## 4. Logo, icon and wordmark
+
+> **Update:** the outlined wordmark (concept C) and its generator `tools/make_brand_assets.py` were removed after the release candidate: the header name is plain text in the system serif, which keeps the project free of font-derived artwork and of a maintenance burden. Passages below that mention the asset describe the exploration. The frame symbol and the icon (plain geometry) are unchanged.
 | concept | idea | verdict |
 |---|---|---|
 | A — Frame | a frame (19:15) with a lit panel inside | **chosen** (two shapes, works in one colour) |

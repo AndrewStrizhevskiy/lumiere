@@ -1,11 +1,13 @@
 # Lumière
 
-> **Naming note.** The product is called **Lumière** (owner decision, 2026-10-10; a quick search found other software called Lumière and no trademark register was searched, so the name is **not legally cleared** and not final for public branding). Only the *display* name changed: the command (`kino-stream`, `kino-stream-gui`), the Python packages (`kino_stream`, `kino_stream_ui`), the desktop-entry file and icon names, the settings/state/cache folders (`~/.config/kino-stream`, `~/.local/state/kino-stream`, `~/.cache/kino-stream`) and the cache marker keep their old names, so existing installations and data are unaffected. `KINO_STREAM_BRAND=kino` shows the previous name "Kino Stream".
+> **Name.** *Lumière* (previously "Kino Stream") is a **working name and is not legally cleared**; other software uses the same name and this project is not affiliated with it. See [docs/NAMING.md](docs/NAMING.md). Only the *display* name changed: the commands (`kino-stream`, `kino-stream-gui`), Python packages (`kino_stream`, `kino_stream_ui`), desktop-entry and icon file names and the settings/state/cache folders keep their old names, so existing installations and data keep working. `KINO_STREAM_BRAND=kino` shows the old display name.
 
 Watch a video from a torrent **while it is still downloading**, with a **hard upper limit on the disk space it uses**.
 Lumière has a desktop app (PyQt6 + libmpv) and a command line tool that share one streaming engine.
 
-![Home screen](docs/gui/p2_home.png)
+<img src="docs/design/screens/after/after_dark_1040x700.png" alt="Home screen, dark theme" width="49%"> <img src="docs/design/screens/after/after_light_1040x700.png" alt="Home screen, light theme" width="49%">
+
+*Home screen in the two themes (offscreen renders with made-up titles).*
 
 > **Status: pre-1.0 (0.3.0), tested on Ubuntu 24.04 / GNOME / Wayland only.** The engine and cache have an extensive automated
 > test suite and a few real-swarm runs, but this is young software. Read [Known limitations](#known-limitations) before relying on it.
@@ -13,7 +15,7 @@ Lumière has a desktop app (PyQt6 + libmpv) and a command line tool that share o
 
 | Playing, with the connection panel | Seek bar: grey = already on disk |
 |---|---|
-| ![Player with connection panel](docs/gui/p3_player_panel.png) | ![Fetching a part that is not downloaded yet](docs/gui/p3_player_fetching.png) |
+| ![Player with connection panel](docs/design/screens/player_light_panel.png) | ![Fetching a part that is not downloaded yet](docs/design/screens/player_dark_fetching.png) |
 
 ## What it does
 
@@ -83,7 +85,7 @@ kino-stream doctor --network
 * [Troubleshooting connection problems](docs/TROUBLESHOOTING.md)
 * [Files and settings created, and how to remove them](docs/FILES_AND_DATA.md)
 * [Install / uninstall](docs/INSTALL.md) · [CLI reference](docs/CLI.md)
-* [Known limitations](docs/KNOWN_ISSUES.md) · [Changelog](CHANGELOG.md) · [Release readiness](docs/RELEASE_READINESS.md)
+* [The name Lumière](docs/NAMING.md) · [Design direction](docs/design/README.md) · [Known limitations](docs/KNOWN_ISSUES.md) · [Changelog](CHANGELOG.md) · [Release readiness](docs/RELEASE_READINESS.md)
 * Design and validation notes: [bounded cache design](docs/STAGE2_DESIGN.md), [engine validation](docs/STAGE1_VALIDATION.md), [GUI stage reports](docs/gui/)
 * [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md) · [Code of conduct](CODE_OF_CONDUCT.md) · [Licensing](docs/LICENSING.md)
 
@@ -94,7 +96,7 @@ kino-stream doctor --network
 * The disk limit is hard for *allocated blocks of the cache folder*; it is not a promise about playback during pressure
   (playback can pause while room is made) — see [How it works](docs/HOW_IT_WORKS.md#what-the-cache-limit-guarantees).
 * Tested on ext4 only, on one Ubuntu 24.04 machine, Wayland. Real-swarm validation consists of a handful of runs.
-* **One unexplained intermittent native crash (SIGSEGV) occurred once in 18 full runs of the automated tests** of the interface work and could not be reproduced or explained; see [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md). Do not assume the application is crash-free.
+* **One unexplained crash.** During development the automated test suite was killed once by a native crash (SIGSEGV) in 1 of 18 full runs; it never happened again in many further runs and its cause is unknown. It has only been seen inside the test run, never while using the app. Do not assume the application is crash-free: see [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md) (0b).
 * One intermittent failure of an automated magnet-link test (2 of ~14 early runs, not reproduced in 40+ later runs) has an
   **unknown root cause**; details in [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md).
 * Every eviction re-adds the torrent in libtorrent, which drops peer connections briefly; the effect on slow real swarms is not
@@ -103,8 +105,8 @@ kino-stream doctor --network
 ## Tests
 
 ```bash
-python3 -m unittest discover -s tests -t .      # everything except the OpenGL player tests (~12 min, needs mpv + ffmpeg)
-python3 -m unittest tests.test_ui_player        # real libmpv/OpenGL player on a graphical session (~45 s; a window appears)
+python3 -m unittest discover -s tests -t .      # 360 tests; the OpenGL player tests are skipped offscreen (~16 min, needs mpv + ffmpeg)
+python3 -m unittest tests.test_ui_player        # real libmpv/OpenGL player on a graphical session (10 tests, ~1 min; a window appears)
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the test layout. Opt-in heavy tools: `tests/large_scenarios.py` (25 GB files),
