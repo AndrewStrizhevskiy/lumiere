@@ -124,13 +124,13 @@ class MpvWidget(QOpenGLWidget):
                 log.exception("command %s", args)
 
     def load(self, url: str, start: float = 0.0, title: str = "") -> None:
-        opts = {}
-        if start > 1:
-            opts["start"] = f"{start:.1f}"
-        if title:
-            opts["force-media-title"] = title
-        if self.mpv is not None:
-            self.mpv.loadfile(url, **{k.replace("-", "_"): v for k, v in opts.items()})
+        """Start playing `url`. The title comes from a torrent's file name, i.e. untrusted text: it is set as a *property* (the value is never parsed), not as a loadfile option,
+        because python-mpv joins loadfile options with commas and a name such as "x,script=/y" would smuggle extra options into the command."""
+        if self.mpv is None:
+            return
+        self.mpv["force-media-title"] = title or ""
+        opts = {"start": f"{start:.1f}"} if start > 1 else {}
+        self.mpv.loadfile(url, **opts)
 
     def stop(self) -> None:
         self.command("stop")

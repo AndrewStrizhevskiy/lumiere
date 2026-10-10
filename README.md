@@ -9,8 +9,7 @@ Lumière has a desktop app (PyQt6 + libmpv) and a command line tool that share o
 
 *Home screen in the two themes (offscreen renders with made-up titles).*
 
-> **Status: pre-1.0 (0.3.0), tested on Ubuntu 24.04 / GNOME / Wayland only.** The engine and cache have an extensive automated
-> test suite and a few real-swarm runs, but this is young software. Read [Known limitations](#known-limitations) before relying on it.
+> **Status: pre-1.0 release candidate (0.3.0-rc.2), tested on Ubuntu 24.04 / GNOME / Wayland only.** The engine and cache have an extensive automated test suite and a few real-swarm runs, but this is young software and not claimed to be crash-free (one unexplained crash was seen once during testing, see below). Read [Known limitations](#known-limitations) before relying on it.
 > Lumière does not host or provide any content. You are responsible for only streaming material you have the right to use.
 
 | Playing, with the connection panel | Seek bar: grey = already on disk |
@@ -91,16 +90,11 @@ lumiere doctor --network
 
 ## Known limitations
 
-* Smooth playback is **never guaranteed**: it depends on how many people share the video, their upload speed and your network.
-  Seeking into a part that is not downloaded yet waits for it (seconds on a healthy swarm, longer on a poor one).
-* The disk limit is hard for *allocated blocks of the cache folder*; it is not a promise about playback during pressure
-  (playback can pause while room is made) — see [How it works](docs/HOW_IT_WORKS.md#what-the-cache-limit-guarantees).
-* Tested on ext4 only, on one Ubuntu 24.04 machine, Wayland. Real-swarm validation consists of a handful of runs.
-* **One unexplained crash.** During development the automated test suite was killed once by a native crash (SIGSEGV) in 1 of 18 full runs; it never happened again in many further runs and its cause is unknown. It has only been seen inside the test run, never while using the app. Do not assume the application is crash-free: see [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md) (0b).
-* One intermittent failure of an automated magnet-link test (2 of ~14 early runs, not reproduced in 40+ later runs) has an
-  **unknown root cause**; details in [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md).
-* Every eviction re-adds the torrent in libtorrent, which drops peer connections briefly; the effect on slow real swarms is not
-  fully measured.
+* Smooth playback is **never guaranteed**: it depends on how many people share the video, their upload speed and your network. Seeking into a part that is not downloaded yet waits for it.
+* The disk limit is hard for *allocated blocks of the cache folder*; playback can pause while room is made (see [How it works](docs/HOW_IT_WORKS.md#what-the-cache-limit-guarantees)).
+* Tested on one machine (ext4, Wayland) and mostly against local swarms; real-internet playback is only lightly verified, and two of three first real torrents never started streaming (cause not established).
+* **One unexplained crash:** during development the automated test suite was once killed by a native crash (1 of 18 full runs). It never happened again and has only been seen inside the test run, never while using the app, but its cause is unknown. If the app ever closes unexpectedly, please open an issue with `~/.local/state/lumiere/crash.log`.
+* The full list, with what was fixed and what is still open, is in [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md).
 
 ## Tests
 

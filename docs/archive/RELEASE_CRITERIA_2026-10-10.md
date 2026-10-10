@@ -1,3 +1,5 @@
+> **Archived record** (written for 0.3.0-rc.1). The current summary is `docs/RELEASE_READINESS.md`.
+
 # Release criteria — definition of done for the interface release (0.3.0 candidate)
 
 Status as of 2026-10-10 on the integrated working tree (a local working copy (not part of this repository), uncommitted). **[V]** verified by a command run on this tree; **[L]** limited (see note); **[ ]** open.

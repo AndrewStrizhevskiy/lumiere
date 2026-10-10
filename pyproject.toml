@@ -1,6 +1,6 @@
 [project]
 name = "lumiere"
-version = "0.3.0"
+version = "0.3.0rc2"
 description = "Watch a torrent while it downloads, with a hard-bounded disk cache (desktop app and CLI)"
 requires-python = ">=3.12"
 license = {text = "GPL-3.0-or-later"}

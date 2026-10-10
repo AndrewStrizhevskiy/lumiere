@@ -68,4 +68,4 @@ Design and crash analysis: [STAGE2_DESIGN.md](STAGE2_DESIGN.md). Known limits: [
 
 All libtorrent calls happen in one engine thread (`lumiere-engine`). The window talks to it through a thread-safe facade and Qt signals; the UI never imports
 libtorrent. libtorrent alerts are read with `pop_alerts()` only — `wait_for_alert()` in the Python binding caused crashes and is forbidden by a test
-(see KNOWN_ISSUES.md §1).
+(see the fixed defects in KNOWN_ISSUES.md).
