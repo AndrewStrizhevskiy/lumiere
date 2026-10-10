@@ -32,3 +32,11 @@ NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE US
 ## Fonts
 
 The *Inter* typeface (SIL Open Font License 1.1, © The Inter Project Authors) is used only if it is installed on the system; it is not included.
+
+## Brand artwork (design concept, not yet adopted by the project owner)
+
+* `kino_stream_ui/assets/lumiere-wordmark.svg` contains the **outlines (vector shapes) of the word "Lumière"** taken from the locally installed font **EB Garamond** — style "EB Garamond 12 Regular" (`/usr/share/fonts/truetype/ebgaramond/EBGaramond12-Regular.ttf`, Ubuntu package
+  `fonts-ebgaramond-extra` 0.016+git20210310.42d4f9f2-1) — © 2010–2012 Georg Duffner, **SIL Open Font License 1.1** (licence text: `/usr/share/doc/fonts-ebgaramond-extra/copyright`). The outlines were generated once with `tools/make_brand_assets.py`; no font file is bundled or distributed and the SVG
+  contains no text or font reference. **Whether outlined lettering counts as a derivative work of the font, and what the OFL requires for it, has not been determined; this is a question for qualified review.** If it is a concern, regenerate the wordmark from a different typeface (`--font`).
+* The frame symbol and the application icon (`packaging/kino-stream.svg`) are plain geometry drawn for this project.
+* At run time the interface uses fonts that happen to be installed (Inter, Cantarell, and an editorial serif such as Literata, Source Serif 4 or EB Garamond, with generic fallbacks); none is bundled.

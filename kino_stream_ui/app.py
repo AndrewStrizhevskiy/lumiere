@@ -162,7 +162,8 @@ def run(argv: list[str] | None = None) -> int:
     from .mpvwidget import set_default_surface_format
     set_default_surface_format()
     app = QApplication([argv[0]] + qt_args)
-    app.setApplicationName("Kino Stream")
+    from .brand import product_name
+    app.setApplicationName(product_name())
     app.setDesktopFileName(APP_ID)
     target = next((t for t in map(parse_target, args.target) if t), "")
     if not args.smoke and forward_to_running_instance(target):

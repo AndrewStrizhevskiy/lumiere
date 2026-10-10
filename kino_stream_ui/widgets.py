@@ -2,7 +2,7 @@
 """Reusable building blocks. Everything visual that appears on more than one screen lives here."""
 from __future__ import annotations
 
-from PyQt6.QtCore import (QEasingCurve, QPoint, QPointF, QPropertyAnimation, QRect, QRectF, QSize, Qt, QTimer, QVariantAnimation,
+from PyQt6.QtCore import (QEasingCurve, QObject, QPoint, QPointF, QPropertyAnimation, QRect, QRectF, QSize, Qt, QTimer, QVariantAnimation,
                           pyqtProperty, pyqtSignal)
 from PyQt6.QtGui import QColor, QPainter, QPainterPath, QPen
 from PyQt6.QtWidgets import (QFrame, QGraphicsOpacityEffect, QHBoxLayout, QLabel, QLayout, QLayoutItem, QPushButton, QSizePolicy, QVBoxLayout,
@@ -24,8 +24,26 @@ def label(text: str = "", role: str = "", wrap: bool = False, align=None) -> QLa
     return l
 
 
+class ActionButton(QPushButton):
+    """QPushButton whose focus ring has two bands where the button is filled with the accent: the style sheet draws the outer 2 px ring (FOCUS, contrast
+    with the page); this adds an inner band (FOCUS_INNER, contrast with the burgundy fill), so the indicator reaches 3:1 against BOTH adjacent colours in
+    both themes (a single dark ring on burgundy is only 2.4:1)."""
+
+    def paintEvent(self, e):
+        super().paintEvent(e)
+        v = self.property("variant")
+        if self.hasFocus() and (v == "primary" or (v == "segment" and self.isChecked())):
+            p = QPainter(self)
+            p.setRenderHint(QPainter.RenderHint.Antialiasing)
+            pen = QPen(QColor(T.FOCUS_INNER), 1.5)
+            p.setPen(pen)
+            p.setBrush(Qt.BrushStyle.NoBrush)
+            p.drawRoundedRect(QRectF(self.rect()).adjusted(2.75, 2.75, -2.75, -2.75), max(T.R_CTRL - 3, 2), max(T.R_CTRL - 3, 2))
+            p.end()
+
+
 def button(text: str = "", variant: str = "", icon_name: str = "", icon_color: str | None = None, tip: str = "", name: str = "") -> QPushButton:
-    b = QPushButton(text)
+    b = ActionButton(text)
     if variant:
         b.setProperty("variant", variant)
     if icon_name:
@@ -39,7 +57,8 @@ def button(text: str = "", variant: str = "", icon_name: str = "", icon_color: s
     return b
 
 
-def icon_button(icon_name: str, tip: str, color: str = T.TEXT2, size: int = 20) -> QPushButton:
+def icon_button(icon_name: str, tip: str, color: str | None = None, size: int = 20) -> QPushButton:
+    color = color or T.TEXT2                  # tokens are read when the widget is built, not when this module is imported
     b = button("", "icon", icon_name, color, tip, tip)
     b.setIconSize(QSize(size, size))
     b.setIcon(icon(icon_name, color, size))
@@ -57,6 +76,23 @@ def divider() -> QFrame:
     f.setProperty("role", "divider")
     f.setFrameShape(QFrame.Shape.NoFrame)
     return f
+
+
+class SectionHead(QWidget):
+    """A section heading in the editorial serif followed by a hairline rule that runs to the edge of the column. Selective: used for Continue watching only."""
+
+    def __init__(self, text: str, parent=None):
+        super().__init__(parent)
+        self.title = label(text, "sectionhead")
+        rule = divider()
+        lay = QHBoxLayout(self)
+        lay.setContentsMargins(0, 0, 0, 0)
+        lay.setSpacing(T.S3)
+        lay.addWidget(self.title)
+        lay.addWidget(rule, 1, Qt.AlignmentFlag.AlignVCenter)
+
+    def setText(self, text: str) -> None:
+        self.title.setText(text)
 
 
 def fmt_bytes(n: float) -> str:
@@ -83,8 +119,9 @@ def fmt_time(s: float | None) -> str:
 class AnimatedBar(QWidget):
     """Thin rounded progress bar; the value eases to its target (200 ms) instead of jumping."""
 
-    def __init__(self, color: str = T.ACCENT, track: str = T.TRACK, height: int = 6, parent=None):
+    def __init__(self, color: str | None = None, track: str | None = None, height: int = 6, parent=None):
         super().__init__(parent)
+        color, track = color or T.ACCENT, track or T.TRACK
         self._v = 0.0
         self._color, self._track = QColor(color), QColor(track)
         self.setFixedHeight(height)
@@ -131,8 +168,9 @@ class AnimatedBar(QWidget):
 
 
 class Dot(QWidget):
-    def __init__(self, color: str = T.SUCCESS, parent=None):
+    def __init__(self, color: str | None = None, parent=None):
         super().__init__(parent)
+        color = color or T.SUCCESS
         self._c = QColor(color)
         self.setFixedSize(10, 10)
 
@@ -151,8 +189,9 @@ class Dot(QWidget):
 class Spinner(QWidget):
     """Quiet rotating arc (hidden animation when not visible)."""
 
-    def __init__(self, size: int = 28, color: str = T.ACCENT, parent=None):
+    def __init__(self, size: int = 28, color: str | None = None, parent=None):
         super().__init__(parent)
+        color = color or T.ACCENT
         self.setFixedSize(size, size)
         self._a = 0
         self._c = QColor(color)
@@ -160,7 +199,11 @@ class Spinner(QWidget):
         self._t.timeout.connect(self._step)
 
     def showEvent(self, e):
-        self._t.start(30)
+        from .motion import reduced_motion
+        if reduced_motion():
+            self._t.stop()                                       # a static arc still says "busy" without moving
+        else:
+            self._t.start(30)
 
     def hideEvent(self, e):
         self._t.stop()
@@ -270,7 +313,9 @@ class Banner(QFrame):
     action = pyqtSignal(str)
     dismissed = pyqtSignal()
 
-    COLORS = {"info": T.TEXT2, "warning": T.WARNING, "error": T.DANGER, "success": T.SUCCESS}
+    @staticmethod
+    def colors() -> dict:
+        return {"info": T.TEXT2, "warning": T.WARNING, "error": T.DANGER, "success": T.SUCCESS}
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -290,6 +335,7 @@ class Banner(QFrame):
         col.addLayout(self._actions)
         self._close = icon_button("x", "Dismiss", T.TEXT3, 16)
         self._close.clicked.connect(self.dismissed.emit)
+        self._height_anim: QPropertyAnimation | None = None
         lay = QHBoxLayout(self)
         lay.setContentsMargins(T.S4, T.S3, T.S3, T.S3)
         lay.setSpacing(T.S3)
@@ -299,11 +345,11 @@ class Banner(QFrame):
         self.hide()
 
     def show_message(self, level: str, title: str, text: str, actions: list[tuple[str, str]] | None = None) -> None:
-        c = self.COLORS.get(level, T.TEXT2)
+        c = self.colors().get(level, T.TEXT2)
         self._icon.setPixmap(__import__("kino_stream_ui.icons", fromlist=["pixmap"]).pixmap("alert" if level in ("warning", "error") else "info", c, 20, 2.0))
         self._title.setText(title)
         self._text.setText(text)
-        self.setStyleSheet(f"QFrame#banner {{ border: 1px solid {c}; }}")
+        self.setStyleSheet(f"QFrame#banner {{ background: {T.SURFACE}; border: none; border-bottom: 2px solid {c}; border-radius: 0; }}")
         while self._actions.count():
             it = self._actions.takeAt(0)
             if it.widget():
@@ -313,7 +359,69 @@ class Banner(QFrame):
             b.clicked.connect(lambda _=False, k=key: self.action.emit(k))
             self._actions.addWidget(b)
         self._actions.addStretch(1)
+        self._expand()
+
+    # --- height animation: the page below moves smoothly instead of jumping; instant under reduced motion; interruptible in both directions
+    def _animate_height(self, end: int, then_hide: bool) -> None:
+        from .motion import reduced_motion
+        if self._height_anim is not None:
+            self._height_anim.stop()
+            self._height_anim.deleteLater()
+            self._height_anim = None
+        full = 16777215                                           # QWIDGETSIZE_MAX
+        if reduced_motion() or not self.parentWidget() or not self.parentWidget().isVisible():
+            self.setMaximumHeight(full)
+            if then_hide:
+                QFrame.hide(self)
+            else:
+                self.show()
+            return
+        start = self.height() if self.isVisible() else 0
+        self.setMaximumHeight(start)
         self.show()
+        a = QPropertyAnimation(self, b"maximumHeight", self)
+        a.setStartValue(start)
+        a.setEndValue(end)
+        a.setDuration(max(1, int(T.DUR_BASE * 0.8 * (abs(end - start) / max(end, start, 1)))))
+        a.setEasingCurve(QEasingCurve.Type.OutCubic)
+
+        def done(anim=a):
+            if anim is not self._height_anim:
+                return
+            self._height_anim = None
+            if then_hide:
+                QFrame.hide(self)
+            self.setMaximumHeight(full)
+        a.finished.connect(done)
+        self._height_anim = a
+        a.start()
+
+    def natural_height(self) -> int:
+        """Height the banner needs at its current width (its text wraps, so this can be smaller than sizeHint(), which assumes a default width)."""
+        lay = self.layout()
+        width = self.width() if self.width() > 100 else (self.parentWidget().width() if self.parentWidget() else 600)
+        if lay is not None:
+            lay.activate()
+            if lay.hasHeightForWidth():
+                return max(int(lay.totalHeightForWidth(max(width, 1))), 1)
+        return max(self.sizeHint().height(), 1)
+
+    def _expand(self) -> None:
+        self._animate_height(self.natural_height(), False)
+
+    def collapse(self) -> None:
+        """Dismiss with a short collapse (instant under reduced motion)."""
+        if not self.isVisible():
+            return
+        self._animate_height(0, True)
+
+    def hide(self) -> None:                                      # instant, and it cancels a running height animation
+        if self._height_anim is not None:
+            self._height_anim.stop()
+            self._height_anim.deleteLater()
+            self._height_anim = None
+        self.setMaximumHeight(16777215)
+        super().hide()
 
 
 class Toast(QLabel):
@@ -354,17 +462,101 @@ class Toast(QLabel):
         self._anim.start()
 
 
+class _Fade(QObject):
+    """One opacity effect and one animation per fade, owned by the widget. Starting a new fade while one is running INTERRUPTS it and continues from the
+    current opacity (no jump back to 0); the effect is removed only when an animation really ran to the end, so a stale 'finished' can never strip a newer fade."""
+
+    def __init__(self, w: QWidget):
+        super().__init__(w)
+        self.w = w
+        self.fx: QGraphicsOpacityEffect | None = None
+        self.anim: QPropertyAnimation | None = None
+
+    def start(self, ms: int) -> QPropertyAnimation:
+        begin = 0.0
+        if self.fx is None:
+            self.fx = QGraphicsOpacityEffect(self.w)
+            self.fx.setOpacity(0.0)
+            self.w.setGraphicsEffect(self.fx)                   # the widget owns the effect from here on
+        else:
+            begin = float(self.fx.opacity())
+        if self.anim is not None:
+            self.anim.stop()
+            self.anim.deleteLater()
+        a = QPropertyAnimation(self.fx, b"opacity", self)
+        a.setStartValue(begin)
+        a.setEndValue(1.0)
+        a.setDuration(max(1, int(ms * (1.0 - begin))))          # the remaining distance takes proportionally long
+        a.setEasingCurve(QEasingCurve.Type.OutCubic)
+        a.finished.connect(lambda anim=a: self._finished(anim))
+        self.anim = a
+        a.start()
+        return a
+
+    def _finished(self, anim: QPropertyAnimation) -> None:
+        if anim is not self.anim or self.fx is None or float(self.fx.opacity()) < 0.999:
+            return                                              # interrupted or replaced: not the end of the current fade
+        self.remove()
+
+    def remove(self) -> None:
+        if self.anim is not None:
+            self.anim.stop()
+            self.anim.deleteLater()
+            self.anim = None
+        if self.fx is not None:
+            self.fx = None
+            self.w.setGraphicsEffect(None)                      # deletes the effect
+
+    def running(self) -> bool:
+        return self.anim is not None and self.anim.state() == QPropertyAnimation.State.Running
+
+
 def fade_in(w: QWidget, ms: int = T.DUR_BASE) -> QPropertyAnimation | None:
+    """Fade a screen in. Reduced motion: nothing is animated and any running fade is finished at once. Calling it again interrupts the running fade."""
     from .motion import reduced_motion
+    f = getattr(w, "_kino_fade", None)
     if reduced_motion():
+        if f is not None:
+            f.remove()
         return None
-    fx = QGraphicsOpacityEffect(w)
-    w.setGraphicsEffect(fx)
-    a = QPropertyAnimation(fx, b"opacity", w)
-    a.setDuration(ms)
-    a.setStartValue(0.0)
-    a.setEndValue(1.0)
-    a.setEasingCurve(QEasingCurve.Type.OutCubic)
-    a.finished.connect(lambda: w.setGraphicsEffect(None))
-    a.start()
-    return a
+    if f is None:
+        f = w._kino_fade = _Fade(w)
+    return f.start(ms)
+
+
+def stop_fade(w: QWidget) -> None:
+    f = getattr(w, "_kino_fade", None)
+    if f is not None:
+        f.remove()
+
+
+class HoverFade(QObject):
+    """A 0..1 value that eases toward 1 while the pointer is over a widget and back to 0 when it leaves (the style sheet cannot animate). Interruptible: reversing
+    mid-way continues from the current value. Reduced motion: the value jumps. The callback is only `widget.update()`; nothing else happens per frame."""
+
+    def __init__(self, widget: QWidget, ms: int = T.DUR_FAST):
+        super().__init__(widget)
+        self.w, self.ms, self.value = widget, ms, 0.0
+        self._a = QVariantAnimation(self)
+        self._a.setEasingCurve(QEasingCurve.Type.OutCubic)
+        self._a.valueChanged.connect(self._set)
+
+    def _set(self, v) -> None:
+        self.value = float(v)
+        self.w.update()
+
+    def go(self, on: bool) -> None:
+        from .motion import reduced_motion
+        end = 1.0 if on else 0.0
+        self._a.stop()
+        if reduced_motion() or not self.w.isVisible():
+            self.value = end
+            self.w.update()
+            return
+        self._a.setStartValue(self.value)
+        self._a.setEndValue(end)
+        self._a.setDuration(max(1, int(self.ms * abs(end - self.value))))
+        self._a.start()
+
+    def running(self) -> bool:
+        return self._a.state() == QVariantAnimation.State.Running

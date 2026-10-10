@@ -6,11 +6,15 @@ from dataclasses import dataclass, field
 
 from PyQt6.QtCore import QCoreApplication
 
+from .brand import CURRENT_NAME, product_name
+
 from kino_stream import events as ev
 
 
 def tr(text: str, ctx: str = "Messages") -> str:
-    return QCoreApplication.translate(ctx, text)
+    out = QCoreApplication.translate(ctx, text)
+    name = product_name()
+    return out if name == CURRENT_NAME else out.replace(CURRENT_NAME, name)      # display name only (KINO_STREAM_BRAND preview); see brand.py
 
 
 @dataclass

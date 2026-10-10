@@ -12,6 +12,7 @@ from kino_stream import events as ev
 from kino_stream.settings import Settings
 
 from . import theme as T
+from .brand import product_name
 from .bridge import EngineBridge
 from .dialogs import DiagnosticsDialog, MessageDialog, NetworkResultDialog, OpeningOverlay, redact
 from .home import HomeScreen, StatusStrip, looks_like_magnet
@@ -19,7 +20,7 @@ from .messages import for_code, tr
 from .player import PlayerScreen
 from .tour import TourOverlay
 from .settings_screen import SettingsScreen
-from .widgets import Banner, Toast, fade_in
+from .widgets import Banner, Toast, fade_in, stop_fade
 
 
 class MainWindow(QMainWindow):
@@ -28,7 +29,7 @@ class MainWindow(QMainWindow):
     def __init__(self, bridge: EngineBridge, mpv_options: dict | None = None):
         super().__init__()
         self.bridge = bridge
-        self.setWindowTitle("Kino Stream")
+        self.setWindowTitle(product_name())
         self.setMinimumSize(720, 480)
         self.resize(1100, 720)
         self.ready_info: dict | None = None
@@ -106,7 +107,7 @@ class MainWindow(QMainWindow):
         self.player.diagnosticsRequested.connect(self.show_diagnostics)
         self.player.networkCheckRequested.connect(self.bridge.network_check)
         self.overlay.cancelled.connect(self._cancel_open)
-        self.banner.dismissed.connect(self.banner.hide)
+        self.banner.dismissed.connect(self.banner.collapse)
         self.banner.action.connect(self._banner_action)
         b.status.connect(self.on_status)
         b.event.connect(self.on_event)
@@ -306,6 +307,9 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, e):
         self.hide()
+        for w in (self.home, self.settings_screen):      # no animation may outlive the window
+            stop_fade(w)
+        self.banner.hide()
         try:
             self.player.shutdown()
         finally:

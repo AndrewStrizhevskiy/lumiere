@@ -8,13 +8,18 @@ from PyQt6.QtCore import QEvent, QPointF, QRectF, QSize, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QActionGroup, QColor, QCursor, QPainter, QPen
 from PyQt6.QtWidgets import QFrame, QHBoxLayout, QMenu, QSlider, QToolTip, QVBoxLayout, QWidget
 
+from kino_stream import titles
 from kino_stream.scheduler import PlayerState
+
+from types import SimpleNamespace
 
 from . import theme as T
 from .icons import icon
 from .messages import tr
 from .mpvwidget import MPV_IMPORT_ERROR, make_video
 from .widgets import AnimatedBar, Spinner, button, fmt_bytes, fmt_speed, fmt_time, icon_button, label
+
+D = SimpleNamespace(**T.THEMES["dark"])      # the screening room is dark in every theme: all player colours come from the dark set
 
 POLL_MS = 250
 HIDE_AFTER_MS = 3000
@@ -98,7 +103,7 @@ class SeekBar(QWidget):
         cy, th = self.height() / 2, 6.0 if self._hover is None and not self._drag else 8.0
         track = QRectF(x0, cy - th / 2, w, th)
         p.setPen(Qt.PenStyle.NoPen)
-        p.setBrush(QColor(T.TRACK))
+        p.setBrush(QColor(D.TRACK))
         p.drawRoundedRect(track, th / 2, th / 2)
         if self.bins:                                   # downloaded sections
             n = len(self.bins)
@@ -109,16 +114,16 @@ class SeekBar(QWidget):
             for i, f in enumerate(self.bins):
                 if f <= 0:
                     continue
-                c = QColor(T.AVAILABLE)
+                c = QColor(D.AVAILABLE)
                 c.setAlphaF(1.0 if f >= 0.99 else 0.35 + 0.4 * f)
                 p.setBrush(c)
                 a = x0 + w * i / n
                 p.drawRect(QRectF(a, track.top(), w / n + 0.6, th))
             p.restore()
         px = x0 + w * self.value
-        p.setBrush(QColor(T.ACCENT))
+        p.setBrush(QColor(D.PLAYED))
         p.drawRoundedRect(QRectF(x0, track.top(), max(px - x0, 0), th), th / 2, th / 2)
-        p.setBrush(QColor(T.TEXT))
+        p.setBrush(QColor(D.TEXT))
         p.drawEllipse(QPointF(px, cy), 7 if (self._hover is not None or self._drag) else 5.5, 7 if (self._hover is not None or self._drag) else 5.5)
 
 
@@ -128,7 +133,7 @@ class OverlayBar(QFrame):
     def __init__(self, top: bool, parent=None):
         super().__init__(parent)
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
-        a, b = ("rgba(14,15,18,215)", "rgba(14,15,18,0)") if top else ("rgba(14,15,18,0)", "rgba(14,15,18,225)")
+        a, b = (T.rgba(D.CANVAS, 0.85), T.rgba(D.CANVAS, 0)) if top else (T.rgba(D.CANVAS, 0), T.rgba(D.CANVAS, 0.88))
         self.setStyleSheet(f"OverlayBar {{ background: qlineargradient(x1:0,y1:0,x2:0,y2:1, stop:0 {a}, stop:1 {b}); border:none; }}")
 
 
@@ -142,6 +147,7 @@ class PlayerScreen(QWidget):
         super().__init__(parent)
         self.bridge = bridge
         self.setObjectName("root")
+        self.setStyleSheet(T.qss("dark"))                       # scoped: everything inside the player renders with the dark token set
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setMouseTracking(True)
         self.media = None
@@ -162,7 +168,7 @@ class PlayerScreen(QWidget):
 
         # ---- top bar
         self.top = OverlayBar(True, self)
-        self.back = button(tr("Back", "Player"), "", "arrow-left", name=tr("Back to start", "Player"))
+        self.back = button(tr("Back", "Player"), "", "arrow-left", icon_color=D.TEXT, name=tr("Back to start", "Player"))
         self.back.clicked.connect(self.backRequested)
         self.title = label("", "lead")
         tl = QHBoxLayout(self.top)
@@ -175,27 +181,28 @@ class PlayerScreen(QWidget):
         self.bottom = OverlayBar(False, self)
         self.seek = SeekBar()
         self.seek.seekRequested.connect(self.seek_fraction)
-        self.play_btn = icon_button("pause", tr("Play / Pause (Space)", "Player"), T.TEXT, 22)
+        self.play_btn = icon_button("pause", tr("Play / Pause (Space)", "Player"), D.TEXT, 22)
         self.play_btn.clicked.connect(self.toggle_pause)
         self.time_lbl = label("0:00 / 0:00", "secondary")
         self.time_lbl.setMinimumWidth(self.time_lbl.fontMetrics().horizontalAdvance("0:00:00 / 0:00:00") + 4)
-        self.mute_btn = icon_button("volume", tr("Mute (M)", "Player"), T.TEXT, 20)
+        self.mute_btn = icon_button("volume", tr("Mute (M)", "Player"), D.TEXT, 20)
         self.mute_btn.clicked.connect(self.toggle_mute)
         self.vol = QSlider(Qt.Orientation.Horizontal)
         self.vol.setRange(0, 100)
         self.vol.setValue(self._volume)
         self.vol.setFixedWidth(96)
         self.vol.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.vol.setStyleSheet(f"QSlider::sub-page:horizontal {{ background: {D.PLAYED}; border-radius: 2px; }}")     # same 'filled' tone as the seek bar
         self.vol.setAccessibleName(tr("Volume", "Player"))
         self.vol.valueChanged.connect(self.set_volume)
-        self.audio_btn = icon_button("audio", tr("Audio track", "Player"), T.TEXT, 20)
+        self.audio_btn = icon_button("audio", tr("Audio track", "Player"), D.TEXT, 20)
         self.audio_btn.clicked.connect(lambda: self._track_menu("audio", self.audio_btn))
-        self.subs_btn = icon_button("captions", tr("Subtitles", "Player"), T.TEXT, 20)
+        self.subs_btn = icon_button("captions", tr("Subtitles", "Player"), D.TEXT, 20)
         self.subs_btn.clicked.connect(lambda: self._track_menu("sub", self.subs_btn))
-        self.conn_btn = icon_button("activity", tr("Connection details", "Player"), T.TEXT, 20)
+        self.conn_btn = icon_button("activity", tr("Connection details", "Player"), D.TEXT, 20)
         self.conn_btn.setCheckable(True)
         self.conn_btn.clicked.connect(self.toggle_panel)
-        self.fs_btn = icon_button("fullscreen", tr("Fullscreen (F)", "Player"), T.TEXT, 20)
+        self.fs_btn = icon_button("fullscreen", tr("Fullscreen (F)", "Player"), D.TEXT, 20)
         self.fs_btn.clicked.connect(self.toggle_fullscreen)
         for b in (self.play_btn, self.mute_btn, self.audio_btn, self.subs_btn, self.conn_btn, self.fs_btn, self.back):
             b.setFocusPolicy(Qt.FocusPolicy.NoFocus)
@@ -217,7 +224,7 @@ class PlayerScreen(QWidget):
         self.wait.setProperty("card", "outlined")
         self.wait.setObjectName("waitcard")
         self.wait.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
-        self.wait_spin = Spinner(28)
+        self.wait_spin = Spinner(28, D.ACCENT)
         self.wait_title = label("", "lead", align=Qt.AlignmentFlag.AlignCenter)
         self.wait_sub = label("", "secondary", wrap=True, align=Qt.AlignmentFlag.AlignCenter)
         wl = QVBoxLayout(self.wait)
@@ -233,14 +240,14 @@ class PlayerScreen(QWidget):
         self.panel = QFrame(self)
         self.panel.setObjectName("connpanel")
         self.panel.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
-        self.panel.setStyleSheet(f"QFrame#connpanel {{ background: rgba(22,24,29,238); border-left:1px solid {T.OUTLINE}; }}")
+        self.panel.setStyleSheet(f"QFrame#connpanel {{ background: {T.rgba(D.CANVAS, 0.94)}; border-left:1px solid {D.OUTLINE}; }}")
         self.panel.setFixedWidth(320)
         pl = QVBoxLayout(self.panel)
         pl.setContentsMargins(T.S4, T.S4, T.S4, T.S4)
         pl.setSpacing(T.S3)
         head = QHBoxLayout()
         head.addWidget(label(tr("Connection", "Player"), "lead"), 1)
-        close = icon_button("x", tr("Close panel", "Player"), T.TEXT2, 18)
+        close = icon_button("x", tr("Close panel", "Player"), D.TEXT2, 18)
         close.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         close.clicked.connect(lambda: self.toggle_panel(False))
         head.addWidget(close)
@@ -257,14 +264,14 @@ class PlayerScreen(QWidget):
             self.vals[key] = v
             pl.addLayout(r)
             if key == "cache":
-                self.cache_bar = AnimatedBar(T.ACCENT, T.TRACK, 6)
+                self.cache_bar = AnimatedBar(D.ACCENT, D.TRACK, 6)
                 pl.addWidget(self.cache_bar)
         self.panel_note = label(tr("On the seek bar, grey parts are already on disk and dark parts still have to be fetched.", "Player"), "caption", wrap=True)
         pl.addWidget(self.panel_note)
         pl.addStretch(1)
-        d = button(tr("Diagnostics", "Player"), "", "info", name=tr("Open diagnostics", "Player"))
+        d = button(tr("Diagnostics", "Player"), "", "info", icon_color=D.TEXT, name=tr("Open diagnostics", "Player"))
         d.clicked.connect(self.diagnosticsRequested)
-        c = button(tr("Check my connection", "Player"), "", "activity", name=tr("Check my connection", "Player"))
+        c = button(tr("Check my connection", "Player"), "", "activity", icon_color=D.TEXT, name=tr("Check my connection", "Player"))
         c.clicked.connect(self.networkCheckRequested)
         pl.addWidget(d)
         pl.addWidget(c)
@@ -290,7 +297,7 @@ class PlayerScreen(QWidget):
         self._ended = False
         self._active = True
         self._wait_since = time.monotonic()
-        self.title.setText(media.title)
+        self.title.setText(titles.for_name(media.title).text or media.title)      # display only; the stored name is unchanged
         self.seek.set_bins([])
         self.seek.set_value(0)
         self.seek.duration = 0.0
@@ -374,7 +381,7 @@ class PlayerScreen(QWidget):
         self.fullscreenRequested.emit(not self.window().isFullScreen())
 
     def set_fullscreen_icon(self, on: bool) -> None:
-        self.fs_btn.setIcon(icon("fullscreen-exit" if on else "fullscreen", T.TEXT, 20))
+        self.fs_btn.setIcon(icon("fullscreen-exit" if on else "fullscreen", D.TEXT, 20))
 
     def toggle_panel(self, on: bool | None = None) -> None:
         on = (not self.panel.isVisible()) if on is None else bool(on)
@@ -493,16 +500,16 @@ class PlayerScreen(QWidget):
         v["cache"].setText(f"{fmt_bytes(used)} / {fmt_bytes(lim)}" if lim else fmt_bytes(used))
         frac = used / lim if lim else 0
         self.cache_bar.setValue(frac)
-        self.cache_bar.setColor(T.WARNING if frac > 0.9 else T.ACCENT)
+        self.cache_bar.setColor(D.WARNING if frac > 0.9 else D.ACCENT)
         v["mode"].setText(tr("Temporary, no limit", "Player") if not s.get("bounded") else tr("Limited", "Player"))
         v["evict"].setText(str(s.get("evictions", 0)))
 
     def _refresh_play_icon(self) -> None:
         playing = not bool(self.video.get("pause", False)) and not self._ended
-        self.play_btn.setIcon(icon("pause" if playing else "play", T.TEXT, 22))
+        self.play_btn.setIcon(icon("pause" if playing else "play", D.TEXT, 22))
 
     def _refresh_volume_icon(self) -> None:
-        self.mute_btn.setIcon(icon("volume-off" if self._muted or self._volume == 0 else "volume", T.TEXT, 20))
+        self.mute_btn.setIcon(icon("volume-off" if self._muted or self._volume == 0 else "volume", D.TEXT, 20))
 
     def _on_file_ended(self, reason: str, error: str) -> None:
         if not self._active:

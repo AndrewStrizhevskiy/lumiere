@@ -20,7 +20,7 @@ class OpeningOverlay(QWidget):
     def __init__(self, parent: QWidget):
         super().__init__(parent)
         self.setObjectName("opening")
-        self.setStyleSheet(f"QWidget#opening {{ background: rgba(14,15,18,225); }}")
+        self.setStyleSheet(f"QWidget#opening {{ background: {T.rgba(T.CANVAS if T.THEME == 'dark' else T.TEXT, 0.88)}; }}")
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
         box = QFrame()
         box.setProperty("card", "outlined")

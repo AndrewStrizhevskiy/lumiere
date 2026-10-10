@@ -220,9 +220,9 @@ class Illustration(QWidget):
     def _ready(self, p: QPainter) -> None:
         t = self._ease(self.phase * 2)
         p.setPen(Qt.PenStyle.NoPen)
-        p.setBrush(_c(T.ACCENT, 0.16))
+        p.setBrush(_c(T.ACCENT_FILL, 0.30))
         p.drawEllipse(QPointF(0, 0), 62 + 6 * math.sin(self.phase * 2 * math.pi) * (0 if reduced_motion() else 1), 62 + 6 * math.sin(self.phase * 2 * math.pi) * (0 if reduced_motion() else 1))
-        p.setBrush(_c(T.ACCENT))
+        p.setBrush(_c(T.ACCENT_FILL))
         p.drawEllipse(QPointF(0, 0), 44, 44)
         p.setPen(QPen(_c(T.ON_ACCENT), 7, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap, Qt.PenJoinStyle.RoundJoin))
         path = QPainterPath()
@@ -249,7 +249,7 @@ class TourOverlay(QWidget):
         super().__init__(parent)
         self.setObjectName("tour")
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
-        self.setStyleSheet("QWidget#tour { background: rgba(14,15,18,232); }")
+        self.setStyleSheet(f"QWidget#tour {{ background: {T.rgba(T.CANVAS if T.THEME == 'dark' else T.TEXT, 0.88)}; }}")
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.index = 0
         self.steps = steps(cache_gb)

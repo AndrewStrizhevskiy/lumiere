@@ -1,8 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
-  <title>Kino Stream</title>
-  <rect x="8" y="8" width="112" height="112" rx="26" fill="#16181D"/>
-  <rect x="8" y="8" width="112" height="112" rx="26" fill="none" stroke="#343945" stroke-width="3"/>
-  <polygon points="50,38 50,90 94,64" fill="#F2B544"/>
-  <rect x="26" y="102" width="76" height="6" rx="3" fill="#3A3F4B"/>
-  <rect x="26" y="102" width="34" height="6" rx="3" fill="#7A8294"/>
+  <title>Frame symbol (concept)</title>
+  <rect x="3" y="3" width="122" height="122" rx="26" fill="#22211F"/>
+  <rect x="22.20" y="31.00" width="83.60" height="66.00" rx="9.68" fill="none" stroke="#EAE7E0" stroke-width="11.44"/>
+  <rect x="49.92" y="48.16" width="42.24" height="30.36" rx="3.96" fill="#D49A96"/>
 </svg>
