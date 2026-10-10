@@ -6,7 +6,7 @@
 
 Same workload for both modes: 3 loopback seeders + 1 leecher, 128 MiB file in 16 KiB pieces, ALL alert categories on
 (thousands of alerts/s, so the alert queue keeps growing/re-allocating while the reader runs).
-  wait : a Python thread loops   a = ses.wait_for_alert(20); ses.pop_alerts()      (what kino-stream used to do)
+  wait : a Python thread loops   a = ses.wait_for_alert(20); ses.pop_alerts()      (what lumiere used to do)
   poll : the main thread loops   ses.pop_alerts(); sleep(0.02)                       (what it does now)
 Exit status -11 = SIGSEGV."""
 import os, random, shutil, sys, tempfile, threading, time

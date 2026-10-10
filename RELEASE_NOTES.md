@@ -2,7 +2,7 @@
 
 > **This is a pre-release for testing, not a stable release.** It is not claimed to be crash-free. Known limitations are listed below and in [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md).
 
-The application is now called **Lumière** (previously "Kino Stream"; command, packages and data folders keep the name `kino-stream`). The name is **not legally cleared**: a quick search found other software called Lumière and no trademark register was searched (see the naming note in the README).
+The application is called **Lumière** (previously "Kino Stream"). *Update after this release candidate:* the commands, Python packages, desktop entry and data folders were renamed to `lumiere` as well, with an automatic, recoverable migration of existing folders and compatibility launchers for the old command names (see the CHANGELOG, `docs/INSTALL.md` and `docs/FILES_AND_DATA.md`); the rc.1 release itself used the old technical names. The name is **not legally cleared**: a quick search found other software called Lumière and no trademark register was searched (see the naming note in the README).
 
 Lumière plays a video from a torrent while it downloads, with a hard limit on the disk space used. This release adds a desktop app on
 top of the existing engine and command line tool.

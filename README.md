@@ -1,6 +1,6 @@
 # Lumière
 
-> **Name.** *Lumière* (previously "Kino Stream") is a **working name and is not legally cleared**; other software uses the same name and this project is not affiliated with it. See [docs/NAMING.md](docs/NAMING.md). Only the *display* name changed: the commands (`kino-stream`, `kino-stream-gui`), Python packages (`kino_stream`, `kino_stream_ui`), desktop-entry and icon file names and the settings/state/cache folders keep their old names, so existing installations and data keep working. `KINO_STREAM_BRAND=kino` shows the old display name.
+> **Name.** *Lumière* (previously "Kino Stream") is a **working name and is not legally cleared**; other software uses the same name and this project is not affiliated with it. See [docs/NAMING.md](docs/NAMING.md). The name is used throughout: commands `lumiere` and `lumiere-gui`, Python packages `lumiere` and `lumiere_ui`, folders `~/.config/lumiere`, `~/.local/state/lumiere` and `~/.cache/lumiere`. **Upgrading from a version that still used the old name (`kino-stream`)?** On first start the application moves your old folders to the new names (nothing is copied or deleted, a link is left at the old name) and the installer replaces the old installation and leaves small compatibility launchers `kino-stream` / `kino-stream-gui`; see [docs/INSTALL.md](docs/INSTALL.md#upgrading-from-the-former-name-kino-stream) and [docs/FILES_AND_DATA.md](docs/FILES_AND_DATA.md#migration-from-the-former-name).
 
 Watch a video from a torrent **while it is still downloading**, with a **hard upper limit on the disk space it uses**.
 Lumière has a desktop app (PyQt6 + libmpv) and a command line tool that share one streaming engine.
@@ -28,7 +28,7 @@ How well that works depends on the people sharing the video and on your network 
 **Implemented and covered by automated tests**
 
 * Desktop app: drop a `.torrent` onto the window, choose a file, or paste a magnet link; "Continue watching" list with resume. Each entry shows a readable title (and the year when the file name clearly gives one) made **offline** from the file name; when a name cannot be read with confidence the readable file name is shown instead of a guess. No online lookup exists.
-* Interface: warm charcoal (default) and ivory themes (`KINO_STREAM_THEME=dark|light`), the player is always dark; keyboard-visible focus; short, interruptible transitions that follow GNOME's "reduce animations" (`KINO_REDUCE_MOTION=0|1` overrides it). Fonts are the ones installed on the system; none is bundled.
+* Interface: warm charcoal (default) and ivory themes (`LUMIERE_THEME=dark|light`), the player is always dark; keyboard-visible focus; short, interruptible transitions that follow GNOME's "reduce animations" (`LUMIERE_REDUCE_MOTION=0|1` overrides it). Fonts are the ones installed on the system; none is bundled.
 * Embedded player (libmpv): play/pause, seek bar that shows which parts are already on disk, volume, fullscreen, audio-track and
   subtitle-track menus (tracks inside the file), keyboard shortcuts, auto-hiding controls.
 * Honest status: sources, speed, how much is ready ahead, disk used, and plain-language messages for "looking for sources",
@@ -39,10 +39,10 @@ How well that works depends on the people sharing the video and on your network 
   deleted on close) is offered instead of silently ignoring the limit.
 * Settings (cache size, how much watched video to keep, patience with poor connections, protocol encryption, on-close behaviour,
   cache folder), saved-data list with delete-on-request, first-run tutorial (reopen from Help).
-* "Check my connection" and `kino-stream doctor --network`: read-only probes whose results are labelled *confirmed*, *observed*
+* "Check my connection" and `lumiere doctor --network`: read-only probes whose results are labelled *confirmed*, *observed*
   or *hypothesis*; it never claims a cause it has not measured.
 * Desktop launcher with `.torrent` / `magnet:` handling (it does not change your default applications), single running instance.
-* Command line tool: `kino-stream play ...`, `kino-stream doctor ...` (mpv in its own window).
+* Command line tool: `lumiere play ...`, `lumiere doctor ...` (mpv in its own window).
 
 **Not implemented / planned** (no promises)
 
@@ -57,11 +57,11 @@ How well that works depends on the people sharing the video and on your network 
 
 ```bash
 sudo apt install python3-libtorrent python3-pyqt6 python3-pyqt6.qtsvg python3-mpv libmpv2 mpv
-git clone https://github.com/AndrewStrizhevskiy/lumiere.git kino-stream && cd kino-stream
+git clone https://github.com/AndrewStrizhevskiy/lumiere.git lumiere && cd lumiere
 ./packaging/install.sh          # user-level: no root, no network; --check shows what it would do
 ```
 
-Start **Lumière** from the application menu, or run `kino-stream-gui`. Details, other options and the clean uninstall:
+Start **Lumière** from the application menu, or run `lumiere-gui`. Details, other options and the clean uninstall:
 [docs/INSTALL.md](docs/INSTALL.md). Uninstall: `./packaging/uninstall.sh` (keeps your data) or `--purge-data`.
 
 ## Quick start
@@ -75,8 +75,8 @@ Start **Lumière** from the application menu, or run `kino-stream-gui`. Details,
 Command line:
 
 ```bash
-kino-stream play "Movie.torrent" --save-path ~/.cache/kino-stream/movie --cache-limit-gb 3
-kino-stream doctor --network
+lumiere play "Movie.torrent" --save-path ~/.cache/lumiere/movie --cache-limit-gb 3
+lumiere doctor --network
 ```
 
 ## Documentation

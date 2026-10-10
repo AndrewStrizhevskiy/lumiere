@@ -208,7 +208,7 @@ def main():
     random_file(root / "a.bin", 300_001, 1); random_file(root / "b.bin", 700_003, 2); random_file(root / "c.bin", 300_007, 3)
     S2 = Seeder(root, upload_limit=0)
     ti2 = S2.ti
-    from kino_stream.piecemap import PieceMap
+    from lumiere.piecemap import PieceMap
     pm = PieceMap.from_torrent_info(ti2)
     shared = [i for i in range(pm.num_pieces) if pm.is_shared(i)]
     pdir = work / "mfl"; pdir.mkdir()

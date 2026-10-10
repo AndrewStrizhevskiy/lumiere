@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parent.parent
 class NoWaitForAlert(unittest.TestCase):
     def test_application_and_test_support_never_call_wait_for_alert(self):
         offenders = []
-        for p in list((ROOT / "kino_stream").rglob("*.py")) + [ROOT / "tests" / "support.py"]:
+        for p in list((ROOT / "lumiere").rglob("*.py")) + [ROOT / "tests" / "support.py"]:
             for n, line in enumerate(p.read_text().splitlines(), 1):
                 code = line.split("#", 1)[0]
                 if re.search(r"\.wait_for_alert\s*\(", code):

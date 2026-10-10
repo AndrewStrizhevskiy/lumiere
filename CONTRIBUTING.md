@@ -3,18 +3,18 @@
 Thanks for helping. Bug reports with the **Diagnostics** text (Help → Diagnostics) and clear steps are the most useful contribution.
 
 ## Ground rules that protect users
-* Never delete user data without an explicit, confirmed action; deletion code lives in `kino_stream/caches.py` and is deliberately narrow.
-* Never present an unverified network hypothesis as a fact in user-facing text (`kino_stream_ui/messages.py`).
+* Never delete user data without an explicit, confirmed action; deletion code lives in `lumiere/caches.py` and is deliberately narrow.
+* Never present an unverified network hypothesis as a fact in user-facing text (`lumiere_ui/messages.py`).
 * All libtorrent calls stay in the engine thread. Never call `wait_for_alert()`; `tests/test_alert_safety.py` enforces it.
-* `kino_stream_ui/tour.py` and other pure-UI modules must not import the engine.
+* `lumiere_ui/tour.py` and other pure-UI modules must not import the engine.
 * Don't touch the user's network configuration (VPN, firewall, routes) or other applications from code or scripts.
 
 ## Setup
 ```bash
 sudo apt install python3-libtorrent python3-pyqt6 python3-pyqt6.qtsvg python3-mpv libmpv2 mpv ffmpeg
-git clone https://github.com/AndrewStrizhevskiy/lumiere.git && cd kino-stream
-python3 -m kino_stream_ui        # run the app from the checkout
-./bin/kino-stream --help         # CLI from the checkout
+git clone https://github.com/AndrewStrizhevskiy/lumiere.git && cd lumiere
+python3 -m lumiere_ui        # run the app from the checkout
+./bin/lumiere --help         # CLI from the checkout
 ```
 
 ## Tests

@@ -58,7 +58,7 @@ actually allocated below the limit you set (default 4 GB):
   and refused rather than ignored.
 * **Not guaranteed:** playback continuity. The limit is hard, read-ahead is not: under pressure playback may pause while room is made. A limit
   too small for the window plus read-ahead is rejected at start with an explanation.
-* **Not covered:** the state files in `~/.local/state/kino-stream` and mpv's small in-memory cache are outside the limit. Only ext4 has been tested.
+* **Not covered:** the state files in `~/.local/state/lumiere` and mpv's small in-memory cache are outside the limit. Only ext4 has been tested.
   Power loss was simulated with process kills, not real power cuts.
 * **Temporary mode** (offered only when the limit cannot be enforced, and only on your explicit confirmation) has **no limit**; its data is deleted when you close the video.
 
@@ -66,6 +66,6 @@ Design and crash analysis: [STAGE2_DESIGN.md](STAGE2_DESIGN.md). Known limits: [
 
 ## Threads
 
-All libtorrent calls happen in one engine thread (`kino-engine`). The window talks to it through a thread-safe facade and Qt signals; the UI never imports
+All libtorrent calls happen in one engine thread (`lumiere-engine`). The window talks to it through a thread-safe facade and Qt signals; the UI never imports
 libtorrent. libtorrent alerts are read with `pop_alerts()` only — `wait_for_alert()` in the Python binding caused crashes and is forbidden by a test
 (see KNOWN_ISSUES.md §1).

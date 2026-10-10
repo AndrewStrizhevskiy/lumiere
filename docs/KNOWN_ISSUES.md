@@ -1,4 +1,4 @@
-# Known issues and open risks (read this before relying on kino-stream)
+# Known issues and open risks (read this before relying on lumiere)
 
 ## 0a. Interface refinements (design direction "Lumière") — what was verified, and what was not
 * Verified by automated tests on one machine (Ubuntu 24.04, GNOME/Wayland, PyQt6 6.6.1 on Qt 6.4.2): themes and contrast tokens, focus visibility and Tab order, interruptible fades and banner, reduced motion, Home composition at 720/1040/1440 px, long and CJK titles in cards, the offline title cleaner, positions and history preserved. Most of these tests run offscreen; the real-display run covers the player (`tests/test_ui_player.py`).
@@ -6,8 +6,8 @@
 * Fonts are not bundled; on a machine without the named serif or sans families the interface uses generic ones and looks different (and may wrap differently).
 * The title cleaner is deliberately conservative and local: it cannot identify a film, does not fix wrong file names, leaves unknown tags (for example `VOSTFR`) in the title, and declines TV episodes, season packs and collections (the readable file name is shown). Rules and limits: `docs/design/TITLE_CLEANER.md`.
 * "Continue watching" keeps **one entry per torrent** (keyed by infohash) and the app always opens the largest video of a torrent; multi-file torrents (season packs) are therefore represented by one file. A proposal for changing this is in `docs/design/HISTORY_MODEL_PROPOSAL.md`; nothing was changed.
-* The theme is chosen with `KINO_STREAM_THEME=dark|light` (dark by default); there is no Settings toggle. GNOME's reduce-animations setting is read once at start (`KINO_REDUCE_MOTION` overrides it).
-* The product is named **Lumière** (display name only, owner decision 2026-10-10). The commands, packages, desktop-entry/icon file names and the settings/state/cache folders still say `kino-stream`; engine and command-line error strings may still say "Kino Stream". **No trademark or domain check has been done.** `KINO_STREAM_BRAND=kino` shows the previous name.
+* The theme is chosen with `LUMIERE_THEME=dark|light` (dark by default); there is no Settings toggle. GNOME's reduce-animations setting is read once at start (`LUMIERE_REDUCE_MOTION` overrides it).
+* The product is named **Lumière** and the name is used throughout (commands `lumiere`/`lumiere-gui`, packages `lumiere`/`lumiere_ui`, folders `…/lumiere`). Names of the former version (`kino-stream`) survive only as documented compatibility items (launchers, a link at the old folder names, the old cache marker, two old environment variables); see `docs/NAMING.md`. **No trademark or domain check has been completed**; the name is a working name.
 
 ## 0b. One unexplained native crash in the automated tests — UNRESOLVED
 **What happened.** During development, one run of the complete automated test suite (1 of 18 full runs of the interface work) was killed by the operating system with a segmentation fault (exit code 139) while a GUI test (`tests.test_ui.Window.test_open_failure_maps_to_dialog_and_hides_overlay`) was running. No stack trace was captured, because crash reporting and core dumps were not enabled for that run. That run used an earlier development state of the interface code.
@@ -18,14 +18,14 @@
 
 **What it could mean for you.** The worst plausible outcome is the application closing. The disk cache and its journal are designed to survive a crash and are tested with real `SIGKILL`, so a crash should not corrupt your downloaded data (this is tested, not guaranteed).
 
-**If it happens to you.** Please open an issue and attach `~/.local/state/kino-stream/crash.log` (the application writes native stack traces there; it was empty in all our application runs). A readable stack would need Qt/Python debug symbols, which were deliberately not installed during development. The engine's separate, fixed `wait_for_alert` crash (section 1) is a different problem.
+**If it happens to you.** Please open an issue and attach `~/.local/state/lumiere/crash.log` (the application writes native stack traces there; it was empty in all our application runs). A readable stack would need Qt/Python debug symbols, which were deliberately not installed during development. The engine's separate, fixed `wait_for_alert` crash (section 1) is a different problem.
 
 ## 0c. Found and fixed during release preparation: eviction journal left open by a clean shutdown
-* In a full run under load, `tests.test_cli.CliBounded.test_play_seek_both_ways_inside_a_hard_cache_limit` failed once with "an eviction journal entry was left open" (txn state `punched`) after a *clean* exit. Cause (established by code reading and a deterministic reproduction): `BoundedSparseStore.close()` cancelled the cache loop while it was between `mark_punched()` and `commit()` of an eviction. This never exceeded the cache limit and never served wrong data (the next start rolls the journal forward; see the crash-point tests), but a clean exit should leave a clean journal. Fixed in `kino_stream/bounded_store.py` (`close()` waits up to 20 s for an in-flight eviction; no new eviction starts while closing); regression test `tests/test_cache.py::CrashRecovery::test_closing_while_the_cache_loop_is_evicting_lets_the_eviction_finish_and_leaves_a_closed_journal` (red before, green after). Reproduction rate before the fix: 0 of 8 runs alone, 2 of 18 with three runs in parallel.
+* In a full run under load, `tests.test_cli.CliBounded.test_play_seek_both_ways_inside_a_hard_cache_limit` failed once with "an eviction journal entry was left open" (txn state `punched`) after a *clean* exit. Cause (established by code reading and a deterministic reproduction): `BoundedSparseStore.close()` cancelled the cache loop while it was between `mark_punched()` and `commit()` of an eviction. This never exceeded the cache limit and never served wrong data (the next start rolls the journal forward; see the crash-point tests), but a clean exit should leave a clean journal. Fixed in `lumiere/bounded_store.py` (`close()` waits up to 20 s for an in-flight eviction; no new eviction starts while closing); regression test `tests/test_cache.py::CrashRecovery::test_closing_while_the_cache_loop_is_evicting_lets_the_eviction_finish_and_leaves_a_closed_journal` (red before, green after). Reproduction rate before the fix: 0 of 8 runs alone, 2 of 18 with three runs in parallel.
 
 ## 0d. Found and fixed during release preparation: zeros served for a completed piece under heavy CPU load
-* Under 6- to 10-way parallel load (several full CLI/mpv runs at once on 8 cores) `tests.test_cli.CliBounded.test_play_seek_both_ways_inside_a_hard_cache_limit` reported `http_mismatches: 1` (the server sent a piece as zeros that the store already counted as downloaded). Rate before the fix: 4 of 100 runs at 10-way load (0 of 8 runs alone). Evidence: the diagnostic copy logged `all_zero_in_served: True` for exactly one piece with `have=1`, no eviction, no restart, and a re-read 0.3 s later equalled the original. Cause: libtorrent's `piece_finished` alert can precede the visibility of the piece's blocks in the file; the store read the file immediately. It is a contract violation of the store (`kino_stream/store.py`: never return zero/missing data) that existed in the engine before the interface work.
-* Fix (`kino_stream/lt_store.py`, `bounded_store.py`, `httpd.py`): the first time a piece is served it is verified against the torrent's SHA-1 piece hash; if it does not match yet the read raises `PieceUnavailable` and the HTTP server waits (20 ms steps, aborting with an explanation after `hard_timeout`). Same load after the fix: 0 mismatches in 100 runs. Limits: only pieces lying entirely inside the streamed file are verifiable (up to 2 boundary pieces per file are not); pure BitTorrent-v2 torrents have no v1 piece hashes and are not checked; a piece that stays wrong on disk for `hard_timeout` now aborts the connection (previously it would have been served corrupt). Before this fix, damaged retained data was only detected by the startup sample or the player; it is now also detected when served.
+* Under 6- to 10-way parallel load (several full CLI/mpv runs at once on 8 cores) `tests.test_cli.CliBounded.test_play_seek_both_ways_inside_a_hard_cache_limit` reported `http_mismatches: 1` (the server sent a piece as zeros that the store already counted as downloaded). Rate before the fix: 4 of 100 runs at 10-way load (0 of 8 runs alone). Evidence: the diagnostic copy logged `all_zero_in_served: True` for exactly one piece with `have=1`, no eviction, no restart, and a re-read 0.3 s later equalled the original. Cause: libtorrent's `piece_finished` alert can precede the visibility of the piece's blocks in the file; the store read the file immediately. It is a contract violation of the store (`lumiere/store.py`: never return zero/missing data) that existed in the engine before the interface work.
+* Fix (`lumiere/lt_store.py`, `bounded_store.py`, `httpd.py`): the first time a piece is served it is verified against the torrent's SHA-1 piece hash; if it does not match yet the read raises `PieceUnavailable` and the HTTP server waits (20 ms steps, aborting with an explanation after `hard_timeout`). Same load after the fix: 0 mismatches in 100 runs. Limits: only pieces lying entirely inside the streamed file are verifiable (up to 2 boundary pieces per file are not); pure BitTorrent-v2 torrents have no v1 piece hashes and are not checked; a piece that stays wrong on disk for `hard_timeout` now aborts the connection (previously it would have been served corrupt). Before this fix, damaged retained data was only detected by the startup sample or the player; it is now also detected when served.
 * The real-swarm behaviour of this check is **not measured** (all measurements are loopback swarms).
 
 ## 0. Desktop app (0.3.0) — scope of what was verified
@@ -53,7 +53,7 @@
 * The tutorial and error dialogs were checked at window sizes from 720×480 to 1920×1080 (layout assertions plus screenshots); screen-reader behaviour was not tested
   (this PyQt6 build exposes no `QAccessible`, so only accessible names/descriptions are set).
 * GNOME's "reduce animations" setting is read once at startup.
-* Stale `kino-stream-<pid>.sock` files can remain in `$XDG_RUNTIME_DIR` after killed command-line runs (harmless).
+* Stale `lumiere-<pid>.sock` files can remain in `$XDG_RUNTIME_DIR` after killed command-line runs (harmless).
 * Launching from the GNOME application menu was not clicked through. The installed `.desktop` file was launched with `gio launch` from a throw-away profile (manual check), plus a second launch to confirm hand-over to the running window.
 
 ## 1. libtorrent crashes (SIGSEGV / SIGABRT): root cause found, fixed, verified by a controlled experiment
@@ -71,12 +71,12 @@ loopback tests never saw it and real swarms crashed ~2 runs in 5.
 | second thread: `pop_alerts()` only | survived 3 of 3 (1.5-1.7 M alerts each) |
 | main thread: `pop_alerts()` only | survived 3 of 3 (1.3-2.0 M alerts each) |
 
-**Fix.** kino-stream never calls `wait_for_alert()`: alerts are polled with `pop_alerts()` from the event-loop thread every
+**Fix.** lumiere never calls `wait_for_alert()`: alerts are polled with `pop_alerts()` from the event-loop thread every
 50 ms and converted into plain tuples immediately (objects are only valid until the next `pop_alerts()`). Regression tests:
 `tests/test_alert_safety.py` (a source guard that forbids `wait_for_alert` in the package and the test fixtures, plus the
 alert storm in a subprocess for both safe reader styles). The earlier mitigations (narrow alert mask) stay but are no longer
-what protects us. No automatic restart was added to hide crashes. `python -m kino_stream` still writes native crash stacks to
-`~/.local/state/kino-stream/crash.log`.
+what protects us. No automatic restart was added to hide crashes. `python -m lumiere` still writes native crash stacks to
+`~/.local/state/lumiere/crash.log`.
 
 **Residual risk.** The controlled experiment and the regression tests prove the mechanism, not that no other defect exists.
 Confirmation on real swarms is recorded in `docs/real_swarm_report.json` (runs after the fix); any crash still leaves a
@@ -91,7 +91,7 @@ stack in `crash.log`.
 * Under pressure (cache full of data that must stay) playback can pause while the store makes room: the limit is hard,
   read-ahead is not. A limit too small for `pins + back window + read-ahead` is rejected at start with a clear message.
 * The limit counts allocated blocks of the whole cache directory with a reserve (2% or 8 blocks, plus 4 pieces for partially
-  downloaded pieces). The index and journal live in the state directory (`~/.local/state/kino-stream`), not in the limit.
+  downloaded pieces). The index and journal live in the state directory (`~/.local/state/lumiere`), not in the limit.
 * Needs a filesystem that really releases blocks on `fallocate(PUNCH_HOLE)`: probed at start with a scratch file; otherwise
   startup fails and the directory is left untouched. Tested: ext4 only. Other filesystems (btrfs/xfs/zfs/NFS) are untested.
 * A cache directory is bound to its index. A directory with data but no index is refused (never adopted silently).
@@ -112,7 +112,7 @@ stack in `crash.log`.
   first wanted (`wake()`), and a stuck torrent is re-added (`restart_after`).
 * Pieces that finish between the pre-eviction flush and the torrent removal used to be dropped from the bookkeeping while
   staying allocated on disk (cache exceeded its limit). They are now kept (made durable) and strays are reclaimed.
-* Network findings (what is confirmed vs hypothesis) live in `docs/NETWORK_FINDINGS.md`; `kino-stream doctor --network` repeats the probes.
+* Network findings (what is confirmed vs hypothesis) live in `docs/NETWORK_FINDINGS.md`; `lumiere doctor --network` repeats the probes.
 
 ## 5. Real-swarm behaviour of the bounded cache (3 runs, Sintel 129 MB / limit 48 MiB twice, Tears of Steel 571 MB / limit 160 MiB)
 * No crash, no served mismatch, no corrupt piece, nothing downloaded outside the demanded windows; peak disk 46.0, 50.9 (limit 50.3: 1.2% over,

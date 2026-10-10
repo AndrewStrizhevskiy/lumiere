@@ -2,6 +2,15 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are pre-1.0: anything may change.
 
+## [Unreleased]
+
+### Changed (breaking for anything that used the old names)
+- **Lumière is now the name everywhere, not only the display name.** Commands `lumiere` and `lumiere-gui`; Python packages `lumiere` and `lumiere_ui` (no import shim: pre-1.0); desktop entry, icon and window class `lumiere`; environment variables `LUMIERE_THEME`, `LUMIERE_REDUCE_MOTION`, `LUMIERE_BIN` (the old `KINO_STREAM_THEME` and `KINO_REDUCE_MOTION` are still honoured as a fallback). The interface strings now say "Lumière" directly (the `KINO_STREAM_BRAND` display switch is gone).
+- **User folders moved to the new name, recoverably:** `~/.config|.local/state|.cache/kino-stream` become `…/lumiere` on first start (atomic rename, no copy, link left at the old name, journal for an interrupted run, nothing is merged or overwritten; see `docs/FILES_AND_DATA.md`). Settings, `recent.json`, cache indexes and cache contents are unchanged. New caches carry the marker `.lumiere-managed`; caches with the old marker `.kino-stream-managed` are still recognised.
+- **Installer:** installs the new names, replaces a former installation (its app folder, menu entry and icon), leaves small compatibility launchers `kino-stream` / `kino-stream-gui`, and never touches user data; the uninstaller removes both generations (`--purge-data` also removes the old names' links).
+- Tests: `tests/test_migration.py` (16 tests: migration, recovery from interruption, relocated folders, legacy marker), installer upgrade tests.
+- Entries below this heading use the names of their time (`kino_stream`, `kino-stream`, …).
+
 ## [0.3.0] — first public version (not yet published)
 
 ### Changed

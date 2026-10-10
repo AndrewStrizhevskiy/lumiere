@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Interaction quality: transitions are short, interruptible, never delay an action, honour reduced motion, and behave in both themes (offscreen Qt, real-time waits).
-Reduced motion is forced per test through the environment override (KINO_REDUCE_MOTION) and restored afterwards."""
+Reduced motion is forced per test through the environment override (LUMIERE_REDUCE_MOTION) and restored afterwards."""
 import os
 import tempfile
 import time
@@ -19,18 +19,18 @@ from PyQt6.QtGui import QColor  # noqa: E402
 from PyQt6.QtTest import QTest  # noqa: E402
 from PyQt6.QtWidgets import QApplication  # noqa: E402
 
-from kino_stream.recent import RecentItems  # noqa: E402
-from kino_stream.settings import Settings  # noqa: E402
+from lumiere.recent import RecentItems  # noqa: E402
+from lumiere.settings import Settings  # noqa: E402
 
 app = QApplication.instance() or QApplication([])
-from kino_stream_ui import theme as T  # noqa: E402
-from kino_stream_ui.app import install_theme  # noqa: E402
+from lumiere_ui import theme as T  # noqa: E402
+from lumiere_ui.app import install_theme  # noqa: E402
 
 install_theme(app)
-from kino_stream_ui import widgets as W  # noqa: E402
-from kino_stream_ui.bridge import EngineBridge  # noqa: E402
-from kino_stream_ui.home import RecentCard  # noqa: E402
-from kino_stream_ui.mainwindow import MainWindow  # noqa: E402
+from lumiere_ui import widgets as W  # noqa: E402
+from lumiere_ui.bridge import EngineBridge  # noqa: E402
+from lumiere_ui.home import RecentCard  # noqa: E402
+from lumiere_ui.mainwindow import MainWindow  # noqa: E402
 
 FULL = 16777215
 
@@ -44,7 +44,7 @@ class MotionCase(unittest.TestCase):
     reduced = "0"
 
     def setUp(self):
-        patcher = mock.patch.dict(os.environ, {"KINO_REDUCE_MOTION": self.reduced})
+        patcher = mock.patch.dict(os.environ, {"LUMIERE_REDUCE_MOTION": self.reduced})
         patcher.start()
         self.addCleanup(patcher.stop)
         T.apply(self.theme)
@@ -77,7 +77,7 @@ class ScreenFade(MotionCase):
         wait(450)
         for w in self.screens():
             self.assertIsNone(w.graphicsEffect(), "a finished fade must leave no opacity effect behind")
-            f = getattr(w, "_kino_fade", None)
+            f = getattr(w, "_lumiere_fade", None)
             self.assertTrue(f is None or (f.fx is None and f.anim is None))
         self.assertTrue(self.win.stack.currentWidget().isVisible())
 
@@ -85,10 +85,10 @@ class ScreenFade(MotionCase):
         home = self.win.home
         W.fade_in(home, 300)
         wait(90)
-        before = home._kino_fade.fx.opacity()
+        before = home._lumiere_fade.fx.opacity()
         self.assertTrue(0.05 < before < 0.99, before)
         W.fade_in(home, 300)                                       # interrupt
-        after = home._kino_fade.fx.opacity()
+        after = home._lumiere_fade.fx.opacity()
         self.assertGreaterEqual(after, before - 0.02, "the interrupted fade jumped back")
         wait(400)
         self.assertIsNone(home.graphicsEffect())
@@ -113,7 +113,7 @@ class ScreenFade(MotionCase):
     def test_the_playback_screen_is_never_faded(self):
         self.win.stack.setCurrentIndex(self.win.HOME)
         self.win.go(self.win.PLAYER)
-        self.assertIsNone(getattr(self.win.player, "_kino_fade", None))       # a graphics effect on the parent of the GL video widget breaks its rendering
+        self.assertIsNone(getattr(self.win.player, "_lumiere_fade", None))       # a graphics effect on the parent of the GL video widget breaks its rendering
         self.assertIsNone(self.win.player.graphicsEffect())
 
     def test_an_action_is_not_delayed_by_a_running_fade(self):
@@ -139,10 +139,10 @@ class ReducedMotion(MotionCase):
         self.assertIsNone(W.fade_in(self.win.home))
         self.win.go(self.win.SETTINGS)
         self.assertIsNone(self.win.settings_screen.graphicsEffect())
-        self.assertIsNone(getattr(self.win.settings_screen, "_kino_fade", None) and self.win.settings_screen._kino_fade.fx)
+        self.assertIsNone(getattr(self.win.settings_screen, "_lumiere_fade", None) and self.win.settings_screen._lumiere_fade.fx)
 
     def test_a_running_fade_is_finished_at_once_when_motion_is_reduced(self):
-        with mock.patch.dict(os.environ, {"KINO_REDUCE_MOTION": "0"}):
+        with mock.patch.dict(os.environ, {"LUMIERE_REDUCE_MOTION": "0"}):
             W.fade_in(self.win.home, 400)
             wait(30)
             self.assertIsNotNone(self.win.home.graphicsEffect())

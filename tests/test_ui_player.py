@@ -16,21 +16,21 @@ os.environ["XDG_STATE_HOME"] = _xdg
 import libtorrent as lt  # noqa: E402
 from PyQt6.QtWidgets import QApplication  # noqa: E402
 
-from kino_stream import events as ev  # noqa: E402
-from kino_stream.config import MiB  # noqa: E402
-from kino_stream.recent import RecentItems  # noqa: E402
-from kino_stream.settings import Settings  # noqa: E402
-from kino_stream_ui.mpvwidget import MPV_IMPORT_ERROR, set_default_surface_format  # noqa: E402
+from lumiere import events as ev  # noqa: E402
+from lumiere.config import MiB  # noqa: E402
+from lumiere.recent import RecentItems  # noqa: E402
+from lumiere.settings import Settings  # noqa: E402
+from lumiere_ui.mpvwidget import MPV_IMPORT_ERROR, set_default_surface_format  # noqa: E402
 from tests.support import Seeder, free_port, media  # noqa: E402
 
 set_default_surface_format()
 app = QApplication.instance() or QApplication([])
-from kino_stream_ui.app import install_theme  # noqa: E402
+from lumiere_ui.app import install_theme  # noqa: E402
 
 install_theme(app)
-from kino_stream_ui.bridge import EngineBridge  # noqa: E402
-from kino_stream_ui.mainwindow import MainWindow  # noqa: E402
-from kino_stream_ui.player import SeekBar, menu_text  # noqa: E402
+from lumiere_ui.bridge import EngineBridge  # noqa: E402
+from lumiere_ui.mainwindow import MainWindow  # noqa: E402
+from lumiere_ui.player import SeekBar, menu_text  # noqa: E402
 
 OVERRIDES = dict(dht=False, lsd=False, limits_on_lan=True, metadata_timeout=20.0, min_readahead_bytes=2 * MiB, mpv_cache_bytes=0,
                  window_margin_bytes=0, readahead_s=0, urgent_s=0, assumed_bytes_per_s=2_000_000, wake_interval=1.0,
@@ -86,7 +86,7 @@ class PlayerEndToEnd(unittest.TestCase):
         st = Settings(cache_root=str(self.tmp / "caches"))
         self.recent = RecentItems(self.tmp / "recent.json")
         self.bridge = EngineBridge(st, self.tmp / "state", self.recent)
-        import kino_stream_ui.mainwindow as mw
+        import lumiere_ui.mainwindow as mw
         self.dialogs = []
         outer = self
 
@@ -255,7 +255,7 @@ class PlayerEndToEnd(unittest.TestCase):
         self.assertEqual(self.win.player.media.infohash, self.infohash)
 
     def test_interruption_and_pressure_are_communicated_accurately(self):
-        from kino_stream.events import EngineEvent
+        from lumiere.events import EngineEvent
         self.open(str(self.torrent))
         self.playing(1.0)
         p = self.win.player

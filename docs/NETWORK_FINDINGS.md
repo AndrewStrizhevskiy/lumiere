@@ -2,7 +2,7 @@
 
 These are the findings from the network diagnosis done while developing Lumière (formerly Kino Stream), with provider names, addresses and other identifying details removed. They are
 **observations from one developer's machine on three kinds of network, a few runs each**, not statistics and not statements about any provider. The tools that produced them are
-in `diag/` (`net_diag.py`, `udp_probe.py`, `bt_bench.py`); raw result files are intentionally not published. `kino-stream doctor --network` repeats the read-only probes.
+in `diag/` (`net_diag.py`, `udp_probe.py`, `bt_bench.py`); raw result files are intentionally not published. `lumiere doctor --network` repeats the read-only probes.
 
 The measurements were read-only: nothing persistent (routes, firewall, VPN, router) was changed, UPnP/NAT-PMP was never enabled, and web seeds were off in all BitTorrent runs.
 

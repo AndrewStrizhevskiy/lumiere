@@ -18,18 +18,18 @@ from PyQt6.QtGui import QFont  # noqa: E402
 from PyQt6.QtTest import QTest  # noqa: E402
 from PyQt6.QtWidgets import QApplication, QLabel  # noqa: E402
 
-from kino_stream.recent import RecentItems  # noqa: E402
-from kino_stream.settings import Settings  # noqa: E402
+from lumiere.recent import RecentItems  # noqa: E402
+from lumiere.settings import Settings  # noqa: E402
 
 app = QApplication.instance() or QApplication([])
-from kino_stream_ui import theme as T  # noqa: E402
-from kino_stream_ui.app import install_theme  # noqa: E402
+from lumiere_ui import theme as T  # noqa: E402
+from lumiere_ui.app import install_theme  # noqa: E402
 
 install_theme(app)
-from kino_stream_ui import widgets as W  # noqa: E402
-from kino_stream_ui.bridge import EngineBridge  # noqa: E402
-from kino_stream_ui.home import RecentCard, wrap_elide  # noqa: E402
-from kino_stream_ui.mainwindow import MainWindow  # noqa: E402
+from lumiere_ui import widgets as W  # noqa: E402
+from lumiere_ui.bridge import EngineBridge  # noqa: E402
+from lumiere_ui.home import RecentCard, wrap_elide  # noqa: E402
+from lumiere_ui.mainwindow import MainWindow  # noqa: E402
 
 LONG = ["The.Extraordinarily.Long.Title.Of.An.Independent.Film.That.Keeps.Going.And.Going.2019.2160p.UHD.BluRay.x265-GRP",
         "A" * 90 + ".mkv", "Eine.sehr.lange.Geschichte.über.Donaudampfschifffahrtsgesellschaftskapitän.2011.1080p.WEB-DL.x264",
@@ -98,7 +98,7 @@ class Themed(unittest.TestCase):
     theme = "dark"
 
     def setUp(self):
-        p = mock.patch.dict(os.environ, {"KINO_REDUCE_MOTION": "1"})
+        p = mock.patch.dict(os.environ, {"LUMIERE_REDUCE_MOTION": "1"})
         p.start()
         self.addCleanup(p.stop)
         T.apply(self.theme)

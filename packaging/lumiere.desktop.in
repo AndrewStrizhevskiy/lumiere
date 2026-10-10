@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Lumière
+GenericName=Torrent video player
+Comment=Watch a video from a torrent while it downloads
+Exec=@EXEC@
+Icon=lumiere
+Terminal=false
+Categories=AudioVideo;Video;Player;
+Keywords=lumiere;lumiere;torrent;magnet;stream;video;movie;
+MimeType=application/x-bittorrent;x-scheme-handler/magnet;
+StartupNotify=false
+StartupWMClass=lumiere

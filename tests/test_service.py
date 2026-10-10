@@ -10,14 +10,14 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from kino_stream import events as ev
-from kino_stream.caches import MARKER, NotManaged, delete_managed_cache, list_caches, prepare_cache_dir
-from kino_stream.config import MiB
-from kino_stream.recent import RecentItems
-from kino_stream.scheduler import PlayerState
-from kino_stream.service import EngineError, EngineService, OpenOptions
-from kino_stream.settings import Settings
-from kino_stream.store import CacheDirNotManagedError
+from lumiere import events as ev
+from lumiere.caches import MARKER, NotManaged, delete_managed_cache, list_caches, prepare_cache_dir
+from lumiere.config import MiB
+from lumiere.recent import RecentItems
+from lumiere.scheduler import PlayerState
+from lumiere.service import EngineError, EngineService, OpenOptions
+from lumiere.settings import Settings
+from lumiere.store import CacheDirNotManagedError
 from tests.support import Seeder, free_port, http_range, media
 
 import libtorrent as lt
@@ -264,7 +264,7 @@ class ServiceTests(ServiceCase):
         self.assertEqual(av[mid + 20] if mid + 20 < 100 else 0.0, 0.0)
 
     def test_unsupported_filesystem_gives_a_code_and_opt_in_temporary_mode_works(self):
-        with mock.patch("kino_stream.bounded_store.supports_punch", return_value=(False, "EOPNOTSUPP simulated")):
+        with mock.patch("lumiere.bounded_store.supports_punch", return_value=(False, "EOPNOTSUPP simulated")):
             with self.assertRaises(EngineError) as cm:
                 self.svc.open(str(self.torrent), self.opts()).result(40)
         self.assertEqual(cm.exception.code, ev.CACHE_UNSUPPORTED_FS)
@@ -369,7 +369,7 @@ class ServiceTests(ServiceCase):
 
 class NetworkCheckTests(ServiceCase):
     def test_verdicts_are_tagged_and_never_claim_throttling(self):
-        n = "kino_stream.doctor.netprobe"
+        n = "lumiere.doctor.netprobe"
         with mock.patch(n + ".exit_info", return_value={"ip": "1.2.3.4"}), mock.patch(n + ".dns_udp", return_value=True), \
                 mock.patch(n + ".dht_replies", return_value=(0, 4)), mock.patch(n + ".udp_tracker_replies", return_value=(0, 4)), \
                 mock.patch(n + ".tcp_http_ports", return_value={6881: True, 51413: True}), mock.patch(n + ".default_route_iface", return_value="tun0"):

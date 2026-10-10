@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SUPERSEDED (kept for the record): this mock patched the pre-implementation UI. R1-R6 are now implemented; use docs/design/prototypes/render_screens.py. Not maintained.
 """PROPOSAL MOCK - not part of the application. Renders the real Home/Settings screens as they are today ("before") and with the refinements proposed in
-docs/design/CRAFT_DIRECTION.md applied *in this process only* by monkeypatching ("after"). No file of kino_stream / kino_stream_ui is modified; nothing is persisted.
+docs/design/CRAFT_DIRECTION.md applied *in this process only* by monkeypatching ("after"). No file of lumiere / lumiere_ui is modified; nothing is persisted.
 usage (from the repository root):  PYTHONPATH=. python3 docs/design/prototypes/craft_mock.py OUTPUT_DIR
 Offscreen, reduced motion, made-up sample titles (not real data). The "after" images approximate the proposal; metrics are not final."""
 import os
@@ -11,7 +11,7 @@ import time
 from pathlib import Path
 
 os.environ["QT_QPA_PLATFORM"] = "offscreen"
-os.environ["KINO_REDUCE_MOTION"] = "1"
+os.environ["LUMIERE_REDUCE_MOTION"] = "1"
 _d = tempfile.mkdtemp()
 os.environ["XDG_CONFIG_HOME"] = _d
 os.environ["XDG_STATE_HOME"] = _d
@@ -21,14 +21,14 @@ from PyQt6.QtGui import QColor, QFont, QImage, QPainter, QPen  # noqa: E402
 from PyQt6.QtWidgets import QApplication, QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget  # noqa: E402
 
 app = QApplication([])
-from kino_stream.recent import RecentItems  # noqa: E402
-from kino_stream.settings import Settings  # noqa: E402
-from kino_stream_ui import home, theme as T  # noqa: E402
-from kino_stream_ui.app import install_theme  # noqa: E402
-from kino_stream_ui.bridge import EngineBridge  # noqa: E402
-from kino_stream_ui.mainwindow import MainWindow  # noqa: E402
-from kino_stream_ui.widgets import AnimatedBar, fmt_time, label  # noqa: E402
-from kino_stream import titles  # noqa: E402
+from lumiere.recent import RecentItems  # noqa: E402
+from lumiere.settings import Settings  # noqa: E402
+from lumiere_ui import home, theme as T  # noqa: E402
+from lumiere_ui.app import install_theme  # noqa: E402
+from lumiere_ui.bridge import EngineBridge  # noqa: E402
+from lumiere_ui.mainwindow import MainWindow  # noqa: E402
+from lumiere_ui.widgets import AnimatedBar, fmt_time, label  # noqa: E402
+from lumiere import titles  # noqa: E402
 
 install_theme(app)
 OUT = Path(sys.argv[1])

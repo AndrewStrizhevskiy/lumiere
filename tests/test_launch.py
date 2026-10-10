@@ -17,15 +17,15 @@ os.environ["XDG_RUNTIME_DIR"] = _rt                 # the hand-over socket must 
 from PyQt6.QtCore import QCoreApplication  # noqa: E402
 from PyQt6.QtWidgets import QApplication  # noqa: E402
 
-from kino_stream.recent import RecentItems  # noqa: E402
-from kino_stream.settings import Settings  # noqa: E402
+from lumiere.recent import RecentItems  # noqa: E402
+from lumiere.settings import Settings  # noqa: E402
 
 app = QApplication.instance() or QApplication([])
-from kino_stream_ui import app as appmod  # noqa: E402
-from kino_stream_ui.app import InstanceServer, forward_to_running_instance, instance_socket_path, parse_target, socket_is_ours  # noqa: E402
-from kino_stream_ui.bridge import EngineBridge  # noqa: E402
-from kino_stream_ui.dialogs import redact  # noqa: E402
-from kino_stream_ui.mainwindow import MainWindow  # noqa: E402
+from lumiere_ui import app as appmod  # noqa: E402
+from lumiere_ui.app import InstanceServer, forward_to_running_instance, instance_socket_path, parse_target, socket_is_ours  # noqa: E402
+from lumiere_ui.bridge import EngineBridge  # noqa: E402
+from lumiere_ui.dialogs import redact  # noqa: E402
+from lumiere_ui.mainwindow import MainWindow  # noqa: E402
 
 MAGNET = "magnet:?xt=urn:btih:" + "ab" * 20
 
@@ -39,7 +39,7 @@ class Parsing(unittest.TestCase):
             self.assertEqual(parse_target(bad), "", bad)
 
     def test_redaction(self):
-        t = redact(f'{{"p": "{Path.home()}/.cache/kino-stream/x", "m": "{MAGNET}&tr=udp://tracker.example:6969/announce?passkey=SECRET", "u": "https://t.example/ann?k=SECRET"}}')
+        t = redact(f'{{"p": "{Path.home()}/.cache/lumiere/x", "m": "{MAGNET}&tr=udp://tracker.example:6969/announce?passkey=SECRET", "u": "https://t.example/ann?k=SECRET"}}')
         self.assertNotIn("SECRET", t)
         self.assertNotIn(str(Path.home()), t)
         self.assertIn("btih:" + "ab" * 20, t)
@@ -99,7 +99,7 @@ class SocketSafety(unittest.TestCase):
         sk = socket.socket(socket.AF_UNIX)
         sk.bind(path)
         self.addCleanup(sk.close)
-        with mock.patch("kino_stream_ui.app.os.getuid", return_value=os.getuid() + 1):
+        with mock.patch("lumiere_ui.app.os.getuid", return_value=os.getuid() + 1):
             self.assertFalse(socket_is_ours(path))
         self.assertTrue(socket_is_ours(path))
 

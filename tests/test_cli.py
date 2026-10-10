@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""End-to-end through the real command line: kino-stream play ... --cache-limit-mb ... with headless mpv, seeks through
+"""End-to-end through the real command line: lumiere play ... --cache-limit-mb ... with headless mpv, seeks through
 mpv's IPC socket, and a real SIGKILL of the whole process group at different moments, followed by recovery."""
 import json
 import os
@@ -15,10 +15,10 @@ from pathlib import Path
 
 import libtorrent as lt
 
-from kino_stream.cacheindex import CacheIndex
-from kino_stream.config import MiB
-from kino_stream.piecemap import PieceMap
-from kino_stream.punch import allocated_bytes
+from lumiere.cacheindex import CacheIndex
+from lumiere.config import MiB
+from lumiere.piecemap import PieceMap
+from lumiere.punch import allocated_bytes
 from tests.support import Seeder, free_port, media
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -44,7 +44,7 @@ class CliCase(unittest.TestCase):
         self.dl, self.state = self.tmp / "dl", self.tmp / "state"
 
     def cmd(self, quit_after, ipc=None, extra=()):
-        c = [sys.executable, "-m", "kino_stream", "play", str(self.torrent), "--peer", f"127.0.0.1:{self.sd.port}",
+        c = [sys.executable, "-m", "lumiere", "play", str(self.torrent), "--peer", f"127.0.0.1:{self.sd.port}",
              "--save-path", str(self.dl), "--state-dir", str(self.state), "--no-dht", "--listen", f"127.0.0.1:{free_port()}",
              "--headless", "--cache-limit-mb", str(LIMIT_MB), "--cache-back-mb", "1", "--mpv-cache-mb", "1",
              "--min-readahead-mib", "1", "--readahead-s", "8", "--status-interval", "0", "--quit-after", str(quit_after),
@@ -148,7 +148,7 @@ class CliBounded(CliCase):
 
 class Doctor(unittest.TestCase):
     def test_doctor_runs_offline(self):
-        r = subprocess.run([sys.executable, "-m", "kino_stream", "doctor", "--save-path", tempfile.mkdtemp()], capture_output=True,
+        r = subprocess.run([sys.executable, "-m", "lumiere", "doctor", "--save-path", tempfile.mkdtemp()], capture_output=True,
                            text=True, cwd=ROOT, timeout=60)
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         self.assertIn("hole punching works", r.stdout)

@@ -1,8 +1,8 @@
 # Command line reference
 
-    kino-stream play SOURCE [options]       # SOURCE: .torrent file or magnet link; opens mpv
-    kino-stream doctor [--network] [--save-path DIR]
-    kino-stream --version
+    lumiere play SOURCE [options]       # SOURCE: .torrent file or magnet link; opens mpv
+    lumiere doctor [--network] [--save-path DIR]
+    lumiere --version
 
 | option | meaning |
 |---|---|

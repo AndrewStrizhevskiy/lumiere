@@ -19,8 +19,8 @@ from pathlib import Path
 
 import libtorrent as lt
 
-from kino_stream.config import KiB, MiB
-from kino_stream.session import StreamSession
+from lumiere.config import KiB, MiB
+from lumiere.session import StreamSession
 from tests.largemedia import BASE, BITRATE_BPS, ensure_large
 from tests.support import Seeder, disk_usage, free_port, leech_config
 

@@ -13,7 +13,7 @@ from pathlib import Path
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 os.environ.setdefault("LC_NUMERIC", "C")
-os.environ["KINO_REDUCE_MOTION"] = "1"
+os.environ["LUMIERE_REDUCE_MOTION"] = "1"
 _xdg = tempfile.mkdtemp()
 os.environ["XDG_CONFIG_HOME"] = _xdg
 os.environ["XDG_STATE_HOME"] = _xdg
@@ -22,7 +22,7 @@ from PyQt6.QtGui import QColor  # noqa: E402
 from PyQt6.QtWidgets import QApplication, QVBoxLayout, QWidget  # noqa: E402
 
 app = QApplication.instance() or QApplication([])
-from kino_stream_ui import theme as T  # noqa: E402
+from lumiere_ui import theme as T  # noqa: E402
 from tests.test_theme import contrast  # noqa: E402
 
 
@@ -77,7 +77,7 @@ class Tokens(unittest.TestCase):
 
 class RenderedFocus(ThemedCase):
     def make(self):
-        from kino_stream_ui.widgets import button
+        from lumiere_ui.widgets import button
         w = QWidget()
         w.setObjectName("root")
         lay = QVBoxLayout(w)
@@ -125,10 +125,10 @@ class FocusSweep(ThemedCase):
     """2.4.7: every keyboard-focusable control on the Home and Settings screens must look different when focused."""
 
     def build(self):
-        from kino_stream.recent import RecentItems
-        from kino_stream.settings import Settings
-        from kino_stream_ui.bridge import EngineBridge
-        from kino_stream_ui.mainwindow import MainWindow
+        from lumiere.recent import RecentItems
+        from lumiere.settings import Settings
+        from lumiere_ui.bridge import EngineBridge
+        from lumiere_ui.mainwindow import MainWindow
         tmp = Path(tempfile.mkdtemp())
         r = RecentItems(tmp / "recent.json")
         for h, t in (("a" * 40, "Sintel"), ("b" * 40, "Tears of Steel")):
@@ -179,7 +179,7 @@ class FocusSweepLight(FocusSweep):
 
 class SeekBarRendering(ThemedCase):
     def test_played_downloaded_and_remaining_are_three_distinct_luminance_steps(self):
-        from kino_stream_ui.player import SeekBar
+        from lumiere_ui.player import SeekBar
         bar = SeekBar()
         bar.resize(400, 28)
         bar.set_bins([1.0] * 10 + [0.0] * 10)       # first half downloaded

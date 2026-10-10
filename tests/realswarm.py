@@ -20,8 +20,8 @@ from pathlib import Path
 
 import libtorrent as lt
 
-from kino_stream.config import Config, MiB
-from kino_stream.session import StreamSession
+from lumiere.config import Config, MiB
+from lumiere.session import StreamSession
 from tests.large_scenarios import seek_and_measure
 from tests.support import disk_usage
 

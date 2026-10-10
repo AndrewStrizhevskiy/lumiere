@@ -8,7 +8,7 @@ import unicodedata
 import unittest
 from pathlib import Path
 
-from kino_stream.titles import (KIND_CLEANED, KIND_DECLINED, KIND_READABLE, DisplayTitle, clean_release_name as clean, for_name, for_recent_item)
+from lumiere.titles import (KIND_CLEANED, KIND_DECLINED, KIND_READABLE, DisplayTitle, clean_release_name as clean, for_name, for_recent_item)
 
 MAX = 2026
 ROOT = Path(__file__).resolve().parents[1]
@@ -233,7 +233,7 @@ class Misleading(unittest.TestCase):
 
 class Purity(unittest.TestCase):
     def test_no_network_or_io_modules_are_imported_by_the_source(self):
-        tree = ast.parse((ROOT / "kino_stream" / "titles.py").read_text())
+        tree = ast.parse((ROOT / "lumiere" / "titles.py").read_text())
         imported = {n.names[0].name.split(".")[0] for n in ast.walk(tree) if isinstance(n, ast.Import)} | {n.module.split(".")[0] for n in ast.walk(tree) if isinstance(n, ast.ImportFrom) and n.module}
         self.assertTrue(imported <= {"__future__", "re", "unicodedata", "dataclasses", "datetime"}, imported)
 
@@ -241,7 +241,7 @@ class Purity(unittest.TestCase):
         code = ("import socket, sys\n"
                 "def boom(*a, **k): raise AssertionError('network access attempted')\n"
                 "socket.socket = boom; socket.create_connection = boom; socket.getaddrinfo = boom\n"
-                "from kino_stream.titles import clean_release_name, for_name\n"
+                "from lumiere.titles import clean_release_name, for_name\n"
                 "clean_release_name('Some.Movie.2024.1080p.WEB-DL.x264-GROUP.mkv', 2026); for_name('IMG_2048.mov', 2026)\n"
                 "assert not [m for m in sys.modules if m.startswith(('PyQt', 'libtorrent', 'urllib.request', 'http.client'))], 'unexpected module loaded'\n"
                 "print('pure')\n")

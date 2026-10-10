@@ -7,9 +7,9 @@ import time
 import unittest
 from pathlib import Path
 
-from kino_stream.config import KiB, MiB
-from kino_stream.lt_store import PersistentFileStore
-from kino_stream.store import Demand
+from lumiere.config import KiB, MiB
+from lumiere.lt_store import PersistentFileStore
+from lumiere.store import Demand
 from tests.support import (Seeder, disk_usage, eventually, http_range, leech_config, media, open_stream, random_file,
                            record, sha)
 
@@ -301,7 +301,7 @@ class MagnetPath(SwarmCase):
         self.cleanups.append(sd.close)
         ih = str(sd.ti.info_hash())
         magnet = f"magnet:?xt=urn:btih:{ih}&dn=release&x.pe=127.0.0.1:{sd.port}"
-        from kino_stream.session import StreamSession
+        from lumiere.session import StreamSession
         cfg = leech_config(self.tmp, sd, verify_source=vid, min_readahead_bytes=2 * MiB, mpv_cache_bytes=0, window_margin_bytes=0)
         t_open = time.monotonic()
         s = await StreamSession.open(cfg, magnet, self.tmp / "dl")            # accepted: metadata arrives from the swarm

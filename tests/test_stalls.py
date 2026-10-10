@@ -12,9 +12,9 @@ from pathlib import Path
 
 import libtorrent as lt
 
-from kino_stream.config import KiB, MiB
-from kino_stream.store import Demand
-from kino_stream.lt_store import PersistentFileStore
+from lumiere.config import KiB, MiB
+from lumiere.store import Demand
+from lumiere.lt_store import PersistentFileStore
 from tests.support import Seeder, eventually, http_range, leech_config, media, open_stream, record
 
 PL = 65536
@@ -171,8 +171,8 @@ class NoFalseStuckAfterRestart(unittest.TestCase):
     value. The decision is a pure method now, so it is tested deterministically (a swarm-based version was timing-dependent and could pass vacuously)."""
 
     def store(self, **cfg):
-        from kino_stream.config import Config
-        from kino_stream.lt_store import PersistentFileStore
+        from lumiere.config import Config
+        from lumiere.lt_store import PersistentFileStore
         st = object.__new__(PersistentFileStore)
         st.cfg = Config()
         for k, v in cfg.items():

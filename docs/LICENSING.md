@@ -9,7 +9,7 @@ Copyright (C) 2026 the Lumière contributors (a collective name: no individual i
 The desktop app imports PyQt6, which is available only under **GPL-3** or Riverbank's commercial license, and it drives libmpv, which Ubuntu builds as **GPL-3+**.
 Choosing GPL-3.0-or-later for the whole project is consistent with all of them, keeps the project simple, and keeps improvements open. Permissive alternatives
 (MIT/Apache-2.0) would not let anyone ship the app without also complying with the GPL of those dependencies, so they would promise users more than they could deliver.
-The engine package (`kino_stream`) does not import Qt or the mpv bindings, so it could be re-licensed more permissively in the future by its copyright holders if there is a need.
+The engine package (`lumiere`) does not import Qt or the mpv bindings, so it could be re-licensed more permissively in the future by its copyright holders if there is a need.
 
 ## Dependencies and their licenses
 
@@ -25,7 +25,7 @@ Lumière **does not bundle or redistribute** any third-party code or binaries: e
 | ffmpeg | **tests only**, run as a separate process | LGPL/GPL | not linked, not redistributed |
 | Inter font | optional look; **not bundled**, used only if installed | SIL OFL 1.1 | not distributed |
 | Editorial serif fonts (Literata, Source Serif 4, EB Garamond, Charis SIL, Noto Serif, Liberation Serif, DejaVu Serif) | optional look for headings; **not bundled**, the first installed one is used | mostly SIL OFL 1.1 (each per its own package) | not distributed |
-| Icons | `kino_stream_ui/icons.py` | drawn for this project in the style of the Feather/Lucide icon sets; see [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) | notices included as a precaution |
+| Icons | `lumiere_ui/icons.py` | drawn for this project in the style of the Feather/Lucide icon sets; see [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) | notices included as a precaution |
 
 ## Redistribution notes and concerns (read before packaging)
 

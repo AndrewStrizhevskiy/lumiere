@@ -12,24 +12,24 @@ from unittest import mock
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 os.environ.setdefault("LC_NUMERIC", "C")
-os.environ["KINO_REDUCE_MOTION"] = "1"
+os.environ["LUMIERE_REDUCE_MOTION"] = "1"
 _xdg = tempfile.mkdtemp()
 os.environ["XDG_CONFIG_HOME"] = _xdg
 os.environ["XDG_STATE_HOME"] = _xdg
 
 from PyQt6.QtWidgets import QApplication, QLabel  # noqa: E402
 
-from kino_stream.recent import RecentItems  # noqa: E402
-from kino_stream.settings import Settings  # noqa: E402
+from lumiere.recent import RecentItems  # noqa: E402
+from lumiere.settings import Settings  # noqa: E402
 
 app = QApplication.instance() or QApplication([])
-from kino_stream_ui import theme as T  # noqa: E402
-from kino_stream_ui.app import install_theme  # noqa: E402
+from lumiere_ui import theme as T  # noqa: E402
+from lumiere_ui.app import install_theme  # noqa: E402
 
 install_theme(app)
-from kino_stream_ui.bridge import EngineBridge  # noqa: E402
-from kino_stream_ui.home import HomeScreen, RecentCard  # noqa: E402
-from kino_stream_ui.mainwindow import MainWindow  # noqa: E402
+from lumiere_ui.bridge import EngineBridge  # noqa: E402
+from lumiere_ui.home import HomeScreen, RecentCard  # noqa: E402
+from lumiere_ui.mainwindow import MainWindow  # noqa: E402
 
 
 def texts(card):

@@ -5,10 +5,10 @@ import random
 import time
 import unittest
 
-from kino_stream.config import Config
-from kino_stream.httpd import RangeError, StreamServer, parse_range
-from kino_stream.scheduler import Scheduler
-from kino_stream.store import PieceUnavailable
+from lumiere.config import Config
+from lumiere.httpd import RangeError, StreamServer, parse_range
+from lumiere.scheduler import Scheduler
+from lumiere.store import PieceUnavailable
 from tests.support import FakeStore, eventually, http_range
 
 SIZE = 300_000

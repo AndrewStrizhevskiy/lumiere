@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Kill the whole kino-stream process group (SIGKILL) at random moments while a 6 MiB cache is evicting, N times, then
+"""Kill the whole lumiere process group (SIGKILL) at random moments while a 6 MiB cache is evicting, N times, then
 recover once and verify integrity. Reports how many kills landed inside an open eviction transaction."""
 import hashlib, json, os, random, shutil, signal, socket, subprocess, sys, tempfile, time
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import libtorrent as lt
-from kino_stream.cacheindex import CacheIndex
-from kino_stream.piecemap import PieceMap
-from kino_stream.punch import allocated_bytes
+from lumiere.cacheindex import CacheIndex
+from lumiere.piecemap import PieceMap
+from lumiere.punch import allocated_bytes
 from tests.support import Seeder, free_port, media
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 12
@@ -18,7 +18,7 @@ tmp = Path(tempfile.mkdtemp(prefix="ks-killstorm-"))
 tor = tmp / "t.torrent"; tor.write_bytes(lt.bencode(lt.create_torrent(ti).generate()))
 dl, state = tmp / "dl", tmp / "state"
 def cmd(quit_after):
-    return [sys.executable, "-m", "kino_stream", "play", str(tor), "--peer", f"127.0.0.1:{sd.port}", "--save-path", str(dl), "--state-dir", str(state),
+    return [sys.executable, "-m", "lumiere", "play", str(tor), "--peer", f"127.0.0.1:{sd.port}", "--save-path", str(dl), "--state-dir", str(state),
             "--no-dht", "--listen", f"127.0.0.1:{free_port()}", "--headless", "--cache-limit-mb", "6", "--cache-back-mb", "1", "--mpv-cache-mb", "1",
             "--min-readahead-mib", "1", "--readahead-s", "8", "--status-interval", "0", "--quit-after", str(quit_after), "--verify-source", str(src)]
 pm = PieceMap.from_torrent_info(ti); rnd = random.Random(42)

@@ -13,19 +13,19 @@ os.environ["XDG_STATE_HOME"] = _xdg
 
 from PyQt6.QtWidgets import QApplication
 
-from kino_stream import events as ev
-from kino_stream.recent import RecentItems
-from kino_stream.settings import Settings
+from lumiere import events as ev
+from lumiere.recent import RecentItems
+from lumiere.settings import Settings
 
 app = QApplication.instance() or QApplication([])
-from kino_stream_ui.app import install_theme  # noqa: E402
+from lumiere_ui.app import install_theme  # noqa: E402
 
 install_theme(app)
-from kino_stream_ui.bridge import EngineBridge  # noqa: E402
-from kino_stream_ui.home import looks_like_magnet  # noqa: E402
-from kino_stream_ui.mainwindow import MainWindow  # noqa: E402
-from kino_stream_ui.messages import for_code  # noqa: E402
-from kino_stream_ui.widgets import fmt_bytes  # noqa: E402
+from lumiere_ui.bridge import EngineBridge  # noqa: E402
+from lumiere_ui.home import looks_like_magnet  # noqa: E402
+from lumiere_ui.mainwindow import MainWindow  # noqa: E402
+from lumiere_ui.messages import for_code  # noqa: E402
+from lumiere_ui.widgets import fmt_bytes  # noqa: E402
 
 
 def pump(n=5):
@@ -57,7 +57,7 @@ class Pure(unittest.TestCase):
 class Untrusted(unittest.TestCase):
     def test_labels_never_render_rich_text(self):
         from PyQt6.QtCore import Qt
-        from kino_stream_ui.widgets import Toast, label
+        from lumiere_ui.widgets import Toast, label
         from PyQt6.QtWidgets import QWidget
         l = label('<a href="http://evil">x</a><img src="http://evil/p.png">')
         self.assertEqual(l.textFormat(), Qt.TextFormat.PlainText)
@@ -97,7 +97,7 @@ class Window(unittest.TestCase):
 
     def test_open_failure_maps_to_dialog_and_hides_overlay(self):
         shown = []
-        import kino_stream_ui.mainwindow as mw
+        import lumiere_ui.mainwindow as mw
 
         class D:
             choice = ""
@@ -118,7 +118,7 @@ class Window(unittest.TestCase):
         self.bridge.apply_settings(dataclasses.replace(self.st, cache_gb=8.0, network="quick"))
         again = Settings.load()
         self.assertEqual((again.cache_gb, again.network), (8.0, "quick"))
-        self.assertTrue(str(Path(os.environ["XDG_CONFIG_HOME"])) in str(Path(os.environ["XDG_CONFIG_HOME"]) / "kino-stream"))
+        self.assertTrue(str(Path(os.environ["XDG_CONFIG_HOME"])) in str(Path(os.environ["XDG_CONFIG_HOME"]) / "lumiere"))
 
 
 if __name__ == "__main__":

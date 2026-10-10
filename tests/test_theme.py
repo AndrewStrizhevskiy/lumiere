@@ -17,7 +17,7 @@ from PyQt6.QtGui import QColor  # noqa: E402
 from PyQt6.QtWidgets import QApplication  # noqa: E402
 
 app = QApplication.instance() or QApplication([])
-from kino_stream_ui import brand, theme as T  # noqa: E402
+from lumiere_ui import brand, theme as T  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -90,11 +90,11 @@ class Tokens(unittest.TestCase):
         self.assertEqual(T.BG, "#22211F")
 
     def test_env_var_selects_theme_and_stylesheets_render_for_both(self):
-        os.environ["KINO_STREAM_THEME"] = "light"
+        os.environ["LUMIERE_THEME"] = "light"
         try:
             self.assertEqual(T.apply(), "light")
         finally:
-            os.environ.pop("KINO_STREAM_THEME")
+            os.environ.pop("LUMIERE_THEME")
         for name in ("dark", "light"):
             css = T.qss(name)
             self.assertIn(T.THEMES[name]["BG"], css)
@@ -109,7 +109,7 @@ class Tokens(unittest.TestCase):
         self.assertEqual(T.rgba("#FFFFFF", 0.0), "rgba(255,255,255,0)")
 
     def test_no_stray_colour_literals_in_screens(self):
-        for f in (ROOT / "kino_stream_ui").glob("*.py"):
+        for f in (ROOT / "lumiere_ui").glob("*.py"):
             if f.name in ("theme.py",):
                 continue
             hits = re.findall(r"#[0-9A-Fa-f]{6}\b|rgba?\(\s*\d", f.read_text())
@@ -117,30 +117,18 @@ class Tokens(unittest.TestCase):
 
 
 class Brand(unittest.TestCase):
-    def tearDown(self):
-        os.environ.pop("KINO_STREAM_BRAND", None)
-
-    def test_the_product_name_is_lumiere_and_the_old_name_is_one_switch_away(self):
+    def test_the_product_name_is_lumiere_and_no_technical_identifier_is_derived_from_it(self):
         self.assertEqual(brand.product_name(), "Lumière")
-        os.environ["KINO_STREAM_BRAND"] = "kino"
-        self.assertEqual(brand.product_name(), "Kino Stream")
-        os.environ["KINO_STREAM_BRAND"] = "lumiere"
-        self.assertEqual(brand.product_name(), "Lumière")
-
-    def test_tr_applies_the_display_name_but_no_technical_identifier_follows_it(self):
-        from kino_stream_ui.messages import tr
-        self.assertIn("Lumière", tr("Welcome to Kino Stream"))
-        os.environ["KINO_STREAM_BRAND"] = "kino"
-        self.assertIn("Kino Stream", tr("Welcome to Kino Stream"))                   # reversible display switch
-        os.environ.pop("KINO_STREAM_BRAND")
-        import kino_stream, kino_stream_ui
-        self.assertEqual((kino_stream.__name__, kino_stream_ui.__name__), ("kino_stream", "kino_stream_ui"))
-        from kino_stream.settings import config_dir, state_dir
-        self.assertTrue(str(config_dir()).endswith("kino-stream") and str(state_dir()).endswith("kino-stream"))
-        desktop = (ROOT / "packaging" / "kino-stream.desktop.in").read_text()
+        from lumiere_ui.messages import tr
+        self.assertEqual(tr("Welcome to Lumière"), "Welcome to Lumière")
+        import lumiere, lumiere_ui
+        self.assertEqual((lumiere.__name__, lumiere_ui.__name__), ("lumiere", "lumiere_ui"))
+        from lumiere.settings import config_dir, state_dir
+        self.assertTrue(str(config_dir()).endswith("lumiere") and str(state_dir()).endswith("lumiere"))
+        desktop = (ROOT / "packaging" / "lumiere.desktop.in").read_text()
         self.assertIn("Name=Lumière", desktop)                           # display name only: the file name, Exec, Icon and StartupWMClass keep the technical id
-        self.assertIn("Icon=kino-stream", desktop)
-        self.assertIn("StartupWMClass=kino-stream", desktop)
+        self.assertIn("Icon=lumiere", desktop)
+        self.assertIn("StartupWMClass=lumiere", desktop)
 
     def test_symbol_renders_at_icon_sizes_and_in_one_colour(self):
         for size in (16, 24, 32, 64):
@@ -150,9 +138,9 @@ class Brand(unittest.TestCase):
             self.assertLess(opaque / (size * size), 0.75, f"{size}px: symbol too heavy")
 
     def test_app_icon_is_text_free_so_it_survives_either_name(self):
-        svg = (ROOT / "packaging" / "kino-stream.svg").read_text()
+        svg = (ROOT / "packaging" / "lumiere.svg").read_text()
         self.assertNotIn("<text", svg)
-        self.assertNotIn("Kino", svg.replace("<title>Frame symbol (concept)</title>", ""))
+        self.assertNotIn("<text", svg)
 
 
 class SmallSizeLegibility(unittest.TestCase):
@@ -175,7 +163,7 @@ class SmallSizeLegibility(unittest.TestCase):
         im = QImage(size, size, QImage.Format.Format_ARGB32)
         im.fill(Qt.GlobalColor.transparent)
         q = QPainter(im)
-        QSvgRenderer(QByteArray((ROOT / "packaging" / "kino-stream.svg").read_bytes())).render(q, QRectF(0, 0, size, size))
+        QSvgRenderer(QByteArray((ROOT / "packaging" / "lumiere.svg").read_bytes())).render(q, QRectF(0, 0, size, size))
         q.end()
         return im
 
@@ -208,13 +196,13 @@ class Packaging(unittest.TestCase):
         import subprocess
         home = Path(tempfile.mkdtemp(prefix="ks-theme-home-"))
         self.addCleanup(shutil.rmtree, home, True)
-        env = {k: v for k, v in os.environ.items() if not k.startswith("XDG_") and k != "KINO_STREAM_BIN"}
+        env = {k: v for k, v in os.environ.items() if not k.startswith("XDG_") and k != "LUMIERE_BIN"}
         env.update(HOME=str(home))
         r = subprocess.run([str(ROOT / "packaging" / "install.sh"), "--no-desktop-db"], env=env, capture_output=True, text=True, timeout=120)
         self.assertEqual(r.returncode, 0, r.stderr)
-        self.assertTrue((home / ".local/share/kino-stream/app/kino_stream_ui/brand.py").exists())
-        self.assertFalse((home / ".local/share/kino-stream/app/kino_stream_ui/assets").exists(), "no artwork is shipped")
-        self.assertEqual((home / ".local/share/icons/hicolor/scalable/apps/kino-stream.svg").read_text(), (ROOT / "packaging" / "kino-stream.svg").read_text())
+        self.assertTrue((home / ".local/share/lumiere/app/lumiere_ui/brand.py").exists())
+        self.assertFalse((home / ".local/share/lumiere/app/lumiere_ui/assets").exists(), "no artwork is shipped")
+        self.assertEqual((home / ".local/share/icons/hicolor/scalable/apps/lumiere.svg").read_text(), (ROOT / "packaging" / "lumiere.svg").read_text())
         subprocess.run([str(ROOT / "packaging" / "uninstall.sh"), "--no-desktop-db"], env=env, capture_output=True, timeout=120)
 
 

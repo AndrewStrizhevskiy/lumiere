@@ -5,7 +5,7 @@
 **Assessment: a pre-1.0 release candidate, published as a GitHub pre-release.** It is meant for people who run Ubuntu 24.04 (GNOME/Wayland) and are willing to report problems. It is not claimed to be crash-free or fully verified.
 
 ### 0.1 What this is
-* Lumière 0.3.0 (display name; previously "Kino Stream"): a desktop app (PyQt6 + libmpv) and a command-line tool over one libtorrent streaming engine with a hard-bounded disk cache. Commands, packages and data folders keep the name `kino-stream` for compatibility.
+* Lumière 0.3.0 (display name; previously "Kino Stream"): a desktop app (PyQt6 + libmpv) and a command-line tool over one libtorrent streaming engine with a hard-bounded disk cache. After rc.1 the commands, packages and data folders were renamed to `lumiere` as well (with an automatic, recoverable migration; see `docs/NAMING.md`); the rc.1 release itself used the old technical names `kino-stream`.
 * The history starts from an earlier sanitised development history (15 commits) and adds three commits: the earlier engineering fixes (installer quoting, stall detector, docs), the interface work, and stabilisation fixes + the rename + the release configuration. Commits use a neutral project identity (no personal e-mail).
 * Development evidence (crash-investigation logs and scripts, design deltas, recovery archives) is kept locally by the maintainer and is not part of this repository.
 
@@ -16,17 +16,17 @@
 | `python3 -X faulthandler -m unittest -v tests.test_ui_player` (real libmpv + OpenGL, Wayland) | 0 | **10 tests, OK**, 58 s |
 | after the rename: `test_theme test_tour test_launch test_packaging test_ui test_craft test_continue_watching test_accessibility`, then `test_release_config` | OK | 136 tests, 120 s; 4 tests |
 After the release candidate, a documentation/branding cleanup (wordmark removal, naming page, README, messages) was checked with `test_theme test_craft test_ui test_tour test_launch test_packaging test_release_config test_continue_watching` (126 tests OK), `test_service` (24 OK), an installer/uninstaller/`desktop-file-validate` check in a disposable profile and a link check of all Markdown files; no full run was repeated.
-Not run: `tests/realswarm.py` (internet), `tests/large_scenarios.py`. The release documentation changes after the full run touch no code except `kino_stream_ui/brand.py`, `home.py`, `app.py` (display name) and `tools/release_config.py`.
+Not run: `tests/realswarm.py` (internet), `tests/large_scenarios.py`. The release documentation changes after the full run touch no code except `lumiere_ui/brand.py`, `home.py`, `app.py` (display name) and `tools/release_config.py`.
 
 ### 0.3 Defects found and fixed while preparing the release (regression tests red before, green after)
 1. Eviction journal left open after a clean exit (`close()` cancelled an eviction mid-transaction): see `docs/KNOWN_ISSUES.md` 0c.
 2. Zeros served for a completed piece under heavy CPU load (libtorrent's "piece finished" can precede the bytes being readable): each in-file piece is now verified against its SHA-1 the first time it is served: `docs/KNOWN_ISSUES.md` 0d. Real-swarm behaviour of this check is not measured.
 
 ### 0.4 Intermittent native crash — UNRESOLVED (do not call the application crash-free)
-One SIGSEGV (exit 139) in 18 full runs of the interface work's automated tests (earlier code state, no stack, other Qt processes running). Not reproduced in: 4 core-enabled full runs, 2 heap-checked full runs, ≈ 165 GUI-module iterations (60 with an aggressive garbage collector, 11 under gdb) and ≈ 440 CLI/mpv test runs under load. Cause unknown; a link to the interface changes is neither shown nor excluded; a defect in PyQt6/Qt is plausible and unproven. It has only ever been seen inside the test harness. The cache and its journal are crash-safe (tested with real SIGKILL), so the worst plausible outcome is the application closing. Native stacks, if any, go to `~/.local/state/kino-stream/crash.log`. Reading a stack would need Qt/Python debug symbols (system packages), which were not installed.
+One SIGSEGV (exit 139) in 18 full runs of the interface work's automated tests (earlier code state, no stack, other Qt processes running). Not reproduced in: 4 core-enabled full runs, 2 heap-checked full runs, ≈ 165 GUI-module iterations (60 with an aggressive garbage collector, 11 under gdb) and ≈ 440 CLI/mpv test runs under load. Cause unknown; a link to the interface changes is neither shown nor excluded; a defect in PyQt6/Qt is plausible and unproven. It has only ever been seen inside the test harness. The cache and its journal are crash-safe (tested with real SIGKILL), so the worst plausible outcome is the application closing. Native stacks, if any, go to `~/.local/state/lumiere/crash.log`. Reading a stack would need Qt/Python debug symbols (system packages), which were not installed.
 
 ### 0.5 Open items (not blockers for a labelled pre-release)
-* **Name:** "Lumière" is the intended display name but is **not legally cleared**. A proportionate search (2026-10-10) found other software with that name (a dormant GNOME media player from the 2000s, a prototype MPV/Slint player, a 1990s Corel video suite, a text-to-video research model, an image-generation product), `lumiere.app` and `lumiere.video` are registered, and the PyPI name `lumiere` is taken (this project is not published to PyPI). No trademark register (USPTO/EUIPO/other) was searched. A proper clearance is required before the name is treated as final; the name can be reverted with `KINO_STREAM_BRAND=kino` and the display strings are centralised in `kino_stream_ui/brand.py`.
+* **Name:** "Lumière" is the intended display name but is **not legally cleared**. A proportionate search (2026-10-10) found other software with that name (a dormant GNOME media player from the 2000s, a prototype MPV/Slint player, a 1990s Corel video suite, a text-to-video research model, an image-generation product), `lumiere.app` and `lumiere.video` are registered, and the PyPI name `lumiere` is taken (this project is not published to PyPI). No trademark register (USPTO/EUIPO/other) was searched. A proper clearance is required before the name is treated as final; the name can be reverted with `KINO_STREAM_BRAND=kino` and the display strings are centralised in `lumiere_ui/brand.py`.
 * **Wordmark:** the header name is plain text in the system serif; the optional outlined artwork was removed after the release candidate (no artwork, no bundled font; see `THIRD_PARTY_NOTICES.md`).
 * **Copyright holder** is the collective "Lumière contributors" (`docs/LICENSING.md`).
 * **Security and conduct reports** go through GitHub's private advisories; no e-mail address is published.
@@ -48,7 +48,7 @@ Conventions: **[V]** verified in the 2026-10-09 evening verification session aga
 
 | item | value |
 |---|---|
-| repository | `kino-stream-public` (local only; **no remote**, no tags pushed) |
+| repository | `lumiere-public` (local only; **no remote**, no tags pushed) |
 | branch / commit [V] | `main` @ `e353b24` (15 commits, neutral author `Kino Stream contributors <noreply@invalid>`) |
 | working tree | the repository history (see §0.1); the text of this section was written before publication and is kept as the record of that assessment |
 
@@ -83,7 +83,7 @@ Environment: Ubuntu 24.04, GNOME/Wayland session, ext4, Python 3.12.3, PyQt6 6.6
   * *Quoting rules, checked by really launching entries through GIO* with stub executables that record their argv: the executable goes inside double quotes; inside them `"`, `` ` ``, `$` and `\` need a backslash, every
     literal backslash is doubled again by the string-value rule, and `%` is written `%%`. Verified to launch correctly for paths containing spaces, `'`, `"`, `$`, backticks, backslashes, `& | ; * ? # ( ) < > ~` and non-ASCII characters.
   * *Final choice:* **escape everything that can be escaped; reject only what cannot be represented or is not accepted by the platform.** Control characters (tab, newline…) cannot be expressed and make `desktop-file-validate` fail; a `%` in the
-    launcher directory is valid per the specification but GIO (GNOME) rejects such an entry, so the installer refuses with an explanation and `KINO_STREAM_BIN=<dir>` as the way out. A `%` elsewhere (data directory) is fine because only the launcher
+    launcher directory is valid per the specification but GIO (GNOME) rejects such an entry, so the installer refuses with an explanation and `LUMIERE_BIN=<dir>` as the way out. A `%` elsewhere (data directory) is fine because only the launcher
     directory appears in the desktop entry. The launcher script now single-quotes the application directory, and the version banner no longer interpolates the path into Python code.
   * *Tests:* `tests/test_packaging.py::PathHandling` (4 tests, 14 path variants): install, `desktop-file-validate`, launcher scripts run, the entry is launched through GIO and the stub receives exactly `[launcher, "--", path]`, uninstall leaves no file behind;
     refused paths write nothing. **Red-green verified:** against the original installer the new tests fail (12 failures, 4 errors); against the fixed installer all 12 packaging tests pass.
@@ -161,7 +161,7 @@ Inputs: the app's own log (`gui.log`), the history file's structural fields (sou
 * H3: with non-libtorrent peers whose optimistic-unchoke interval is ≥30 s, a 25 s restart cadence could keep resetting our place in the queue. Not supported by item 7 (libtorrent seeder only); untested against other clients. **The timeouts were not changed.**
 
 **Proposed, not implemented (needs approval):** include a one-line peer summary in the restart message (how many connected peers choke us, how many have none of the wanted pieces). It changes no behaviour and would turn the next occurrence into evidence.
-**Not performed:** `kino-stream doctor --network`, any external probe or download, a re-run of the failing torrents, instrumentation of the running application.
+**Not performed:** `lumiere doctor --network`, any external probe or download, a re-run of the failing torrents, instrumentation of the running application.
 
 ## 8. Release gate and reproducibility
 

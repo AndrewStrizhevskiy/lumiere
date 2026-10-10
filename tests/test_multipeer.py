@@ -9,8 +9,8 @@ import time
 import unittest
 from pathlib import Path
 
-from kino_stream.config import KiB, MiB
-from kino_stream.store import Demand
+from lumiere.config import KiB, MiB
+from lumiere.store import Demand
 from tests.support import Seeder, eventually, http_range, leech_config, media, open_stream, record, sha
 
 

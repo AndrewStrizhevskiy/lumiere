@@ -11,14 +11,14 @@ import asyncio
 import json
 import unittest
 
-from kino_stream.punch import allocated_bytes
+from lumiere.punch import allocated_bytes
 from tests.support import http_range
 from tests.test_cache import PL, CacheCase, MiB
 
 
 class RestartReuse(CacheCase):
     async def test_range_pieces_are_retained_reused_and_never_refetched_and_the_limit_holds(self):
-        from kino_stream.session import StreamSession
+        from lumiere.session import StreamSession
         ih = str(self.ti.info_hash())
         magnet = f"magnet:?xt=urn:btih:{ih}&dn=t&x.pe=127.0.0.1:{self.sd.port}"
         limit = 48 * MiB

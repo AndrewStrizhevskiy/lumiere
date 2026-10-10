@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Plain libtorrent benchmark (NOT the kino-stream application): isolates the network from our code.
+"""Plain libtorrent benchmark (NOT the lumiere application): isolates the network from our code.
 
     python3 diag/bt_bench.py sintel --seconds 60 [--iface wlan0] [--enc default|forced|disabled] [--label x]
 
@@ -25,7 +25,7 @@ a = ap.parse_args()
 C = lt.alert.category_t
 s = {"enable_dht": True, "enable_lsd": False, "enable_upnp": False, "enable_natpmp": False,
      "alert_mask": int(C.error_notification | C.status_notification | C.tracker_notification | C.dht_notification),
-     "alert_queue_size": 5000, "user_agent": "kino-stream-diag/1"}
+     "alert_queue_size": 5000, "user_agent": "lumiere-diag/1"}
 if a.iface:
     ip = subprocess.run(["sh", "-c", f"ip -4 -br addr show {a.iface} | awk '{{print $3}}' | cut -d/ -f1"], capture_output=True, text=True).stdout.strip()
     s["outgoing_interfaces"] = a.iface

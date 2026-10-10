@@ -15,9 +15,9 @@ from pathlib import Path
 
 import libtorrent as lt
 
-from kino_stream.config import Config, KiB, MiB
-from kino_stream.piecemap import PieceMap
-from kino_stream.store import Demand, PieceStore, PieceTimeout, PieceUnavailable
+from lumiere.config import Config, KiB, MiB
+from lumiere.piecemap import PieceMap
+from lumiere.store import Demand, PieceStore, PieceTimeout, PieceUnavailable
 
 CACHE = Path(__file__).parent / ".cache" / "media"
 PIECE_LENGTH = 64 * KiB
@@ -196,7 +196,7 @@ class FakeStore(PieceStore):
     """In-memory store for scheduler/HTTP unit tests. Records the demand it was given. Pieces appear on command."""
 
     def __init__(self, files: list[tuple[str, bytes]], piece_length: int = 1000):
-        from kino_stream.piecemap import FileSpan
+        from lumiere.piecemap import FileSpan
         off, spans, blobs = 0, [], []
         for i, (name, data) in enumerate(files):
             spans.append(FileSpan(i, off, len(data), name)); blobs.append(data); off += len(data)
@@ -287,7 +287,7 @@ def record(name: str, value) -> None:
 
 
 async def open_stream(tmp: Path, seeder, source_file: Path | None = None, file_index: int | None = None, **over):
-    from kino_stream.session import StreamSession
+    from lumiere.session import StreamSession
     cfg = leech_config(tmp, seeder, verify_source=source_file, **over)
     first = seeder[0] if isinstance(seeder, (list, tuple)) else seeder
     return await StreamSession.open(cfg, first.ti, tmp / "dl", file_index)

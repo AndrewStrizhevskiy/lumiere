@@ -13,12 +13,12 @@ from unittest import mock
 
 import libtorrent as lt
 
-from kino_stream.bounded_store import BoundedSparseStore
-from kino_stream.cacheindex import CacheIndex, SimulatedCrash
-from kino_stream.config import KiB, MiB
-from kino_stream.piecemap import PieceMap
-from kino_stream.punch import allocated_bytes, supports_punch
-from kino_stream.store import Demand, StoreError
+from lumiere.bounded_store import BoundedSparseStore
+from lumiere.cacheindex import CacheIndex, SimulatedCrash
+from lumiere.config import KiB, MiB
+from lumiere.piecemap import PieceMap
+from lumiere.punch import allocated_bytes, supports_punch
+from lumiere.store import Demand, StoreError
 from tests.support import (Seeder, eventually, http_range, leech_config, media, open_stream, random_file, record)
 
 PL = 64 * KiB
@@ -99,7 +99,7 @@ class Eviction(CacheCase):
         s = await self.open()
         await self.fill(s, range(20, 60))
         await s.evict([30, 31, 32])
-        from kino_stream.store import PieceUnavailable
+        from lumiere.store import PieceUnavailable
         with self.assertRaises(PieceUnavailable):
             s.read(0, 30 * PL + 10, 100)
         self.assertEqual(s.read(0, 40 * PL, 100), self.src.read_bytes()[40 * PL:40 * PL + 100])
@@ -109,7 +109,7 @@ class Eviction(CacheCase):
         them (re-reading 0.3 s later gave the right bytes). The store contract is 'never zero/missing data'; each piece is now checked against its hash the first time it is served."""
         s = await self.open()
         await self.fill(s, range(30, 40))
-        from kino_stream.store import PieceUnavailable
+        from lumiere.store import PieceUnavailable
         p = 35
         a, b = p * PL, (p + 1) * PL
         good = self.src.read_bytes()[a:b]
@@ -231,7 +231,7 @@ class Safety(CacheCase):
         f = d / "precious.bin"
         f.write_bytes(os.urandom(100_000))
         digest = hashlib.sha256(f.read_bytes()).hexdigest()
-        with mock.patch("kino_stream.bounded_store.supports_punch", return_value=(False, "EOPNOTSUPP simulated")):
+        with mock.patch("lumiere.bounded_store.supports_punch", return_value=(False, "EOPNOTSUPP simulated")):
             with self.assertRaises(StoreError) as cm:
                 await BoundedSparseStore.open(self.cfg(), self.ti, d, select=0)
         self.assertIn("not possible", str(cm.exception))
@@ -341,7 +341,7 @@ class CrashRecovery(CacheCase):
         s = await self.open()
         await self.fill(s, range(20, 60))
         stale = self.tmp / "state" / f"{s._infohash}.resume"
-        from kino_stream.lt_store import PersistentFileStore
+        from lumiere.lt_store import PersistentFileStore
         self.assertTrue(await PersistentFileStore._save_resume(s), "could not create the stale resume file")
         E = list(range(30, 40))
         s.crash_hook = lambda n: (_ for _ in ()).throw(SimulatedCrash(n)) if n == "after_punch" else None
@@ -428,7 +428,7 @@ class CacheLimit(CacheCase):
 
 class BoundedMagnet(CacheCase):
     async def test_bounded_cache_works_with_a_magnet_link_and_survives_a_restart(self):
-        from kino_stream.session import StreamSession
+        from lumiere.session import StreamSession
         ih = str(self.ti.info_hash())
         magnet = f"magnet:?xt=urn:btih:{ih}&dn=t&x.pe=127.0.0.1:{self.sd.port}"
         cfg = self.cfg(cache_limit_bytes=48 * MiB, verify_source=self.src, min_readahead_bytes=2 * MiB, mpv_cache_bytes=0,

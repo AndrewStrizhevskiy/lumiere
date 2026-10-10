@@ -12,7 +12,7 @@ possible exception below. At run time it uses the following software installed f
 
 ## Icons
 
-The outline icons in `kino_stream_ui/icons.py` were drawn for this project (24×24, 2 px stroke, round caps) in the visual style of the Feather and Lucide icon sets. Some
+The outline icons in `lumiere_ui/icons.py` were drawn for this project (24×24, 2 px stroke, round caps) in the visual style of the Feather and Lucide icon sets. Some
 shapes (for example the play, volume, folder, alert and check glyphs) are simple geometries that may coincide with those sets. As a precaution their notices are reproduced:
 
 **Feather** — MIT License — Copyright (c) 2013-2017 Cole Bemis
@@ -31,10 +31,10 @@ NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE US
 
 ## Fonts
 
-The *Inter* typeface (SIL Open Font License 1.1, © The Inter Project Authors) and the editorial serifs named in `kino_stream_ui/theme.py` (Literata, Source Serif 4, EB Garamond, Charis SIL, Noto Serif, Liberation Serif, DejaVu Serif) are used only if installed on the system; **no font is included or bundled**, and the interface falls back to generic families.
+The *Inter* typeface (SIL Open Font License 1.1, © The Inter Project Authors) and the editorial serifs named in `lumiere_ui/theme.py` (Literata, Source Serif 4, EB Garamond, Charis SIL, Noto Serif, Liberation Serif, DejaVu Serif) are used only if installed on the system; **no font is included or bundled**, and the interface falls back to generic families.
 
 ## Brand artwork and fonts
 
-* The frame symbol and the application icon (`packaging/kino-stream.svg`) are plain geometry drawn for this project.
+* The frame symbol and the application icon (`packaging/lumiere.svg`) are plain geometry drawn for this project.
 * No logo or wordmark artwork is shipped: the header name is plain text. (An earlier candidate included vector outlines of the word "Lumière" taken from the *EB Garamond* font, SIL OFL 1.1; that file was removed to keep the project free of font-derived artwork.)
 * At run time the interface uses fonts that happen to be installed (Inter, Cantarell, and an editorial serif such as Literata, Source Serif 4 or EB Garamond, with generic fallbacks); none is bundled.

@@ -1,5 +1,5 @@
 [project]
-name = "kino-stream"
+name = "lumiere"
 version = "0.3.0"
 description = "Watch a torrent while it downloads, with a hard-bounded disk cache (desktop app and CLI)"
 requires-python = ">=3.12"
@@ -9,13 +9,13 @@ classifiers = ["License :: OSI Approved :: GNU General Public License v3 or late
 dependencies = []
 
 [project.scripts]
-kino-stream = "kino_stream.__main__:main"
-kino-stream-gui = "kino_stream_ui.__main__:main"
+lumiere = "lumiere.__main__:main"
+lumiere-gui = "lumiere_ui.__main__:main"
 
 [build-system]
 requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["kino_stream", "kino_stream_ui"]
+packages = ["lumiere", "lumiere_ui"]
 

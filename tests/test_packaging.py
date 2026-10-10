@@ -17,8 +17,8 @@ class Packaging(unittest.TestCase):
     def setUp(self):
         self.home = Path(tempfile.mkdtemp(prefix="ks-home-"))
         self.addCleanup(shutil.rmtree, self.home, True)
-        self.env = {k: v for k, v in os.environ.items() if not k.startswith("XDG_") and k != "KINO_STREAM_BIN"}
-        self.env.update(HOME=str(self.home), QT_QPA_PLATFORM="offscreen", KINO_REDUCE_MOTION="1")
+        self.env = {k: v for k, v in os.environ.items() if not k.startswith("XDG_") and k != "LUMIERE_BIN"}
+        self.env.update(HOME=str(self.home), QT_QPA_PLATFORM="offscreen", LUMIERE_REDUCE_MOTION="1")
         # things that belong to other applications and must survive untouched
         self.sentinels = {
             self.home / ".local/bin/otherapp": "#!/bin/sh\necho other\n",
@@ -61,22 +61,60 @@ class Packaging(unittest.TestCase):
         self.install()
         created = self.files_under(self.home) - before
         for f in created:
-            self.assertTrue(f.startswith((".local/share/kino-stream/app/", ".local/bin/kino-stream", ".local/share/applications/kino-stream.desktop",
-                                          ".local/share/icons/hicolor/scalable/apps/kino-stream.svg")), f)
+            self.assertTrue(f.startswith((".local/share/lumiere/app/", ".local/bin/lumiere", ".local/share/applications/lumiere.desktop",
+                                          ".local/share/icons/hicolor/scalable/apps/lumiere.svg", ".local/bin/kino-stream")), f)       # kino-stream*: compatibility launchers
         self.assert_sentinels_untouched()
-        gui, cli = self.home / ".local/bin/kino-stream-gui", self.home / ".local/bin/kino-stream"
-        self.assertIn("kino-stream 0.", self.sh(gui, "--version").stdout)
+        gui, cli = self.home / ".local/bin/lumiere-gui", self.home / ".local/bin/lumiere"
+        self.assertIn("lumiere 0.", self.sh(gui, "--version").stdout)
         self.assertIn("usage", self.sh(cli, "--help").stdout.lower())
-        self.assertIn("kino-stream 0.", self.sh(cli, "--version").stdout)
+        self.assertIn("lumiere 0.", self.sh(cli, "--version").stdout)
+        for old, new in (("kino-stream", cli), ("kino-stream-gui", gui)):               # compatibility launchers for the former command names
+            self.assertIn("lumiere 0.", self.sh(self.home / ".local/bin" / old, "--version").stdout)
         # the installed copy (not the checkout) is what runs
         self.sh(gui, "--smoke")
-        desk = self.home / ".local/share/applications/kino-stream.desktop"
+        desk = self.home / ".local/share/applications/lumiere.desktop"
         text = desk.read_text()
         self.assertIn(f'Exec="{gui}" -- %U', text)   # executable quoted; "--": a file name can never be read as an option
         self.assertIn("MimeType=application/x-bittorrent;x-scheme-handler/magnet;", text)
         if shutil.which("desktop-file-validate"):
             self.sh("desktop-file-validate", desk)
         # default handlers are the user's choice: mimeapps.list is untouched (checked above); the launcher only declares support
+
+    def test_installing_over_a_former_installation_replaces_it_and_never_touches_user_data(self):
+        """A pre-rename install (name kino-stream) had: app folder, launchers with the old marker, menu entry, icon. They are replaced; settings/history/cache stay."""
+        old_app = self.home / ".local/share/kino-stream/app/kino_stream_ui"
+        old_app.mkdir(parents=True)
+        (old_app / "__init__.py").write_text("")
+        for n in ("kino-stream", "kino-stream-gui"):
+            f = self.home / ".local/bin" / n
+            f.write_text("#!/bin/sh\n# kino-stream installer: generated launcher, removed by packaging/uninstall.sh\nexit 0\n")
+            os.chmod(f, 0o755)
+        for d in ("applications", "icons/hicolor/scalable/apps"):
+            (self.home / ".local/share" / d).mkdir(parents=True, exist_ok=True)
+        (self.home / ".local/share/applications/kino-stream.desktop").write_text("[Desktop Entry]\nName=Kino Stream\nExec=\"/x/kino-stream-gui\" -- %U\n")
+        (self.home / ".local/share/icons/hicolor/scalable/apps/kino-stream.svg").write_text("<svg/>")
+        user = {self.home / ".config/kino-stream/settings.json": "{\"cache_gb\": 7.0}", self.home / ".local/state/kino-stream/recent.json": "{\"items\": []}",
+                self.home / ".cache/kino-stream/abc/.kino-stream-managed": "{}"}
+        for p, t in user.items():
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(t)
+        self.install()
+        self.assertFalse((self.home / ".local/share/kino-stream").exists(), "the former app folder must be gone")
+        self.assertFalse((self.home / ".local/share/applications/kino-stream.desktop").exists())
+        self.assertFalse((self.home / ".local/share/icons/hicolor/scalable/apps/kino-stream.svg").exists())
+        self.assertIn("lumiere 0.", self.sh(self.home / ".local/bin/kino-stream", "--version").stdout)          # now the compatibility launcher
+        self.assertTrue((self.home / ".local/share/applications/lumiere.desktop").exists())
+        for p, t in user.items():
+            self.assertEqual(p.read_text(), t, f"{p} changed")
+        self.assert_sentinels_untouched()
+
+    def test_a_foreign_file_named_like_a_former_command_is_left_alone(self):
+        foreign = self.home / ".local/bin/kino-stream"
+        foreign.write_text("#!/bin/sh\necho mine\n")
+        os.chmod(foreign, 0o755)
+        self.install()
+        self.assertEqual(foreign.read_text(), "#!/bin/sh\necho mine\n")
+        self.assertTrue((self.home / ".local/bin/lumiere").exists())
 
     def test_reinstall_is_idempotent(self):
         self.install()
@@ -87,22 +125,22 @@ class Packaging(unittest.TestCase):
     def test_uninstall_removes_everything_it_made_and_keeps_user_data(self):
         before = self.files_under(self.home)
         self.install()
-        data = self.home / ".config/kino-stream/settings.json"
+        data = self.home / ".config/lumiere/settings.json"
         data.parent.mkdir(parents=True)
         data.write_text("{}")
         self.sh(PKG / "uninstall.sh", "--no-desktop-db")
-        self.assertEqual(self.files_under(self.home) - before, {".config/kino-stream/settings.json"})
+        self.assertEqual(self.files_under(self.home) - before, {".config/lumiere/settings.json"})
         self.assert_sentinels_untouched()
 
-    def test_purge_removes_only_kino_stream_dirs_and_never_a_custom_cache(self):
+    def test_purge_removes_only_lumiere_dirs_and_never_a_custom_cache(self):
         self.install()
         custom = self.home / "Videos" / "my-cache"
         custom.mkdir(parents=True)
         (custom / "keep.bin").write_text("x")
-        conf = self.home / ".config/kino-stream"
+        conf = self.home / ".config/lumiere"
         conf.mkdir(parents=True)
         (conf / "settings.json").write_text(json.dumps({"cache_root": str(custom)}))
-        for d in (".local/state/kino-stream", ".cache/kino-stream/abc"):
+        for d in (".local/state/lumiere", ".cache/lumiere/abc"):
             (self.home / d).mkdir(parents=True)
             (self.home / d / "f").write_text("x")
         other = self.home / ".cache/other-app/data"
@@ -110,8 +148,8 @@ class Packaging(unittest.TestCase):
         other.write_text("keep")
         r = self.sh(PKG / "uninstall.sh", "--purge-data", "--no-desktop-db")
         self.assertFalse(conf.exists())
-        self.assertFalse((self.home / ".local/state/kino-stream").exists())
-        self.assertFalse((self.home / ".cache/kino-stream").exists())
+        self.assertFalse((self.home / ".local/state/lumiere").exists())
+        self.assertFalse((self.home / ".cache/lumiere").exists())
         self.assertTrue((custom / "keep.bin").exists())
         self.assertIn(str(custom), r.stdout)
         self.assertEqual(other.read_text(), "keep")
@@ -124,7 +162,7 @@ class Packaging(unittest.TestCase):
         self.assertEqual(self.files_under(self.home), before)
 
     def test_installer_refuses_to_overwrite_a_foreign_launcher(self):
-        foreign = self.home / ".local/bin/kino-stream"
+        foreign = self.home / ".local/bin/lumiere"
         foreign.write_text("#!/bin/sh\necho mine\n")
         r = self.sh(PKG / "install.sh", "--no-desktop-db", check=False)
         self.assertNotEqual(r.returncode, 0)
@@ -160,7 +198,7 @@ class PathHandling(unittest.TestCase):
     def env_for(self, name):
         home = self.root / name
         home.mkdir()
-        env = {k: v for k, v in os.environ.items() if not k.startswith("XDG_") and k != "KINO_STREAM_BIN"}
+        env = {k: v for k, v in os.environ.items() if not k.startswith("XDG_") and k != "LUMIERE_BIN"}
         env.update(HOME=str(home), QT_QPA_PLATFORM="offscreen")
         return home, env
 
@@ -178,16 +216,16 @@ class PathHandling(unittest.TestCase):
                 before = {str(p.relative_to(home)) for p in home.rglob("*") if p.is_file()}
                 r = self.run_script("install.sh", env, "--no-desktop-db")
                 self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
-                gui = home / ".local/bin/kino-stream-gui"
-                desk = home / ".local/share/applications/kino-stream.desktop"
-                self.assertIn("kino-stream 0.", subprocess.run([str(gui), "--version"], env=env, capture_output=True, text=True).stdout)      # generated launcher quoting
-                self.assertIn("kino-stream 0.", subprocess.run([str(home / ".local/bin/kino-stream"), "--version"], env=env, capture_output=True, text=True).stdout)
+                gui = home / ".local/bin/lumiere-gui"
+                desk = home / ".local/share/applications/lumiere.desktop"
+                self.assertIn("lumiere 0.", subprocess.run([str(gui), "--version"], env=env, capture_output=True, text=True).stdout)      # generated launcher quoting
+                self.assertIn("lumiere 0.", subprocess.run([str(home / ".local/bin/lumiere"), "--version"], env=env, capture_output=True, text=True).stdout)
                 if shutil.which("desktop-file-validate"):
                     v = subprocess.run(["desktop-file-validate", str(desk)], capture_output=True, text=True)
                     self.assertEqual(v.returncode, 0, v.stdout + v.stderr)
                 if Gio is not None:                              # what the desktop would really run: replace the launcher by a stub that records its argv
                     out = self.root / f"argv-{i}.txt"                # clean path: the stub itself must not depend on quoting
-                    gui.write_text(f'#!/bin/sh\n# kino-stream installer: test stub\nprintf "%s\\n" "$0" "$@" > "{out}"\n')
+                    gui.write_text(f'#!/bin/sh\n# lumiere installer: test stub\nprintf "%s\\n" "$0" "$@" > "{out}"\n')
                     info = Gio.DesktopAppInfo.new_from_filename(str(desk))
                     self.assertIsNotNone(info, "GIO must accept the entry")
                     info.launch_uris(["file:///tmp/x%20y.torrent"], None)      # %U: GIO hands local files over as paths
@@ -214,19 +252,19 @@ class PathHandling(unittest.TestCase):
         # only the launcher directory goes into the desktop entry; the app directory is single-quoted in the launcher script
         home, env = self.env_for("data%dir")
         env["XDG_DATA_HOME"] = str(home / "share%x")
-        env["KINO_STREAM_BIN"] = str(self.root / "cleanbin")
+        env["LUMIERE_BIN"] = str(self.root / "cleanbin")
         r = self.run_script("install.sh", env, "--no-desktop-db")
         self.assertEqual(r.returncode, 0, r.stderr)
-        self.assertIn("kino-stream 0.", subprocess.run([str(self.root / "cleanbin" / "kino-stream-gui"), "--version"], env=env, capture_output=True, text=True).stdout)
+        self.assertIn("lumiere 0.", subprocess.run([str(self.root / "cleanbin" / "lumiere-gui"), "--version"], env=env, capture_output=True, text=True).stdout)
 
     def test_custom_launcher_directory_with_a_space(self):
         home, env = self.env_for("home")
-        env["KINO_STREAM_BIN"] = str(home / "my bin")
+        env["LUMIERE_BIN"] = str(home / "my bin")
         r = self.run_script("install.sh", env, "--no-desktop-db")
         self.assertEqual(r.returncode, 0, r.stderr)
-        self.assertIn(f'Exec="{home}/my bin/kino-stream-gui" -- %U', (home / ".local/share/applications/kino-stream.desktop").read_text())
+        self.assertIn(f'Exec="{home}/my bin/lumiere-gui" -- %U', (home / ".local/share/applications/lumiere.desktop").read_text())
         self.assertEqual(self.run_script("uninstall.sh", env, "--no-desktop-db").returncode, 0)
-        self.assertFalse((home / "my bin/kino-stream-gui").exists())
+        self.assertFalse((home / "my bin/lumiere-gui").exists())
 
 
 if __name__ == "__main__":

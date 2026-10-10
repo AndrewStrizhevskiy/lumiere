@@ -1,5 +1,0 @@
-#!/bin/sh
-# SPDX-License-Identifier: GPL-3.0-or-later
-# Run kino-stream from this checkout without installing anything.
-HERE="$(cd "$(dirname "$0")/.." && pwd)"
-PYTHONPATH="$HERE${PYTHONPATH:+:$PYTHONPATH}" exec python3 -m kino_stream "$@"

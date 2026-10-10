@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""End-to-end: real libtorrent swarm -> kino-stream -> real mpv (headless), three container layouts.
+"""End-to-end: real libtorrent swarm -> lumiere -> real mpv (headless), three container layouts.
 
 Each run: start, play, seek forward, seek backward, check bytes/bounds, record startup and seek latency.
 """
@@ -10,7 +10,7 @@ import time
 import unittest
 from pathlib import Path
 
-from kino_stream.config import KiB, MiB
+from lumiere.config import KiB, MiB
 from tests.support import Seeder, disk_usage, eventually, media, open_stream, record
 
 

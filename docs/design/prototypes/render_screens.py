@@ -9,7 +9,7 @@ import time
 from pathlib import Path
 
 os.environ["QT_QPA_PLATFORM"] = "offscreen"
-os.environ["KINO_REDUCE_MOTION"] = "1"
+os.environ["LUMIERE_REDUCE_MOTION"] = "1"
 _d = tempfile.mkdtemp()
 os.environ["XDG_CONFIG_HOME"] = _d
 os.environ["XDG_STATE_HOME"] = _d
@@ -18,12 +18,12 @@ from PyQt6.QtGui import QColor, QImage, QPainter  # noqa: E402
 from PyQt6.QtWidgets import QApplication  # noqa: E402
 
 app = QApplication([])
-from kino_stream.recent import RecentItems  # noqa: E402
-from kino_stream.settings import Settings  # noqa: E402
-from kino_stream_ui import home, theme as T  # noqa: E402
-from kino_stream_ui.app import install_theme  # noqa: E402
-from kino_stream_ui.bridge import EngineBridge  # noqa: E402
-from kino_stream_ui.mainwindow import MainWindow  # noqa: E402
+from lumiere.recent import RecentItems  # noqa: E402
+from lumiere.settings import Settings  # noqa: E402
+from lumiere_ui import home, theme as T  # noqa: E402
+from lumiere_ui.app import install_theme  # noqa: E402
+from lumiere_ui.bridge import EngineBridge  # noqa: E402
+from lumiere_ui.mainwindow import MainWindow  # noqa: E402
 
 install_theme(app)
 OUT = Path(sys.argv[1])

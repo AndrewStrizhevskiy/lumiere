@@ -15,17 +15,17 @@ from PyQt6.QtCore import Qt  # noqa: E402
 from PyQt6.QtTest import QTest  # noqa: E402
 from PyQt6.QtWidgets import QApplication  # noqa: E402
 
-from kino_stream.recent import RecentItems  # noqa: E402
-from kino_stream.settings import Settings  # noqa: E402
+from lumiere.recent import RecentItems  # noqa: E402
+from lumiere.settings import Settings  # noqa: E402
 
 app = QApplication.instance() or QApplication([])
-from kino_stream_ui.app import install_theme  # noqa: E402
+from lumiere_ui.app import install_theme  # noqa: E402
 
 install_theme(app)
-from kino_stream_ui import motion  # noqa: E402
-from kino_stream_ui.bridge import EngineBridge  # noqa: E402
-from kino_stream_ui.mainwindow import MainWindow  # noqa: E402
-from kino_stream_ui.tour import STEPS, TourOverlay, steps  # noqa: E402
+from lumiere_ui import motion  # noqa: E402
+from lumiere_ui.bridge import EngineBridge  # noqa: E402
+from lumiere_ui.mainwindow import MainWindow  # noqa: E402
+from lumiere_ui.tour import STEPS, TourOverlay, steps  # noqa: E402
 
 
 def pump(n=8):
@@ -42,9 +42,9 @@ class TourBase(unittest.TestCase):
     reduce = "1"                                  # instant transitions keep the tests deterministic
 
     def setUp(self):
-        os.environ["KINO_REDUCE_MOTION"] = self.reduce
+        os.environ["LUMIERE_REDUCE_MOTION"] = self.reduce
         self.tmp = Path(tempfile.mkdtemp())
-        self.settings_path = Path(os.environ["XDG_CONFIG_HOME"]) / "kino-stream" / "settings.json"
+        self.settings_path = Path(os.environ["XDG_CONFIG_HOME"]) / "lumiere" / "settings.json"
         if self.settings_path.exists():
             self.settings_path.unlink()
         self.boot()
@@ -62,7 +62,7 @@ class TourBase(unittest.TestCase):
 
     def tearDown(self):
         self.shutdown()
-        os.environ.pop("KINO_REDUCE_MOTION", None)
+        os.environ.pop("LUMIERE_REDUCE_MOTION", None)
 
 
 class Navigation(TourBase):
@@ -183,8 +183,8 @@ class Isolation(TourBase):
         self.assertEqual(self.bridge.service.snapshot().get("phase"), "idle")
 
     def test_module_has_no_engine_imports(self):
-        src = (Path(__file__).parents[1] / "kino_stream_ui" / "tour.py").read_text()
-        for bad in ("kino_stream.", "libtorrent", "bridge", "service"):
+        src = (Path(__file__).parents[1] / "lumiere_ui" / "tour.py").read_text()
+        for bad in ("lumiere.", "libtorrent", "bridge", "service"):
             self.assertNotIn(f"import {bad}", src)
             self.assertNotIn(f"from {bad}", src)
 
@@ -221,9 +221,9 @@ class Motion(TourBase):
         self.assertEqual(t.illu.phase, 1.0)
 
     def test_env_overrides_system_setting(self):
-        os.environ["KINO_REDUCE_MOTION"] = "0"
+        os.environ["LUMIERE_REDUCE_MOTION"] = "0"
         self.assertFalse(motion.reduced_motion())
-        os.environ["KINO_REDUCE_MOTION"] = "1"
+        os.environ["LUMIERE_REDUCE_MOTION"] = "1"
         self.assertTrue(motion.reduced_motion())
 
 

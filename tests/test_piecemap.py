@@ -6,7 +6,7 @@ from pathlib import Path
 
 import libtorrent as lt
 
-from kino_stream.piecemap import FileSpan, PieceMap
+from lumiere.piecemap import FileSpan, PieceMap
 from tests.support import PIECE_LENGTH, Seeder, random_file
 
 

@@ -2,7 +2,7 @@
 """Generate ~25 GB synthetic-but-playable test videos (our own testsrc2/sine, no third-party content).
 
 A 60 s CBR segment (~28 Mbit/s = 3.5 MB/s) is encoded once and stream-copied N times, so a file of ~2 h / ~25 GB exists
-without 2 h of encoding. Outputs (in ~/.cache/kino-stream-testmedia, outside the repo):
+without 2 h of encoding. Outputs (in ~/.cache/lumiere-testmedia, outside the repo):
   big_cues_end.mkv   MKV, Cues at the end
   big_moov_front.mp4 MP4 with moov at the start (faststart)
   big_moov_end.mp4   MP4 with moov at the end
@@ -15,7 +15,7 @@ import sys
 import time
 from pathlib import Path
 
-BASE = Path.home() / ".cache" / "kino-stream-testmedia"
+BASE = Path.home() / ".cache" / "lumiere-testmedia"
 SEGMENTS = 119          # x 60 s
 BITRATE_BPS = 3_500_000  # bytes/s, nominal
 

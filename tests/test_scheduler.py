@@ -3,8 +3,8 @@
 import asyncio
 import unittest
 
-from kino_stream.config import Config
-from kino_stream.scheduler import PlayerState, Scheduler
+from lumiere.config import Config
+from lumiere.scheduler import PlayerState, Scheduler
 from tests.support import FakeStore
 
 

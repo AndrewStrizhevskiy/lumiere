@@ -28,7 +28,7 @@ The replica records which pieces session 1 had made durable (the cache index), w
 | which pieces the extra payload belonged to (classified runs) | **head pieces 0–15 and tail pieces 229–230** (second classified run: pieces 2–15) — never the range 45–51, never read-ahead beyond it |
 
 ## Mechanism
-`kino_stream/config.py` pins the container head and tail (`pin_head_bytes = 1 MiB` = pieces 0–15, `pin_tail_bytes = 512 KiB`): the scheduler requests them whenever a session starts, because players probe a file's header/index first. Session 1 closes immediately after the range
+`lumiere/config.py` pins the container head and tail (`pin_head_bytes = 1 MiB` = pieces 0–15, `pin_tail_bytes = 512 KiB`): the scheduler requests them whenever a session starts, because players probe a file's header/index first. Session 1 closes immediately after the range
 response, so how many of those pinned pieces it had completed (and made durable) before closing is a race: the instrumented runs show 14–32 pieces retained at close. Whatever session 1 did not finish, session 2 downloads at start-up, and those bytes are added to `total_download`. Under CPU load more
 of them are still in flight when the test reads the counter, and the total can reach 3 pieces.
 That is **timing sensitivity plus an incorrect assumption**: the test treats "any payload in session 2" as "retained pieces were not reused", but the payload belongs to pinned pieces unrelated to the range. The retention and reuse the test is meant to establish worked in every run.
