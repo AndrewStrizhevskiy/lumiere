@@ -104,6 +104,49 @@ class Eviction(CacheCase):
             s.read(0, 30 * PL + 10, 100)
         self.assertEqual(s.read(0, 40 * PL, 100), self.src.read_bytes()[40 * PL:40 * PL + 100])
 
+    async def test_a_complete_piece_that_is_not_yet_readable_from_the_file_is_never_served_as_zeros(self):
+        """Seen under heavy CPU load (10 parallel tests.test_cli runs, 4 of 100): libtorrent reported a piece as complete, the file still held zeros for it, and the HTTP server sent
+        them (re-reading 0.3 s later gave the right bytes). The store contract is 'never zero/missing data'; each piece is now checked against its hash the first time it is served."""
+        s = await self.open()
+        await self.fill(s, range(30, 40))
+        from kino_stream.store import PieceUnavailable
+        p = 35
+        a, b = p * PL, (p + 1) * PL
+        good = self.src.read_bytes()[a:b]
+        fd = os.open(self.data_path, os.O_RDWR)
+        self.addCleanup(os.close, fd)
+        os.pwrite(fd, bytes(PL), a)                                # the data has not (yet) arrived in the file
+        getattr(s, "_disk_ok", set()).clear()
+        with self.assertRaises(PieceUnavailable):
+            s.read(0, a + 10, 100)
+        self.assertNotIn(p, s._disk_ok)
+        os.pwrite(fd, good, a)                                     # now it has
+        self.assertEqual(s.read(0, a + 10, 100), good[10:110])
+        self.assertIn(p, s._disk_ok)
+        s._disk_ok.discard(p)                                      # a piece that is downloaded again (after an eviction) must be verified again
+        await s.evict([p])
+        self.assertNotIn(p, s._disk_ok)
+
+    async def test_the_http_server_waits_for_the_data_instead_of_sending_zeros(self):
+        s = await open_stream(self.tmp, self.sd, self.src, cache_limit_bytes=64 * MiB, evict_min_interval=5.0, mpv_cache_bytes=0)
+        self.addAsyncCleanup(s.close)
+        s.store.apply_demand(Demand(deadlines={q: 100 + i for i, q in enumerate(range(0, 12))}))
+        self.assertTrue(await eventually(lambda: all(s.store.have(p) for p in range(0, 12)), 40))
+        await s.store._flush_durable()
+        a, b = 5 * PL, 6 * PL
+        good = self.src.read_bytes()[a:b]
+        fd = os.open(self.data_path, os.O_RDWR)
+        self.addCleanup(os.close, fd)
+        os.pwrite(fd, bytes(PL), a)
+        getattr(s.store, "_disk_ok", set()).clear()
+        task = asyncio.create_task(http_range(s.server.port, s.server.path, f"bytes={a}-{b - 1}", None))
+        await asyncio.sleep(0.4)
+        self.assertFalse(task.done(), "the server answered while the piece was still unreadable")
+        os.pwrite(fd, good, a)
+        status, _h, body, _fb, _el = await asyncio.wait_for(task, 20)
+        self.assertEqual(body, good)
+        self.assertEqual(s.server.stats["mismatches"], 0)
+
     async def test_only_pieces_exclusive_to_the_streamed_file_can_be_evicted(self):
         root = self.tmp / "multi"
         root.mkdir()
@@ -272,6 +315,26 @@ class CrashRecovery(CacheCase):
                         self.assertTrue(all(piece_ok(self.ti, self.data_path, p) for p in E))
                 finally:
                     await s2.close()
+
+    async def test_closing_while_the_cache_loop_is_evicting_lets_the_eviction_finish_and_leaves_a_closed_journal(self):
+        """Observed once in the full suite under load (tests.test_cli, 'an eviction journal entry was left open', txn state 'punched'): a clean shutdown cancelled the cache loop
+        in the middle of an eviction transaction. Recovery would have completed it at the next start (see the crash-point test above), but a clean exit should not leave it open."""
+        s = await self.open()
+        await self.fill(s, range(30, 80))
+        E = list(range(40, 60))
+        s.estimated_usage = lambda: 10 ** 9                        # pretend the cache is full ...
+        s.plan_eviction = lambda usage: list(E)                    # ... so that the loop (not the test) runs the eviction, exactly as in a real run
+        reached = []
+        s.crash_hook = lambda n: reached.append(n) if n == "after_index_punched" else None
+        s._kick.set()
+        self.assertTrue(await eventually(lambda: "after_index_punched" in reached, 20), "the cache loop never started the eviction")
+        await s.close()                                            # the eviction is now in its 0.4 s pause between 'punched' and 'commit'
+        idx_path = next((self.tmp / "state").glob("*.cache.json"))
+        idx = CacheIndex.load(idx_path, str(self.ti.info_hash()), s.piece_map.num_pieces, s.piece_map.piece_length)
+        self.assertFalse(idx.corrupt)
+        self.assertIsNone(idx.txn, "a clean close left the eviction journal open")
+        self.assertEqual(s.cache_stats["evictions"], 1)
+        self.assertEqual(idx.retained_set() & set(E), set(), "the evicted pieces must not be claimed any more")
 
     async def test_journal_beats_stale_resume_data(self):
         """Resume data written BEFORE the eviction claims the evicted pieces; it must be ignored."""

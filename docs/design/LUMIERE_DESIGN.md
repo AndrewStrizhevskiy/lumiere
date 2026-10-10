@@ -1,7 +1,7 @@
 # Lumière — design concept and sandbox implementation (v2, refinement phase)
 
 > **Status: provisional design direction, implemented in a sandbox, not adopted.** The owner has provisionally approved the *visual direction* for further refinement (charcoal and warm ivory, restrained burgundy, olive grey for secondary status, selective editorial serif, frame symbol + wordmark, always-dark playback).
-> "Lumière" is **not** the final product name and has not been checked for trademark availability. The application's displayed name stays **"Kino Stream"** unless the preview switch `KINO_STREAM_BRAND=lumiere` is set; no technical identifier is renamed.
+> **Update 2026-10-10:** Lumière is now the displayed product name (owner decision); it has still **not** been checked for trademark or domain availability. Earlier text: "the displayed name stays Kino Stream unless `KINO_STREAM_BRAND=lumiere` is set"; today the switch is reversed (`KINO_STREAM_BRAND=kino` shows the old name). No technical identifier is renamed.
 > Nothing here is committed to, merged into or installed from the public release candidate; the sandbox is a local working copy (not part of this repository).
 
 ![Design board](lumiere_design_board.png)
@@ -135,7 +135,9 @@ Main-window hierarchy and spacing (header offset, modest radii, empty-state text
 ## 6. Themes
 Both themes render consistently across Home, Settings, dialogs, banner, tutorial and empty state; the playback area is dark in both (screenshots: dark app, light app). The theme module is selected once at start-up from `KINO_STREAM_THEME`.
 
-## 7. Naming and migration (nothing renamed; trademark not checked)
+## 7. Naming and migration
+
+> **Update 2026-10-10:** the owner decided that the product is called Lumière. Only the display name was changed (`brand.product_name()`, desktop entry `Name=`, texts); the identifiers described below stay as they are. Trademark/domain checks remain outstanding. The text below is the earlier analysis. (nothing renamed; trademark not checked)
 | identifier | role | rename needed for a display change? | if "Lumière" is approved |
 |---|---|---|---|
 | window title, headers, dialog text | display | yes — switchable via `brand.product_name()` | change the default in one place |
@@ -164,7 +166,7 @@ Both themes render consistently across Home, Settings, dialogs, banner, tutorial
 7. The two keyboard-focus defects exist in the public candidate; their fixes live only in this delta.
 
 ## 10. Test results
-Environment: Ubuntu 24.04, GNOME/Wayland, Python 3.12, PyQt6 6.4.2. All results are for the sandbox tree; none for the public candidate.
+Environment: Ubuntu 24.04, GNOME/Wayland, Python 3.12, PyQt6 6.6.1 on Qt 6.4.2. All results are for the sandbox tree; none for the public candidate.
 
 | run | command | exit | result |
 |---|---|---|---|
@@ -188,6 +190,7 @@ The project must therefore **not be described as passing the full regression rel
 cd a local working copy (not part of this repository)
 python3 -m kino_stream_ui                                              # dark, current name
 KINO_STREAM_THEME=light python3 -m kino_stream_ui                      # ivory theme
-KINO_STREAM_BRAND=lumiere python3 -m kino_stream_ui                    # proposed name (preview only)
+python3 -m kino_stream_ui                                              # Lumière (default since 2026-10-10)
+KINO_STREAM_BRAND=kino python3 -m kino_stream_ui                       # previous display name
 python3 tools/make_brand_assets.py --write --sheet docs/design/concept_logo_explorations.png
 ```

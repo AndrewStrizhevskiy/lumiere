@@ -175,6 +175,37 @@ class PlayerEndToEnd(unittest.TestCase):
         it = next(i for i in self.recent.items if i["infohash"] == self.infohash)
         self.assertGreater(it["position_s"], 1)
 
+    def test_keyboard_shortcuts_drive_playback_and_escape_leaves(self):
+        """The player has no focusable buttons (they are NoFocus on purpose); the shortcuts are the only keyboard path to playback, so they are verified on the real display."""
+        from PyQt6.QtCore import Qt
+        from PyQt6.QtTest import QTest
+        self.open(str(self.torrent))
+        p = self.win.player
+        self.playing(2.0)
+        p.setFocus()
+        QTest.keyClick(p, Qt.Key.Key_Space)
+        until(lambda: p.video.get("pause") is True, 5, "Space did not pause")
+        QTest.keyClick(p, Qt.Key.Key_K)
+        until(lambda: p.video.get("pause") is False, 5, "K did not resume")
+        v = p.vol.value()
+        QTest.keyClick(p, Qt.Key.Key_Down)
+        self.assertEqual(p.vol.value(), max(0, v - 5))
+        QTest.keyClick(p, Qt.Key.Key_Up)
+        self.assertEqual(p.vol.value(), v)
+        QTest.keyClick(p, Qt.Key.Key_M)
+        until(lambda: p.video.get("mute") is True, 5, "M did not mute")
+        QTest.keyClick(p, Qt.Key.Key_M)
+        until(lambda: p.video.get("mute") is False, 5)
+        QTest.keyClick(p, Qt.Key.Key_C)
+        until(lambda: p.panel.isVisible(), 5, "C did not open the connection panel")
+        QTest.keyClick(p, Qt.Key.Key_Escape)                          # first Escape closes the panel ...
+        until(lambda: not p.panel.isVisible(), 5)
+        self.assertEqual(self.win.stack.currentIndex(), self.win.PLAYER)
+        QTest.keyClick(p, Qt.Key.Key_Escape)                          # ... the second one leaves the video
+        until(lambda: self.win.stack.currentIndex() == self.win.HOME, 20, "Escape did not return home")
+        it = next(i for i in self.recent.items if i["infohash"] == self.infohash)
+        self.assertGreater(it["position_s"], 1)                       # the position was saved on leaving
+
     def _via_launcher(self, source):
         real = self.__dict__.setdefault("_real_open", self.bridge.open_source)     # inject the local swarm only; everything else is the real launcher path
         self.bridge.open_source = lambda src, **kw: real(src, overrides=self.overrides(), peers=[("127.0.0.1", self.sd.port)], **kw)

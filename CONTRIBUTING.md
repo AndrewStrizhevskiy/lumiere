@@ -12,7 +12,7 @@ Thanks for helping. Bug reports with the **Diagnostics** text (Help → Diagnost
 ## Setup
 ```bash
 sudo apt install python3-libtorrent python3-pyqt6 python3-pyqt6.qtsvg python3-mpv libmpv2 mpv ffmpeg
-git clone https://github.com/@@GITHUB_REPO@@.git && cd kino-stream
+git clone https://github.com/AndrewStrizhevskiy/lumiere.git && cd kino-stream
 python3 -m kino_stream_ui        # run the app from the checkout
 ./bin/kino-stream --help         # CLI from the checkout
 ```

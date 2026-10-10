@@ -10,4 +10,4 @@ labels: enhancement
 
 **Alternatives you considered**
 
-Note: Kino Stream will not change your network configuration, and it does not promise uninterrupted playback; requests are judged against those principles.
+Note: Lumière will not change your network configuration, and it does not promise uninterrupted playback; requests are judged against those principles.

@@ -38,6 +38,19 @@ class ReleaseConfig(unittest.TestCase):
         self.assertIn("sec@example.org", (self.d / "SECURITY.md").read_text())
         self.assertEqual(self.run_tool("check").returncode, 0)
 
+    def test_repo_only_apply_works_when_no_file_needs_an_email_and_never_half_applies_otherwise(self):
+        (self.d / "SECURITY.md").write_text("repo @@GITHUB_REPO@@ uses private reporting\n")
+        subprocess.run(["git", "add", "-A"], cwd=self.d, check=True)
+        self.assertEqual(self.run_tool("apply", "--repo", "owner/name").returncode, 0)
+        self.assertEqual(self.run_tool("check").returncode, 0)
+        (self.d / "OTHER.md").write_text("repo @@GITHUB_REPO@@ mail @@SECURITY_EMAIL@@\n")
+        subprocess.run(["git", "add", "-A"], cwd=self.d, check=True)
+        before = (self.d / "SECURITY.md").read_text()
+        r = self.run_tool("apply", "--repo", "x/y")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("@@SECURITY_EMAIL@@", r.stderr)
+        self.assertEqual((self.d / "SECURITY.md").read_text(), before)          # nothing was written
+
     def test_missing_license_blocks(self):
         self.run_tool("apply", "--repo", "o/n", "--security-email", "s@e.org", "--conduct-email", "c@e.org")
         (self.d / "LICENSE").unlink()

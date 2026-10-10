@@ -120,21 +120,26 @@ class Brand(unittest.TestCase):
     def tearDown(self):
         os.environ.pop("KINO_STREAM_BRAND", None)
 
-    def test_the_proposed_name_is_display_only_and_off_by_default(self):
+    def test_the_product_name_is_lumiere_and_the_old_name_is_one_switch_away(self):
+        self.assertEqual(brand.product_name(), "Lumière")
+        os.environ["KINO_STREAM_BRAND"] = "kino"
         self.assertEqual(brand.product_name(), "Kino Stream")
         os.environ["KINO_STREAM_BRAND"] = "lumiere"
         self.assertEqual(brand.product_name(), "Lumière")
 
     def test_tr_applies_the_display_name_but_no_technical_identifier_follows_it(self):
         from kino_stream_ui.messages import tr
-        os.environ["KINO_STREAM_BRAND"] = "lumiere"
         self.assertIn("Lumière", tr("Welcome to Kino Stream"))
+        os.environ["KINO_STREAM_BRAND"] = "kino"
+        self.assertIn("Kino Stream", tr("Welcome to Kino Stream"))                   # reversible display switch
+        os.environ.pop("KINO_STREAM_BRAND")
         import kino_stream, kino_stream_ui
         self.assertEqual((kino_stream.__name__, kino_stream_ui.__name__), ("kino_stream", "kino_stream_ui"))
         from kino_stream.settings import config_dir, state_dir
         self.assertTrue(str(config_dir()).endswith("kino-stream") and str(state_dir()).endswith("kino-stream"))
         desktop = (ROOT / "packaging" / "kino-stream.desktop.in").read_text()
-        self.assertIn("Name=Kino Stream", desktop)                       # not renamed without the owner's decision
+        self.assertIn("Name=Lumière", desktop)                           # display name only: the file name, Exec, Icon and StartupWMClass keep the technical id
+        self.assertIn("Icon=kino-stream", desktop)
         self.assertIn("StartupWMClass=kino-stream", desktop)
 
     def test_symbol_renders_at_icon_sizes_and_in_one_colour(self):

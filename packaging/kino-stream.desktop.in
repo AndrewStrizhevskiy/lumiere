@@ -1,14 +1,14 @@
 [Desktop Entry]
 Type=Application
 Version=1.5
-Name=Kino Stream
+Name=Lumière
 GenericName=Torrent video player
 Comment=Watch a video from a torrent while it downloads
 Exec=@EXEC@
 Icon=kino-stream
 Terminal=false
 Categories=AudioVideo;Video;Player;
-Keywords=torrent;magnet;stream;video;movie;
+Keywords=lumiere;kino-stream;torrent;magnet;stream;video;movie;
 MimeType=application/x-bittorrent;x-scheme-handler/magnet;
 StartupNotify=false
 StartupWMClass=kino-stream

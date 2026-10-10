@@ -1,4 +1,4 @@
-# How Kino Stream works
+# How Lumière works
 
 ## Streaming from a torrent
 
@@ -6,7 +6,7 @@ A torrent splits a file into fixed-size **pieces** (typically 0.25–4 MB). Peop
 different pieces from different peers, in whatever order libtorrent finds efficient. A normal torrent client downloads the
 *rarest* pieces first, which is good for the swarm but useless for watching a video.
 
-Kino Stream changes the order of what it **asks for**:
+Lumière changes the order of what it **asks for**:
 
 ```
 mpv  ──HTTP range requests──▶  local server  ──▶  scheduler  ──▶  libtorrent  ◀──▶  peers
@@ -22,7 +22,7 @@ mpv  ──HTTP range requests──▶  local server  ──▶  scheduler  ─
 
 ## Why playback and seeking depend on peers and the network
 
-Kino Stream can only play what it has downloaded. Therefore:
+Lumière can only play what it has downloaded. Therefore:
 
 * **Start-up** needs at least one peer that has the first pieces. Finding peers needs a tracker or DHT; some networks block those
   (see [TROUBLESHOOTING.md](TROUBLESHOOTING.md)). On a healthy swarm the first frame appears in seconds; on a poor one it can take a minute or never.
@@ -38,7 +38,7 @@ Kino Stream can only play what it has downloaded. Therefore:
 
 ## The bounded cache
 
-Streaming needs somewhere to put pieces. Kino Stream stores them in one **sparse file** per video and keeps the number of disk blocks
+Streaming needs somewhere to put pieces. Lumière stores them in one **sparse file** per video and keeps the number of disk blocks
 actually allocated below the limit you set (default 4 GB):
 
 * Pieces behind the playhead are removed ("eviction") by punching holes in the file (`fallocate(PUNCH_HOLE)`), keeping a window

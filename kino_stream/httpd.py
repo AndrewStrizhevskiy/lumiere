@@ -238,7 +238,12 @@ class StreamServer:
                 continue
             try:
                 data = await asyncio.to_thread(self.store.read, self.file_index, pos, n)
-            except PieceUnavailable:                       # lost between have() and read(): wait again
+            except PieceUnavailable:                       # lost between have() and read(), or not yet readable from the file: wait a moment and ask again
+                if time.monotonic() - started > self.cfg.hard_timeout:
+                    raise _Abort("data of a completed piece never became readable")
+                if not alive() or conn.closed:
+                    return None
+                await asyncio.sleep(0.02)
                 continue
             if waited:
                 self.stats["piece_waits"] += 1

@@ -49,6 +49,7 @@ class BoundedSparseStore(PersistentFileStore):
         self._readers: dict[int, int] = {}
         self._rlock = threading.Lock()
         self._evict_lock = asyncio.Lock()
+        self._closing = False
         self._hint: RetentionHint | None = None
         self._cache_task: asyncio.Task | None = None
         self._last_evict = 0.0
@@ -248,6 +249,9 @@ class BoundedSparseStore(PersistentFileStore):
             for p in need:
                 self._readers[p] = self._readers.get(p, 0) + 1
         try:
+            late = self._unverified(file_index, need)              # complete per libtorrent but not yet readable from the file (see PersistentFileStore._unverified)
+            if late:
+                raise PieceUnavailable(late)
             fd = self._fd(file_index)
             out = bytearray()
             while len(out) < length:
@@ -327,7 +331,7 @@ class BoundedSparseStore(PersistentFileStore):
                     measured_at = now
                 if self._unflushed and now - self._last_flush >= self.cfg.flush_interval:
                     await self._flush_durable()
-                if self._evict_lock.locked():
+                if self._evict_lock.locked() or self._closing:
                     continue
                 usage = max(self.estimated_usage(), self._usage if now - measured_at < 1.5 else 0)
                 pressure = self.truncated > 0
@@ -391,6 +395,7 @@ class BoundedSparseStore(PersistentFileStore):
             with self._rlock:                                                 # doom: nobody may start reading E
                 for p in E:
                     self._have[p] = 0
+                    self._disk_ok.discard(p)                       # when it is downloaded again it must be verified again
             self._at("after_doom")
             deadline = time.monotonic() + self.cfg.drain_timeout
             while True:
@@ -490,6 +495,10 @@ class BoundedSparseStore(PersistentFileStore):
         finally:
             self._readd_have = None
 
+    async def _wait_eviction_done(self) -> None:
+        while self._evict_lock.locked():
+            await asyncio.sleep(0.02)
+
     async def _save_resume(self) -> bool:
         return False                                                           # libtorrent resume data is never trusted
 
@@ -510,6 +519,15 @@ class BoundedSparseStore(PersistentFileStore):
         return d
 
     async def close(self) -> None:
+        self._closing = True                                                   # the cache loop starts no new eviction from here on
+        if self._evict_lock.locked():
+            # An eviction transaction is in flight (the cache loop runs it): let it reach its commit instead of cancelling it half way. Cancelling would leave the journal open
+            # ("punched") after a clean exit; the next start would complete it (roll forward), but a clean exit should leave a clean journal. Bounded: a stuck eviction
+            # (its own waits are <= 10 s) is cancelled as before after 20 s and recovery handles it.
+            try:
+                await asyncio.wait_for(self._wait_eviction_done(), 20)
+            except asyncio.TimeoutError:
+                log.warning("closing while an eviction is still running; the journal completes it at the next start")
         if self._cache_task:
             self._cache_task.cancel()
         try:

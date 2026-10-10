@@ -1,13 +1,15 @@
-# Kino Stream
+# Lumière
+
+> **Naming note.** The product is called **Lumière** (owner decision, 2026-10-10; a quick search found other software called Lumière and no trademark register was searched, so the name is **not legally cleared** and not final for public branding). Only the *display* name changed: the command (`kino-stream`, `kino-stream-gui`), the Python packages (`kino_stream`, `kino_stream_ui`), the desktop-entry file and icon names, the settings/state/cache folders (`~/.config/kino-stream`, `~/.local/state/kino-stream`, `~/.cache/kino-stream`) and the cache marker keep their old names, so existing installations and data are unaffected. `KINO_STREAM_BRAND=kino` shows the previous name "Kino Stream".
 
 Watch a video from a torrent **while it is still downloading**, with a **hard upper limit on the disk space it uses**.
-Kino Stream has a desktop app (PyQt6 + libmpv) and a command line tool that share one streaming engine.
+Lumière has a desktop app (PyQt6 + libmpv) and a command line tool that share one streaming engine.
 
 ![Home screen](docs/gui/p2_home.png)
 
 > **Status: pre-1.0 (0.3.0), tested on Ubuntu 24.04 / GNOME / Wayland only.** The engine and cache have an extensive automated
 > test suite and a few real-swarm runs, but this is young software. Read [Known limitations](#known-limitations) before relying on it.
-> Kino Stream does not host or provide any content. You are responsible for only streaming material you have the right to use.
+> Lumière does not host or provide any content. You are responsible for only streaming material you have the right to use.
 
 | Playing, with the connection panel | Seek bar: grey = already on disk |
 |---|---|
@@ -15,7 +17,7 @@ Kino Stream has a desktop app (PyQt6 + libmpv) and a command line tool that shar
 
 ## What it does
 
-Pick a `.torrent` file or paste a magnet link and press Play. Kino Stream fetches the part of the video you are about to watch
+Pick a `.torrent` file or paste a magnet link and press Play. Lumière fetches the part of the video you are about to watch
 first, plays it through mpv, and removes old parts so the cache never grows past the limit you set (4 GB by default).
 How well that works depends on the people sharing the video and on your network — see [How it works](docs/HOW_IT_WORKS.md).
 
@@ -23,7 +25,8 @@ How well that works depends on the people sharing the video and on your network 
 
 **Implemented and covered by automated tests**
 
-* Desktop app: drop a `.torrent` onto the window, choose a file, or paste a magnet link; "Continue watching" list with resume.
+* Desktop app: drop a `.torrent` onto the window, choose a file, or paste a magnet link; "Continue watching" list with resume. Each entry shows a readable title (and the year when the file name clearly gives one) made **offline** from the file name; when a name cannot be read with confidence the readable file name is shown instead of a guess. No online lookup exists.
+* Interface: warm charcoal (default) and ivory themes (`KINO_STREAM_THEME=dark|light`), the player is always dark; keyboard-visible focus; short, interruptible transitions that follow GNOME's "reduce animations" (`KINO_REDUCE_MOTION=0|1` overrides it). Fonts are the ones installed on the system; none is bundled.
 * Embedded player (libmpv): play/pause, seek bar that shows which parts are already on disk, volume, fullscreen, audio-track and
   subtitle-track menus (tracks inside the file), keyboard shortcuts, auto-hiding controls.
 * Honest status: sources, speed, how much is ready ahead, disk used, and plain-language messages for "looking for sources",
@@ -52,16 +55,16 @@ How well that works depends on the people sharing the video and on your network 
 
 ```bash
 sudo apt install python3-libtorrent python3-pyqt6 python3-pyqt6.qtsvg python3-mpv libmpv2 mpv
-git clone https://github.com/@@GITHUB_REPO@@.git kino-stream && cd kino-stream
+git clone https://github.com/AndrewStrizhevskiy/lumiere.git kino-stream && cd kino-stream
 ./packaging/install.sh          # user-level: no root, no network; --check shows what it would do
 ```
 
-Start **Kino Stream** from the application menu, or run `kino-stream-gui`. Details, other options and the clean uninstall:
+Start **Lumière** from the application menu, or run `kino-stream-gui`. Details, other options and the clean uninstall:
 [docs/INSTALL.md](docs/INSTALL.md). Uninstall: `./packaging/uninstall.sh` (keeps your data) or `--purge-data`.
 
 ## Quick start
 
-1. Start Kino Stream. The short tutorial appears on first launch.
+1. Start Lumière. The short tutorial appears on first launch.
 2. Drop a `.torrent` file on the window, or paste a magnet link and press **Play**. Prefer `.torrent` files: magnet links depend on DHT,
    which some networks block.
 3. Space pauses, ←/→ skip 5 s (Shift: 30 s), ↑/↓ volume, **F** fullscreen, **C** connection panel, **Esc** back.
@@ -91,6 +94,7 @@ kino-stream doctor --network
 * The disk limit is hard for *allocated blocks of the cache folder*; it is not a promise about playback during pressure
   (playback can pause while room is made) — see [How it works](docs/HOW_IT_WORKS.md#what-the-cache-limit-guarantees).
 * Tested on ext4 only, on one Ubuntu 24.04 machine, Wayland. Real-swarm validation consists of a handful of runs.
+* **One unexplained intermittent native crash (SIGSEGV) occurred once in 18 full runs of the automated tests** of the interface work and could not be reproduced or explained; see [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md). Do not assume the application is crash-free.
 * One intermittent failure of an automated magnet-link test (2 of ~14 early runs, not reproduced in 40+ later runs) has an
   **unknown root cause**; details in [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md).
 * Every eviction re-adds the torrent in libtorrent, which drops peer connections briefly; the effect on slow real swarms is not
@@ -109,4 +113,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the test layout. Opt-in heavy tools: 
 ## License
 
 GPL-3.0-or-later — see [LICENSE](LICENSE), [docs/LICENSING.md](docs/LICENSING.md) (dependencies, compatibility, redistribution notes) and
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Kino Stream does not bundle third-party code or binaries.
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Lumière does not bundle third-party code or binaries.

@@ -3,9 +3,10 @@
 """Release configuration. The repository ships with placeholders that must be replaced before publishing; this tool replaces them and checks that none are left.
 
     python3 tools/release_config.py check                       # exit 1 while any placeholder remains (also run by .githooks/pre-push)
-    python3 tools/release_config.py apply --repo OWNER/NAME --security-email ADDR --conduct-email ADDR
+    python3 tools/release_config.py apply --repo OWNER/NAME [--security-email ADDR] [--conduct-email ADDR]
 
-Placeholders: @@GITHUB_REPO@@ (owner/name), @@SECURITY_EMAIL@@, @@CONDUCT_EMAIL@@. Nothing is guessed: `apply` needs every value explicitly.
+Placeholders: @@GITHUB_REPO@@ (owner/name), and, only if a file still contains them, @@SECURITY_EMAIL@@ and @@CONDUCT_EMAIL@@. Nothing is guessed: `apply` refuses (and writes nothing) if any
+placeholder would be left without a value. The shipped SECURITY.md / CODE_OF_CONDUCT.md use GitHub's private reporting and need no email address.
 """
 import argparse
 import re
@@ -40,8 +41,8 @@ def main() -> int:
     sub.add_parser("check")
     a = sub.add_parser("apply")
     a.add_argument("--repo", required=True, help="GitHub owner/name")
-    a.add_argument("--security-email", required=True)
-    a.add_argument("--conduct-email", required=True)
+    a.add_argument("--security-email")
+    a.add_argument("--conduct-email")
     args = ap.parse_args()
     if args.cmd == "check":
         left = remaining()
@@ -58,18 +59,26 @@ def main() -> int:
     if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", args.repo):
         sys.exit("--repo must look like owner/name")
     for e in (args.security_email, args.conduct_email):
-        if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", e):
+        if e is not None and not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", e):
             sys.exit(f"not an email address: {e}")
-    values = {TOKENS["repo"]: args.repo, TOKENS["security_email"]: args.security_email, TOKENS["conduct_email"]: args.conduct_email}
-    n = 0
+    values = {TOKENS["repo"]: args.repo}
+    if args.security_email:
+        values[TOKENS["security_email"]] = args.security_email
+    if args.conduct_email:
+        values[TOKENS["conduct_email"]] = args.conduct_email
+    changed, unfilled = {}, []
     for f, t in tracked_text_files():
         u = t
         for k, v in values.items():
             u = u.replace(k, v)
+        unfilled += [(f, m) for m in sorted(set(PATTERN.findall(u)))]
         if u != t:
-            (ROOT / f).write_text(u, encoding="utf-8")
-            n += 1
-    print(f"updated {n} files; review `git diff` before committing")
+            changed[f] = u
+    if unfilled:                                                    # never guess, never half-apply
+        sys.exit("refusing to apply: no value for " + ", ".join(f"{m} (in {f})" for f, m in unfilled))
+    for f, u in changed.items():
+        (ROOT / f).write_text(u, encoding="utf-8")
+    print(f"updated {len(changed)} files; review `git diff` before committing")
     return 0
 
 

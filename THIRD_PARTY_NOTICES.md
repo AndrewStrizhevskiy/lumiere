@@ -1,6 +1,6 @@
 # Third-party notices
 
-Kino Stream is GPL-3.0-or-later (see [LICENSE](LICENSE) and [docs/LICENSING.md](docs/LICENSING.md)). It does not include third-party code or binaries, with the one
+Lumière is GPL-3.0-or-later (see [LICENSE](LICENSE) and [docs/LICENSING.md](docs/LICENSING.md)). It does not include third-party code or binaries, with the one
 possible exception below. At run time it uses the following software installed from your distribution, each under its own license:
 
 * **PyQt6** — © Riverbank Computing Limited — GPL-3 (https://www.riverbankcomputing.com/software/pyqt/)
@@ -31,12 +31,12 @@ NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE US
 
 ## Fonts
 
-The *Inter* typeface (SIL Open Font License 1.1, © The Inter Project Authors) is used only if it is installed on the system; it is not included.
+The *Inter* typeface (SIL Open Font License 1.1, © The Inter Project Authors) and the editorial serifs named in `kino_stream_ui/theme.py` (Literata, Source Serif 4, EB Garamond, Charis SIL, Noto Serif, Liberation Serif, DejaVu Serif) are used only if installed on the system; **no font is included or bundled**, and the interface falls back to generic families.
 
-## Brand artwork (design concept, not yet adopted by the project owner)
+## Brand artwork (the name Lumière is in use; the outlined wordmark is optional and off by default)
 
-* `kino_stream_ui/assets/lumiere-wordmark.svg` contains the **outlines (vector shapes) of the word "Lumière"** taken from the locally installed font **EB Garamond** — style "EB Garamond 12 Regular" (`/usr/share/fonts/truetype/ebgaramond/EBGaramond12-Regular.ttf`, Ubuntu package
+* `kino_stream_ui/assets/lumiere-wordmark.svg` (shown only with `KINO_STREAM_WORDMARK_ART=1`; by default the header name is set in the installed serif) contains the **outlines (vector shapes) of the word "Lumière"** taken from the locally installed font **EB Garamond** — style "EB Garamond 12 Regular" (`/usr/share/fonts/truetype/ebgaramond/EBGaramond12-Regular.ttf`, Ubuntu package
   `fonts-ebgaramond-extra` 0.016+git20210310.42d4f9f2-1) — © 2010–2012 Georg Duffner, **SIL Open Font License 1.1** (licence text: `/usr/share/doc/fonts-ebgaramond-extra/copyright`). The outlines were generated once with `tools/make_brand_assets.py`; no font file is bundled or distributed and the SVG
-  contains no text or font reference. **Whether outlined lettering counts as a derivative work of the font, and what the OFL requires for it, has not been determined; this is a question for qualified review.** If it is a concern, regenerate the wordmark from a different typeface (`--font`).
+  contains no text or font reference. **Assessment (2026-10-10, not legal advice):** the SIL OFL FAQ (entries 1.1.1 and 1.13, https://openfontlicense.org/ofl-faq/) states that the OFL does not extend to artwork made with an OFL font, so outlines used as a logo are not expected to need the OFL; this notice is kept as a precaution and a qualified reviewer may still be asked. If it is a concern, regenerate the wordmark from a different typeface (`--font`).
 * The frame symbol and the application icon (`packaging/kino-stream.svg`) are plain geometry drawn for this project.
 * At run time the interface uses fonts that happen to be installed (Inter, Cantarell, and an editorial serif such as Literata, Source Serif 4 or EB Garamond, with generic fallbacks); none is bundled.

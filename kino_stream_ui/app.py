@@ -146,8 +146,9 @@ def setup_logging() -> None:
 
 def run(argv: list[str] | None = None) -> int:
     import argparse
+    from .brand import product_name
     argv = list(sys.argv if argv is None else argv)
-    ap = argparse.ArgumentParser(prog="kino-stream-gui", description="Kino Stream - watch a torrent while it downloads.")
+    ap = argparse.ArgumentParser(prog="kino-stream-gui", description=f"{product_name()} - watch a torrent while it downloads.")
     ap.add_argument("target", nargs="*", help="a .torrent file or magnet link to open")
     ap.add_argument("--version", action="store_true")
     ap.add_argument("--smoke", action="store_true", help=argparse.SUPPRESS)       # start, draw one frame, exit 0 (packaging test)

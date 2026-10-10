@@ -48,7 +48,7 @@ A single run on one machine: not conclusive. Reading: the fade added about 2 ms 
 ## 4. Tests
 `tests/test_titles.py` (29: ordinary names, years, season packs/episodes, Unicode, punctuation, empty input, misleading numbers, "nothing is invented", purity/no-network), `tests/test_continue_watching.py` (14: card content, fallbacks, hostile names, same-title entries stay distinct, no write to `recent.json`, positions preserved, no network, list update during playback, card click uses the stored title), `tests/test_motion.py` (40, both themes: rapid navigation, interruption continuity, resize and close during animation, no fade on the player, actions not delayed, reduced motion, banner smoothness/interruption/resize, hover/pressed/focus/disabled pixel states, keyboard activation).
 
-**Results (final code, Ubuntu 24.04, GNOME/Wayland, Python 3.12, PyQt6 6.4.2; 2026-10-09 evening):**
+**Results (final code, Ubuntu 24.04, GNOME/Wayland, Python 3.12, PyQt6 6.6.1 on Qt 6.4.2; 2026-10-09 evening):**
 
 | command | exit | result |
 |---|---|---|

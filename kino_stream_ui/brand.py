@@ -2,7 +2,8 @@
 """Brand constants and the vector symbol. Only DISPLAY text lives here; technical identifiers (package names, executables, desktop-entry id, settings and
 cache directories, URI handling) are deliberately NOT derived from the product name, so a rename never touches existing installations or user data.
 
-The proposed name "Lumière" is a design concept, not a decision: it is only shown when KINO_STREAM_BRAND=lumiere is set (preview). The default stays "Kino Stream"."""
+The product is shown as "Lumière" (owner decision, 2026-10-10; trademark and domain checks are still outstanding). The previous name "Kino Stream" is kept as SOURCE_NAME: the interface
+strings are written with it and `messages.tr()` substitutes the display name, so the rename is one switch and fully reversible: set KINO_STREAM_BRAND=kino to show the old name."""
 from __future__ import annotations
 
 import os
@@ -12,8 +13,8 @@ from PyQt6.QtCore import QByteArray, QRectF, Qt
 from PyQt6.QtGui import QColor, QPainter, QPainterPath, QPen, QPixmap
 from PyQt6.QtSvg import QSvgRenderer
 
-CURRENT_NAME = "Kino Stream"
-PROPOSED_NAME = "Lumière"
+CURRENT_NAME = "Kino Stream"      # the previous product name; the text of the interface strings (see messages.tr); never an identifier
+PROPOSED_NAME = "Lumière"         # the product name now shown (kept under its old constant name for compatibility with tests and tools)
 ASSETS = Path(__file__).parent / "assets"
 
 
@@ -27,7 +28,8 @@ PANEL_RADIUS = 0.9
 
 
 def product_name() -> str:
-    return PROPOSED_NAME if os.environ.get("KINO_STREAM_BRAND", "").strip().lower() in ("lumiere", "lumière") else CURRENT_NAME
+    """The display name: Lumière, unless KINO_STREAM_BRAND=kino (or "kino stream") asks for the previous name."""
+    return CURRENT_NAME if os.environ.get("KINO_STREAM_BRAND", "").strip().lower() in ("kino", "kino stream", "kino-stream") else PROPOSED_NAME
 
 
 def paint_symbol(p: QPainter, rect: QRectF, frame: QColor, light: QColor, variant: str = "frame") -> None:

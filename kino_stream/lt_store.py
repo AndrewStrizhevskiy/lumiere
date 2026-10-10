@@ -13,6 +13,7 @@ libtorrent APIs used (all verified against 2.0.10 in spikes/s0_api.py):
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import logging
 import os
 import threading
@@ -217,6 +218,7 @@ class PersistentFileStore(PieceStore):
         self.piece_map = PieceMap.from_torrent_info(ti)
         n = self.piece_map.num_pieces
         self._have = bytearray(n)
+        self._disk_ok = set()                         # pieces whose bytes on disk were verified against the torrent's piece hash (see _unverified)
         sel = self._select(self.piece_map) if callable(self._select) else self._select
         self.selected_file = sel
         nf = len(self.piece_map.files)
@@ -394,6 +396,7 @@ class PersistentFileStore(PieceStore):
             return
         if not self._have[piece]:
             self._have[piece] = 1
+            self._disk_ok.discard(piece)              # freshly downloaded: not yet verified on disk
             self._last_progress = time.monotonic()
             for f in self._waiters.pop(piece, []):
                 if not f.done():
@@ -441,12 +444,50 @@ class PersistentFileStore(PieceStore):
                     if not lst:
                         self._waiters.pop(p, None)
 
+    def _unverified(self, file_index: int, pieces) -> list[int]:
+        """Pieces among `pieces` that libtorrent reports as complete but whose bytes in the file do not (yet) match the torrent's piece hash.
+
+        Found under heavy CPU load (tests.test_cli, 10 parallel runs): libtorrent's piece_finished alert can arrive before the piece's blocks are visible in the file, so a read
+        returned zeros for a piece the store already called "have" (re-reading 0.3 s later returned the correct bytes). The store contract is "never zero/missing data", so each piece
+        is checked once, the first time it is served (one SHA-1 over the piece, about 8 ms for 4 MiB), and the caller is told to wait if it does not match yet. Only pieces lying
+        entirely inside the file can be checked (a boundary piece also holds bytes of a neighbouring file, which are not downloaded); torrents without v1 piece hashes are not checked."""
+        pm, ti = self.piece_map, self._ti
+        if ti is None or getattr(self, "_verify_off", False):
+            return []
+        f = pm.files[file_index]
+        inside = pm.exclusive_pieces(file_index)
+        bad = []
+        for p in pieces:
+            if p in self._disk_ok or p not in inside:
+                continue
+            a, b = pm.piece_span(p)
+            try:
+                expected = bytes(ti.hash_for_piece(p))
+            except Exception:
+                self._verify_off = True                # no v1 hashes (pure v2 torrent): nothing to compare with
+                return []
+            fd = self._fd(file_index)
+            buf = bytearray()
+            while len(buf) < b - a:
+                chunk = os.pread(fd, b - a - len(buf), a - f.start + len(buf))
+                if not chunk:
+                    break
+                buf += chunk
+            if len(buf) == b - a and hashlib.sha1(buf).digest() == expected:
+                self._disk_ok.add(p)
+            else:
+                bad.append(p)
+        return bad
+
     def read(self, file_index: int, offset: int, length: int) -> bytes:
         pm = self.piece_map
         need = pm.range_pieces(file_index, offset, offset + length - 1)
         gone = [p for p in need if not (self._have[p] and self.handle.have_piece(p))]   # libtorrent has the last word
         if gone:
             raise PieceUnavailable(gone)
+        late = self._unverified(file_index, need)
+        if late:
+            raise PieceUnavailable(late)                 # complete per libtorrent, not yet readable from the file: the caller waits and asks again
         fd = self._fd(file_index)
         out = bytearray()
         while len(out) < length:

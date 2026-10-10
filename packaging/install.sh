@@ -1,6 +1,6 @@
 #!/bin/sh
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Install Kino Stream for the current user. Needs no root, no network and no pip; touches only the paths listed below.
+# Install Lumière (command and folders keep the name kino-stream) for the current user. Needs no root, no network and no pip; touches only the paths listed below.
 #   packaging/install.sh [--check] [--no-desktop-db]
 #   --check           only verify the system dependencies and print what would be installed
 #   --no-desktop-db   do not run update-desktop-database
@@ -105,7 +105,7 @@ if [ "$DESKTOP_DB" = 1 ]; then
   command -v update-desktop-database >/dev/null 2>&1 && update-desktop-database "$DATA/applications" 2>/dev/null || true
   command -v gtk-update-icon-cache >/dev/null 2>&1 && [ -f "$DATA/icons/hicolor/index.theme" ] && gtk-update-icon-cache -q "$DATA/icons/hicolor" 2>/dev/null || true
 fi
-echo "Installed Kino Stream $(python3 -c 'import sys; sys.path.insert(0, sys.argv[1]); import kino_stream; print(kino_stream.__version__)' "$APP")"
+echo "Installed Lumière (kino-stream) $(python3 -c 'import sys; sys.path.insert(0, sys.argv[1]); import kino_stream; print(kino_stream.__version__)' "$APP")"
 echo "  start it from the application menu, or run: $BIN/kino-stream-gui"
 case ":$PATH:" in *":$BIN:"*) ;; *) echo "  note: $BIN is not on your PATH; the menu entry works regardless" ;; esac
 echo "  your default apps for .torrent / magnet: links were NOT changed (see docs/INSTALL.md)"
